@@ -1,6 +1,6 @@
 ## Adobe Data Layer
 
-Adobe Data Layer reduces the effort to instrument websites by providing a standardized method of exposing and accessing any kind of data for any script..
+Adobe Data Layer reduces the effort to instrument websites by providing a standardized method of exposing and accessing any kind of data for any script.
 
 ## Goals
 
