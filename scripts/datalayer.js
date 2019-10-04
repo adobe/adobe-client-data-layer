@@ -3,7 +3,7 @@
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License. You may obtain a copy
  * of the License at http://www.apache.org/licenses/LICENSE-2.0
-
+ *
  * Unless required by applicable law or agreed to in writing, software distributed under
  * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
  * OF ANY KIND, either express or implied. See the License for the specific language
@@ -237,7 +237,7 @@
     DataLayer.prototype._registerListener = function(item) {
         if (this._getListenerIndexes(item).length === 0) {
             this.dataLayer._listeners.push(item);
-            //console.log("event listener registered on: ", item.on);
+            console.log("event listener registered on: ", item.on);
         }
     };
 
@@ -255,7 +255,7 @@
         for (var i = 0; i < indexes.length; i++) {
             if (indexes[i] > -1) {
                 this.dataLayer._listeners.splice(indexes[i], 1);
-                //console.log("event listener unregistered on: ", tmp.on);
+                console.log("event listener unregistered on: ", tmp.on);
             }
         }
     };
@@ -342,7 +342,7 @@
     };
 
     window.addEventListener("datalayer:prepopulated", function() {
-        //console.log("data layer prepopulated - let's initialize the data layer");
+        console.log("data layer prepopulated - let's initialize the data layer");
         window.dataLayer = window.dataLayer || [];
         new DataLayer(window.dataLayer);
         var readyEvent = new CustomEvent(events.READY);
