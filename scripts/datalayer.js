@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global console, window, CustomEvent */
 (function() {
     "use strict";
 
@@ -84,6 +85,8 @@
      */
 
     /**
+     * Data Layer
+     *
      * @class DataLayer
      * @classdesc Data layer controller that augments the passed data layer array and handles eventing.
      * @param {Array} dataLayer The data layer array.
@@ -183,7 +186,7 @@
         if (this._isListener(item)) {
             if (item.on) {
                 this._registerListener(item);
-                //this._triggerListener(item);
+                // this._triggerListener(item);
             } else if (item.off) {
                 this._unregisterListener(item);
             }
