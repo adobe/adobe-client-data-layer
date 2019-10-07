@@ -12,17 +12,16 @@ governing permissions and limitations under the License.
 const {gulp, src, dest, watch, series, parallel} = require('gulp');
 const del = require('del');
 const eslint = require('gulp-eslint');
+const rename = require('gulp-rename');
+const uglify = require('gulp-uglify');
 
 const paths = {
   src: 'src/',
   dist: 'dist/',
-  scripts: {
-    src: 'src/scripts/*',
-    dist: 'dist/js/'
-  }
+  scripts: 'src/scripts/*.js'
 };
 
-const clean = function(done) {
+const clean = (done) => {
   del.sync([
     paths.dist
   ]);
@@ -30,16 +29,25 @@ const clean = function(done) {
   return done();
 };
 
-const lintScripts = function() {
-  return src(paths.scripts.src)
+const lintScripts = () => {
+  return src(paths.scripts)
     .pipe(eslint())
     .pipe(eslint.format())
     .pipe(eslint.failOnError());
 };
 
+const buildJS = async () => {
+  return src(paths.scripts)
+    .pipe(dest(paths.dist))
+    .pipe(uglify())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(dest(paths.dist));
+};
+
 exports.build = series(
   clean,
   parallel(
-    lintScripts
+    lintScripts,
+    buildJS
   )
 );
