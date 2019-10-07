@@ -36,7 +36,7 @@ const lintScripts = () => {
     .pipe(eslint.failOnError());
 };
 
-const buildJS = async () => {
+const buildJS = () => {
   return src(paths.scripts)
     .pipe(dest(paths.dist))
     .pipe(uglify())
