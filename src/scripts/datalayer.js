@@ -1,17 +1,16 @@
 /*
- * Copyright 2019 Adobe. All rights reserved.
- * This file is licensed to you under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License. You may obtain a copy
- * of the License at http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under
- * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
- * OF ANY KIND, either express or implied. See the License for the specific language
- * governing permissions and limitations under the License.
- */
+Copyright 2019 Adobe. All rights reserved.
+This file is licensed to you under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License. You may obtain a copy
+of the License at http://www.apache.org/licenses/LICENSE-2.0
+Unless required by applicable law or agreed to in writing, software distributed under
+the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+OF ANY KIND, either express or implied. See the License for the specific language
+governing permissions and limitations under the License.
+*/
 /* global console, window, CustomEvent */
 (function() {
-    "use strict";
+    'use strict';
 
     /* eslint no-console: "off" */
     /* eslint no-unused-vars: "off" */
@@ -28,11 +27,11 @@
      */
     var events = {
         /** Represents an event triggered for any change in the data layer state */
-        CHANGE: "datalayer:change",
+        CHANGE: 'datalayer:change',
         /** Represents an event triggered for any event push to the data layer */
-        EVENT: "datalayer:event",
+        EVENT: 'datalayer:event',
         /** Represents an event triggered when the data layer has initialized */
-        READY: "datalayer:ready"
+        READY: 'datalayer:ready'
     };
 
     /**
@@ -47,11 +46,11 @@
      */
     var listenerScope = {
         /** Past events only */
-        PAST: "past",
+        PAST: 'past',
         /** Future events only */
-        FUTURE: "future",
+        FUTURE: 'future',
         /** All events, past and future */
-        ALL: "all"
+        ALL: 'all'
     };
 
     /**
@@ -240,7 +239,7 @@
     DataLayer.prototype._registerListener = function(item) {
         if (this._getListenerIndexes(item).length === 0) {
             this.dataLayer._listeners.push(item);
-            console.log("event listener registered on: ", item.on);
+            console.log('event listener registered on: ', item.on);
         }
     };
 
@@ -258,7 +257,7 @@
         for (var i = 0; i < indexes.length; i++) {
             if (indexes[i] > -1) {
                 this.dataLayer._listeners.splice(indexes[i], 1);
-                console.log("event listener unregistered on: ", tmp.on);
+                console.log('event listener unregistered on: ', tmp.on);
             }
         }
     };
@@ -341,16 +340,16 @@
      * @static
      */
     DataLayer.utils.isObject = function(obj) {
-        return (obj && typeof obj === "object" && !Array.isArray(obj));
+        return (obj && typeof obj === 'object' && !Array.isArray(obj));
     };
 
-    window.addEventListener("datalayer:prepopulated", function() {
+    window.addEventListener('datalayer:prepopulated', function() {
         console.log("data layer prepopulated - let's initialize the data layer");
         window.dataLayer = window.dataLayer || [];
         new DataLayer(window.dataLayer);
         var readyEvent = new CustomEvent(events.READY);
         window.dispatchEvent(readyEvent);
-        console.log("datalayer:ready");
+        console.log('datalayer:ready');
     });
 
     /**

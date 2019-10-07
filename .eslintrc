@@ -1,9 +1,9 @@
 {
     "root": true,
-    "extends": "eslint:recommended",
     "parserOptions": {
-        "ecmaVersion": 5
+      "ecmaVersion": 5
     },
+    "extends": "eslint:recommended",
     "rules": {
         "array-bracket-newline": ["off", "consistent"],
         "array-bracket-spacing": ["error", "never", {
@@ -53,7 +53,7 @@
         "one-var": ["error", "never"],
         "one-var-declaration-per-line": ["error", "always"],
         "operator-linebreak": "error",
-        "quotes": ["error", "double", {
+        "quotes": ["error", "single", {
             "avoidEscape": true,
             "allowTemplateLiterals": true
         }],
