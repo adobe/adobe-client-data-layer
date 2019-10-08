@@ -8,4 +8,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-require('./gulp')(require('gulp'));
+module.exports = function(gulp) {
+  const rename = require('gulp-rename');
+  const uglify = require('gulp-uglify');
+
+  const config = {
+    paths: require(`${__dirname}/../configs/paths.conf.js`)
+  };
+
+  gulp.task('scripts', () => {
+    return gulp.src(config.paths.src.scripts)
+      .pipe(gulp.dest(config.paths.dist))
+      .pipe(uglify())
+      .pipe(rename({suffix: '.min'}))
+      .pipe(gulp.dest(config.paths.dist));
+  });
+};

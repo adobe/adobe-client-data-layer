@@ -8,4 +8,23 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-require('./gulp')(require('gulp'));
+module.exports = function(gulp) {
+  'use strict';
+
+  require('./tasks/clean.js')(gulp);
+  require('./tasks/lint.js')(gulp);
+  require('./tasks/scripts.js')(gulp);
+
+  gulp.task('build',
+    gulp.series(
+      gulp.parallel('clean', 'lint'),
+      'scripts'
+    )
+  );
+
+  gulp.task('default',
+    gulp.series(
+      'build'
+    )
+  );
+};
