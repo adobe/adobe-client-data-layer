@@ -24,7 +24,7 @@ you are expected to uphold this code. Please report unacceptable behavior to
 
 ## Ways of Contributing
 
-There are many ways of contributing, from testing and reporting an issue to suggesting and coding full components or features. Below is a summary of some of the best ways to get involved. 
+There are many ways of contributing, from testing and reporting an issue to suggesting and coding full features. Below is a summary of some of the best ways to get involved. 
 
 ### Reporting Bugs 🐛
 
@@ -36,7 +36,7 @@ There are many ways of contributing, from testing and reporting an issue to sugg
 ##### Filing a Bug
 
 1. Visit our [issue tracker on GitHub](https://github.com/adobe/adobe-client-data-layer/issues).
-1. File a `New Issue` as a `Bug Report`.
+1. File a `New Issue`.
 1. Ensure your issue follows the [issue report guidelines](#issue-report-guidelines).
 1. Thanks for the report! The committers will get back to you in a timely manner, typically within one week.
 
@@ -46,7 +46,7 @@ High quality code is important to the project, and to keep it that way, all code
 
 ##### Before Contributing
 
-* Create a [bug report](#reporting-bugs-) or [feature request](#requesting-features-) issue summarizing the problem that you will be solving. This will help with early feedback and tracking.
+* Create a [bug report](#reporting-bugs-) issue summarizing the problem that you will be solving. This will help with early feedback and tracking.
 * Ensure you have [signed the Adobe Contributor License Agreement](http://opensource.adobe.com/cla.html). If you are an Adobe employee, you do not have to sign the CLA.
 
 ##### Contributing
@@ -86,7 +86,7 @@ A well defined issue report will help in quickly understanding and replicating t
 
 ##### Description
 
-See our [issue template](./ISSUE_TEMPLATE/bug_report.md) for details on what is expected to be described. The same information is available when creating a new issue on GitHub.
+See our [issue template](./ISSUE_TEMPLATE.md) for details on what is expected to be described. The same information is available when creating a new issue on GitHub.
 
 ##### Labels
 
