@@ -8,9 +8,7 @@ The following are a set of guidelines for contributing to the project.
 
 * [Code of Conduct](#code-of-conduct)
 * [Ways of Contributing](#ways-of-contributing)
-  * [Joining Feature Discussions](#joining-feature-discussions-) 💭
   * [Reporting Bugs](#reporting-bugs-) 🐛
-  * [Requesting Features](#requesting-features-) 🚀
   * [Contributing Code](#contributing-code-) 👾
   * [Reviewing Code](#reviewing-code-) 👀
   * [Documenting](#documenting-) 📜
@@ -28,10 +26,6 @@ you are expected to uphold this code. Please report unacceptable behavior to
 
 There are many ways of contributing, from testing and reporting an issue to suggesting and coding full components or features. Below is a summary of some of the best ways to get involved. 
 
-### Joining Feature Discussions 💭
-
-You can add your voice to discussions around new and existing component features by commenting on an RTC. New components and features that openly invite public comment are marked by an [RTC](https://github.com/adobe/adobe-client-data-layer/labels/rtc) (Request to Comment) label. We strongly encourage users of the Core Components to bring their own project experience to these issues, as there may be alternative use-cases or requirements that haven't yet been considered.
-
 ### Reporting Bugs 🐛
 
 ##### Before Reporting a Bug 
@@ -45,19 +39,6 @@ You can add your voice to discussions around new and existing component features
 1. File a `New Issue` as a `Bug Report`.
 1. Ensure your issue follows the [issue report guidelines](#issue-report-guidelines).
 1. Thanks for the report! The committers will get back to you in a timely manner, typically within one week.
-
-### Requesting Features 🚀
-
-##### Before Requesting a Feature
-
-* Have a quick search through the currently open [enhancement](https://github.com/adobe/adobe-client-data-layer/labels/enhancement) issues to see if the idea has already been suggested. If it has, you may still have a slightly different requirement that isn't covered, in which case, feel free to comment on the open issue. 
-
-##### Requesting a Feature
-
-1. Visit our [issue tracker on GitHub](https://github.com/adobe/adobe-client-data-layer/issues).
-1. File a `New Issue` as a `Feature Request`.
-1. Ensure your issue follows the [issue report guidelines](#issue-report-guidelines).
-1. Thanks for the feature request! The committers will get back to you in a timely manner, typically within one week.
 
 ### Contributing Code 👾 
 
@@ -105,7 +86,7 @@ A well defined issue report will help in quickly understanding and replicating t
 
 ##### Description
 
-See our [bug report template](.github/ISSUE_TEMPLATE/bug_report.md) or [feature request template](.github/ISSUE_TEMPLATE/feature_request.md) for details on what is expected to be described. The same information is available when creating a new issue on GitHub.
+See our [issue template](./ISSUE_TEMPLATE/bug_report.md) for details on what is expected to be described. The same information is available when creating a new issue on GitHub.
 
 ##### Labels
 
@@ -121,4 +102,4 @@ you are good to go!
 
 ## Security Issues
 
-Security issues shouldn't be reported on this issue tracker. Instead, [file an issue to our security experts](https://helpx.adobe.com/security/alertus.html)
+Security issues shouldn't be reported on this issue tracker. Instead, [file an issue to our security experts](https://helpx.adobe.com/security/alertus.html).
