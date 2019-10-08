@@ -1,16 +1,16 @@
 {
-  "name": "adobe-data-layer",
-  "description": "Adobe Data Layer",
+  "name": "adobe-client-data-layer",
+  "description": "Adobe Client Data Layer",
   "version": "1.0.0-alpha",
   "license": "Apache-2.0",
   "private": false,
-  "homepage": "https://github.com/adobe/adobe-data-layer",
+  "homepage": "https://github.com/adobe/adobe-client-data-layer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adobe/adobe-data-layer"
+    "url": "https://github.com/adobe/adobe-client-data-layer"
   },
   "bugs": {
-    "url": "https://github.com/adobe/adobe-data-layer/issues"
+    "url": "https://github.com/adobe/adobe-client-data-layer/issues"
   },
   "devDependencies": {
     "del": "^5.0.0",
