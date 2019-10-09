@@ -19,7 +19,7 @@ module.exports = function(gulp) {
   gulp.task('serve', () => {
     browserSync.init({
       server: {
-        baseDir: [config.paths.serve.base, config.paths.serve.examples]
+        baseDir: [config.paths.serve.examples, config.paths.serve.base]
       }
     });
   });
