@@ -96,6 +96,7 @@ governing permissions and limitations under the License.
 
         that.dataLayer = dataLayer;
         that.state = {};
+        that._listeners = [];
 
         /**
          * Returns a deep copy of the data layer state.
@@ -107,9 +108,6 @@ governing permissions and limitations under the License.
             return JSON.parse(JSON.stringify(that.state));
         };
 
-        // TODO remove _listeners from data layer (this is used for testing): replace this.dataLayer._listeners and that.dataLayer._listeners
-        that.dataLayer._listeners = [];
-        // this._listeners = [];
         that._init();
     }
 
@@ -212,7 +210,7 @@ governing permissions and limitations under the License.
     };
 
     DataLayer.prototype._triggerListeners = function(item, event) {
-        this.dataLayer._listeners.forEach(function(listener) {
+        this._listeners.forEach(function(listener) {
             if (listener.on === event || listener.on === item.event) {
                 var copy = JSON.parse(JSON.stringify(item));
                 if (item.event) {
@@ -239,7 +237,7 @@ governing permissions and limitations under the License.
      */
     DataLayer.prototype._registerListener = function(item) {
         if (this._getListenerIndexes(item).length === 0) {
-            this.dataLayer._listeners.push(item);
+            this._listeners.push(item);
             console.log('event listener registered on: ', item.on);
         }
     };
@@ -257,7 +255,7 @@ governing permissions and limitations under the License.
         var indexes = this._getListenerIndexes(tmp);
         for (var i = 0; i < indexes.length; i++) {
             if (indexes[i] > -1) {
-                this.dataLayer._listeners.splice(indexes[i], 1);
+                this._listeners.splice(indexes[i], 1);
                 console.log('event listener unregistered on: ', tmp.on);
             }
         }
@@ -272,8 +270,8 @@ governing permissions and limitations under the License.
      */
     DataLayer.prototype._getListenerIndexes = function(item) {
         var listenerIndexes = [];
-        for (var i = 0; i <  this.dataLayer._listeners.length; i++) {
-            var existingListener = this.dataLayer._listeners[i];
+        for (var i = 0; i <  this._listeners.length; i++) {
+            var existingListener = this._listeners[i];
             if (item.on === existingListener.on) {
                 if (item.handler && (item.handler.toString() !== existingListener.handler.toString())) {
                     continue;
