@@ -11,8 +11,16 @@ governing permissions and limitations under the License.
 */
 module.exports = {
   dist: 'dist/',
+  examples: {
+    base: 'examples/',
+    html: 'examples/*.html'
+  },
   src: {
-    index: 'src/',
+    base: 'src/',
     scripts: 'src/scripts/**/*.js'
+  },
+  serve: {
+    base: './',
+    examples: './examples'
   }
 };
