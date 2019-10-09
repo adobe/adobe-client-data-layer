@@ -4,7 +4,7 @@ The Adobe Client Data Layer aims to reduce the effort to instrument websites by 
 
 ## Documentation
 
-* [Introduction and API](https://github.com/adobe/aem-client-data-layer/wiki)
+* [Introduction and API](https://github.com/adobe/adobe-client-data-layer/wiki)
 
 ## Building
 
