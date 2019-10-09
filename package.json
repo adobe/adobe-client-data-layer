@@ -1,7 +1,7 @@
 {
   "name": "adobe-client-data-layer",
   "description": "Adobe Client Data Layer",
-  "version": "1.0.0-alpha",
+  "version": "1.0.0-beta",
   "license": "Apache-2.0",
   "private": false,
   "homepage": "https://github.com/adobe/adobe-client-data-layer",
