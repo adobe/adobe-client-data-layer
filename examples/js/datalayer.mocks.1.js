@@ -16,8 +16,6 @@ governing permissions and limitations under the License.
   /* eslint no-console: "off" */
   /* eslint no-unused-vars: "off" */
 
-  window.dataLayer = window.dataLayer || [];
-
   // populate data layer
   dataLayer.push({
     'data': {
