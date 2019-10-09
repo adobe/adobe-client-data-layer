@@ -11,128 +11,133 @@ governing permissions and limitations under the License.
 */
 /* global console, window, dataLayer, CustomEvent */
 (function() {
-    'use strict';
+  'use strict';
 
-    /* eslint no-console: "off" */
-    /* eslint no-unused-vars: "off" */
+  /* eslint no-console: "off" */
+  /* eslint no-unused-vars: "off" */
 
-    window.dataLayer = window.dataLayer || [];
+  window.dataLayer = window.dataLayer || [];
 
-    // populate data layer
-    dataLayer.push({
-        'data': {
-            'page': {
-                'id': '/content/mysite/en/products/crossfit',
-                'siteLanguage': 'en-us',
-                'siteCountry': 'US',
-                'pageType': 'product detail',
-                'pageName': 'pdp - crossfit zoom',
-                'pageCategory': 'womens > shoes > athletic'
-            }
+  // populate data layer
+  dataLayer.push({
+    'data': {
+      'page': {
+        'id': '/content/mysite/en/products/crossfit',
+        'siteLanguage': 'en-us',
+        'siteCountry': 'US',
+        'pageType': 'product detail',
+        'pageName': 'pdp - crossfit zoom',
+        'pageCategory': 'womens > shoes > athletic'
+      }
+    }
+  });
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'data': {
+      'component': {
+        'carousel': {
+          'carousel3': {
+            'id': '/content/mysite/en/home/jcr:content/root/carousel3',
+            'items': {}
+          }
         }
-    });
+      }
+    }
+  });
 
-    dataLayer.push({
-        'event': 'carousel clicked',
-        'data': {
-            'component': {
-                'carousel': {
-                    'carousel3': {
-                        'id': '/content/mysite/en/home/jcr:content/root/carousel3',
-                        'items': {}
-                    }
-                }
-            }
+  dataLayer.push({
+    'event': 'tab viewed',
+    'data': {
+      'component': {
+        'tab': {
+          'tab2': {
+            'id': '/content/mysite/en/home/jcr:content/root/tab2',
+            'items': {}
+          }
         }
-    });
+      }
+    },
+    'info': {
+      'title': 'some thing'
+    }
+  });
 
-    dataLayer.push({
-        'event': 'tab viewed',
+  dataLayer.push({
+    'on': 'datalayer:change',
+    'handler': function(event) {
+      // handle
+    }
+  });
+
+  dataLayer.push({
+    'on': 'datalayer:event',
+    'handler': function(event) {
+      // handle
+    }
+  });
+
+  // continue populating data layer on ready
+  dataLayer.push({
+    'on': 'datalayer:ready',
+    'handler': function() {
+      dataLayer.push({
+        'event': 'page updated',
         'data': {
-            'component': {
-                'tab': {
-                    'tab2': {
-                        'id': '/content/mysite/en/home/jcr:content/root/tab2',
-                        'items': {}
-                    }
-                }
-            }
-        },
-        'info': {
-            'title': 'some thing'
+          'page': {
+            'new prop': "I'm new",
+            'id': 'NEW/content/mysite/en/products/crossfit',
+            'siteLanguage': 'en-us',
+            'siteCountry': 'US',
+            'pageType': 'product detail',
+            'pageName': 'pdp - crossfit zoom',
+            'pageCategory': 'womens > shoes > athletic'
+          }
         }
-    });
+      });
 
-    dataLayer.push({
-        'on': 'datalayer:change',
+      dataLayer.push({
+        'event': 'component updated',
+        'data': {
+          'component': {
+            'image': {
+              'image4': {
+                'id': '/content/mysite/en/home/jcr:content/root/image4',
+                'items': {}
+              }
+            }
+          }
+        }
+      });
+
+      dataLayer.push({
+        'event': 'removed',
+        'data': {
+          'component': {
+            'image': {
+              'image4': {
+                'id': '/content/mysite/en/home/jcr:content/root/image4',
+                'items': undefined
+              }
+            }
+          }
+        }
+      });
+
+      dataLayer.push({
+        'on': 'removed',
         'handler': function(event) {
-            console.log('event listener triggered on: ', event[Object.keys(event)[0]]);
+          // handle
         }
-    });
+      });
 
-    dataLayer.push({
-      'on': 'datalayer:event',
-      'handler': function(event) {
-        console.log('event listener triggered on: ', event[Object.keys(event)[0]]);
-      }
-    });
-
-    // continue populating data layer on ready
-    dataLayer.push({
-      'on': 'datalayer:ready',
-      'handler': function() {
-        console.log('continue populating data layer on ready');
-
-        dataLayer.push({
-          'event': 'page updated',
-          'data': {
-            'page': {
-              'new prop': "I'm new",
-              'id': 'NEW/content/mysite/en/products/crossfit',
-              'siteLanguage': 'en-us',
-              'siteCountry': 'US',
-              'pageType': 'product detail',
-              'pageName': 'pdp - crossfit zoom',
-              'pageCategory': 'womens > shoes > athletic'
-            }
-          }
-        });
-
-        dataLayer.push({
-          'event': 'component updated',
-          'data': {
-            'component': {
-              'image': {
-                'image4': {
-                  'id': '/content/mysite/en/home/jcr:content/root/image4',
-                  'items': {}
-                }
-              }
-            }
-          }
-        });
-
-        dataLayer.push({
-          'event': 'removed',
-          'data': {
-            'component': {
-              'image': {
-                'image4': {
-                  'id': '/content/mysite/en/home/jcr:content/root/image4',
-                  'items': undefined
-                }
-              }
-            }
-          }
-        });
-
-        dataLayer.push({
-          'on': 'removed',
-          'handler': function(event) {
-            console.log('event listener triggered on: ', event[Object.keys(event)[0]]);
-          }
-        });
-      }
-    });
+      dataLayer.push({
+        'off': 'removed',
+        'handler': function(event) {
+          // handle
+        }
+      });
+    }
+  });
 
 })();

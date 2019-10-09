@@ -88,17 +88,13 @@ governing permissions and limitations under the License.
      * Data Layer
      *
      * @class DataLayer
-     * @classdesc Data layer controller that augments the passed data layer array and handles eventing.
-     * @param {Array} dataLayer The data layer array.
+     * @classdesc Data Layer controller that augments the passed data layer array and handles eventing.
+     * @param {Object} config The Data Layer controller configuration.
      */
-    function DataLayer(dataLayer) {
+    function DataLayer(config) {
         var that = this;
 
-        if (!Array.isArray(dataLayer)) {
-            dataLayer = [];
-        }
-
-        that.dataLayer = dataLayer;
+        that._config = config;
         that._initialize();
     }
 
@@ -110,6 +106,11 @@ governing permissions and limitations under the License.
     DataLayer.prototype._initialize = function() {
         var that = this;
 
+        if (!Array.isArray(that._config.dataLayer)) {
+          that._config.dataLayer = [];
+        }
+
+        that._dataLayer = that._config.dataLayer;
         that._state = {};
         that._listeners = [];
 
@@ -118,18 +119,17 @@ governing permissions and limitations under the License.
          *
          * @returns {Object} The deep copied state object.
          */
-        that.dataLayer.getState = function() {
+        that._dataLayer.getState = function() {
             // use deep copying technique of JSON stringify and parsing the state.
             return JSON.parse(JSON.stringify(that._state));
         };
 
-        that._handleItemsBeforeScriptLoad(that.dataLayer);
+        that._handleItemsBeforeScriptLoad(that._dataLayer);
         that._overridePush();
 
         that._triggerListeners({
             'event': events.READY
         }, events.READY);
-        console.log('datalayer:ready');
     };
 
     /**
@@ -140,10 +140,10 @@ governing permissions and limitations under the License.
     DataLayer.prototype._handleItemsBeforeScriptLoad = function() {
         var that = this;
 
-        that.dataLayer.forEach(function(item, idx) {
+        that._dataLayer.forEach(function(item, idx) {
             // remove event listeners defined before the script load
             if (that._isListener(item)) {
-                that.dataLayer.splice(idx, 1);
+                that._dataLayer.splice(idx, 1);
             }
             that._handleItem(item);
         });
@@ -163,7 +163,7 @@ governing permissions and limitations under the License.
          * @param {...ItemConfig} var_args The items to add to the data layer.
          * @returns {Number} The length of the data layer following push.
          */
-        that.dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
+        that._dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
             var pushArguments = arguments;
             var filteredArguments = arguments;
 
@@ -222,12 +222,18 @@ governing permissions and limitations under the License.
     };
 
     DataLayer.prototype._triggerListeners = function(item, event) {
-        this._listeners.forEach(function(listener) {
+        var that = this;
+
+        console.debug('event triggered -', event);
+
+        that._listeners.forEach(function(listener) {
             if (listener.on === event || listener.on === item.event) {
                 var copy = JSON.parse(JSON.stringify(item));
+
                 if (item.event) {
                     copy.name = item.event;
                 }
+
                 listener.handler(copy);
             }
         });
@@ -250,7 +256,8 @@ governing permissions and limitations under the License.
     DataLayer.prototype._registerListener = function(item) {
         if (this._getListenerIndexes(item).length === 0) {
             this._listeners.push(item);
-            console.log('event listener registered on: ', item.on);
+
+            console.debug('listener registered on -', item.on);
         }
     };
 
@@ -268,7 +275,8 @@ governing permissions and limitations under the License.
         for (var i = 0; i < indexes.length; i++) {
             if (indexes[i] > -1) {
                 this._listeners.splice(indexes[i], 1);
-                console.log('event listener unregistered on: ', tmp.on);
+
+                console.debug('listener unregistered on -', tmp.on);
             }
         }
     };
@@ -354,7 +362,9 @@ governing permissions and limitations under the License.
         return (obj && typeof obj === 'object' && !Array.isArray(obj));
     };
 
-    new DataLayer(window.dataLayer);
+    new DataLayer({
+      dataLayer: dataLayer
+    });
 
     /**
      * Triggered when there is change in the data layer state.
