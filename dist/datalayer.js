@@ -94,8 +94,23 @@ governing permissions and limitations under the License.
     function DataLayer(dataLayer) {
         var that = this;
 
+        if (!Array.isArray(dataLayer)) {
+            dataLayer = [];
+        }
+
         that.dataLayer = dataLayer;
-        that.state = {};
+        that._initialize();
+    }
+
+    /**
+     * Initializes the data layer.
+     *
+     * @private
+     */
+    DataLayer.prototype._initialize = function() {
+        var that = this;
+
+        that._state = {};
         that._listeners = [];
 
         /**
@@ -105,20 +120,16 @@ governing permissions and limitations under the License.
          */
         that.dataLayer.getState = function() {
             // use deep copying technique of JSON stringify and parsing the state.
-            return JSON.parse(JSON.stringify(that.state));
+            return JSON.parse(JSON.stringify(that._state));
         };
 
-        that._init();
-    }
+        that._handleItemsBeforeScriptLoad(that.dataLayer);
+        that._overridePush();
 
-    /**
-     * Initializes the data layer.
-     *
-     * @private
-     */
-    DataLayer.prototype._init = function() {
-        this._handleItemsBeforeScriptLoad(this.dataLayer);
-        this._overridePush();
+        that._triggerListeners({
+            'event': events.READY
+        }, events.READY);
+        console.log('datalayer:ready');
     };
 
     /**
@@ -128,7 +139,8 @@ governing permissions and limitations under the License.
      */
     DataLayer.prototype._handleItemsBeforeScriptLoad = function() {
         var that = this;
-        this.dataLayer.forEach(function(item, idx) {
+
+        that.dataLayer.forEach(function(item, idx) {
             // remove event listeners defined before the script load
             if (that._isListener(item)) {
                 that.dataLayer.splice(idx, 1);
@@ -223,7 +235,7 @@ governing permissions and limitations under the License.
 
     DataLayer.prototype._triggerListener = function(listener) {
         this.dataLayer.forEach(function(item) {
-            if (listener.on === events.CHANGE || listener.on === events.EVENT || listener.on === item.event) {
+            if (listener.on === events.READY || listener.on === events.CHANGE || listener.on === events.EVENT || listener.on === item.event) {
                 listener.handler(item);
             }
         });
@@ -342,14 +354,7 @@ governing permissions and limitations under the License.
         return (obj && typeof obj === 'object' && !Array.isArray(obj));
     };
 
-    window.addEventListener('datalayer:prepopulated', function() {
-        console.log("data layer prepopulated - let's initialize the data layer");
-        window.dataLayer = window.dataLayer || [];
-        new DataLayer(window.dataLayer);
-        var readyEvent = new CustomEvent(events.READY);
-        window.dispatchEvent(readyEvent);
-        console.log('datalayer:ready');
-    });
+    new DataLayer(window.dataLayer);
 
     /**
      * Triggered when there is change in the data layer state.
