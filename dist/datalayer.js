@@ -107,7 +107,7 @@ governing permissions and limitations under the License.
         var that = this;
 
         if (!Array.isArray(that._config.dataLayer)) {
-          that._config.dataLayer = [];
+            that._config.dataLayer = [];
         }
 
         that._dataLayer = that._config.dataLayer;
@@ -363,7 +363,7 @@ governing permissions and limitations under the License.
     };
 
     new DataLayer({
-      dataLayer: dataLayer
+        dataLayer: window.dataLayer
     });
 
     /**

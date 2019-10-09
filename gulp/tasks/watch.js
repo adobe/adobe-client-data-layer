@@ -30,7 +30,7 @@ module.exports = function(gulp) {
   });
 
   gulp.task('watch-examples', () => {
-    return gulp.watch(config.paths.examples.html, gulp.series('reload'));
+    return gulp.watch([config.paths.examples.html, config.paths.examples.js], gulp.series('reload'));
   });
 
   gulp.task('watch-scripts', () => {

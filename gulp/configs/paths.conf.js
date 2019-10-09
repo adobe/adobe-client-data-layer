@@ -13,7 +13,8 @@ module.exports = {
   dist: 'dist/',
   examples: {
     base: 'examples/',
-    html: 'examples/*.html'
+    html: 'examples/*.html',
+    js: 'examples/js/*.js'
   },
   src: {
     base: 'src/',
