@@ -1,5 +1,5 @@
 {
-  "name": "adobe-client-data-layer",
+  "name": "@adobe/adobe-client-data-layer",
   "description": "Adobe Client Data Layer",
   "version": "1.0.0-beta",
   "license": "Apache-2.0",
