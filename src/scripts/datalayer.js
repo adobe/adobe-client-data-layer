@@ -566,4 +566,5 @@ governing permissions and limitations under the License.
      * @type {Object}
      */
 
+    module.exports = DataLayer;
 })();
