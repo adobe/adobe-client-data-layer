@@ -96,7 +96,7 @@ governing permissions and limitations under the License.
      *
      * @class Manager
      * @classdesc Data Layer manager that augments the passed data layer array and handles eventing.
-     * @param {Object} config The Data Layer controller configuration.
+     * @param {Object} config The Data Layer manager configuration.
      */
     dataLayer.Manager = function DataLayer(config) {
         var that = this;
@@ -122,7 +122,7 @@ governing permissions and limitations under the License.
         that._listeners = [];
 
         that._augment();
-        that._handleItemsBeforeScriptLoad(that._dataLayer);
+        that._processItems();
 
         that._triggerListeners({
             'event': events.READY
@@ -149,7 +149,7 @@ governing permissions and limitations under the License.
 
             Object.keys(pushArguments).forEach(function(key) {
                 var item = pushArguments[key];
-                that._handleItem(item);
+                that._processItem(item);
 
                 // filter out event listeners
                 if (that._isListener(item)) {
@@ -174,11 +174,11 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * Handles the items that were pushed before the data layer script loaded.
+     * Processes all items that already exist on the stack.
      *
      * @private
      */
-    dataLayer.Manager.prototype._handleItemsBeforeScriptLoad = function() {
+    dataLayer.Manager.prototype._processItems = function() {
         var that = this;
 
         that._dataLayer.forEach(function(item, idx) {
@@ -186,17 +186,17 @@ governing permissions and limitations under the License.
             if (that._isListener(item)) {
                 that._dataLayer.splice(idx, 1);
             }
-            that._handleItem(item);
+            that._processItem(item);
         });
     };
 
     /**
-     * Handles an item pushed to the data layer.
+     * Processes an item pushed to the stack.
      *
      * @param {ItemConfig} item The item configuration.
      * @private
      */
-    dataLayer.Manager.prototype._handleItem = function(item) {
+    dataLayer.Manager.prototype._processItem = function(item) {
         if (!item) {
             return;
         }
