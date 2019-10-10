@@ -21,7 +21,7 @@ governing permissions and limitations under the License.
      *
      * @type {Object}
      */
-    var dataLayer = {};
+    var DataLayer = {};
 
     /**
      * @typedef {String} DataLayerEvents
@@ -98,7 +98,7 @@ governing permissions and limitations under the License.
      * @classdesc Data Layer manager that augments the passed data layer array and handles eventing.
      * @param {Object} config The Data Layer manager configuration.
      */
-    dataLayer.Manager = function DataLayer(config) {
+    DataLayer.Manager = function DataLayer(config) {
         var that = this;
 
         that._config = config;
@@ -110,7 +110,7 @@ governing permissions and limitations under the License.
      *
      * @private
      */
-    dataLayer.Manager.prototype._initialize = function() {
+    DataLayer.Manager.prototype._initialize = function() {
         var that = this;
 
         if (!Array.isArray(that._config.dataLayer)) {
@@ -134,7 +134,7 @@ governing permissions and limitations under the License.
      *
      * @private
      */
-    dataLayer.Manager.prototype._augment = function() {
+    DataLayer.Manager.prototype._augment = function() {
         var that = this;
 
         /**
@@ -178,7 +178,7 @@ governing permissions and limitations under the License.
      *
      * @private
      */
-    dataLayer.Manager.prototype._processItems = function() {
+    DataLayer.Manager.prototype._processItems = function() {
         var that = this;
 
         that._dataLayer.forEach(function(item, idx) {
@@ -196,7 +196,7 @@ governing permissions and limitations under the License.
      * @param {ItemConfig} item The item configuration.
      * @private
      */
-    dataLayer.Manager.prototype._processItem = function(item) {
+    DataLayer.Manager.prototype._processItem = function(item) {
         if (!item) {
             return;
         }
@@ -224,11 +224,11 @@ governing permissions and limitations under the License.
      * @param {DataConfig} item The data configuration.
      * @private
      */
-    dataLayer.Manager.prototype._updateState = function(item) {
-        dataLayer.utils.deepMerge(this.state, item.data);
+    DataLayer.Manager.prototype._updateState = function(item) {
+        DataLayer.utils.deepMerge(this.state, item.data);
     };
 
-    dataLayer.Manager.prototype._triggerListeners = function(item, event) {
+    DataLayer.Manager.prototype._triggerListeners = function(item, event) {
         var that = this;
 
         console.debug('event triggered -', event);
@@ -246,7 +246,7 @@ governing permissions and limitations under the License.
         });
     };
 
-    dataLayer.Manager.prototype._triggerListener = function(listener) {
+    DataLayer.Manager.prototype._triggerListener = function(listener) {
         this.dataLayer.forEach(function(item) {
             if (listener.on === events.READY || listener.on === events.CHANGE || listener.on === events.EVENT || listener.on === item.event) {
                 listener.handler(item);
@@ -260,7 +260,7 @@ governing permissions and limitations under the License.
      * @param {ListenerOnConfig} item The listener on configuration.
      * @private
      */
-    dataLayer.Manager.prototype._registerListener = function(item) {
+    DataLayer.Manager.prototype._registerListener = function(item) {
         if (this._getListenerIndexes(item).length === 0) {
             this._listeners.push(item);
 
@@ -274,7 +274,7 @@ governing permissions and limitations under the License.
      * @param {ListenerOffConfig} item The listener off configuration.
      * @private
      */
-    dataLayer.Manager.prototype._unregisterListener = function(item) {
+    DataLayer.Manager.prototype._unregisterListener = function(item) {
         var tmp = JSON.parse(JSON.stringify(item));
         tmp.on = item.off;
         delete tmp.off;
@@ -295,7 +295,7 @@ governing permissions and limitations under the License.
      * @returns {Array} The indexes of the listener matches.
      * @private
      */
-    dataLayer.Manager.prototype._getListenerIndexes = function(item) {
+    DataLayer.Manager.prototype._getListenerIndexes = function(item) {
         var listenerIndexes = [];
         for (var i = 0; i <  this._listeners.length; i++) {
             var existingListener = this._listeners[i];
@@ -317,7 +317,7 @@ governing permissions and limitations under the License.
      * @returns {Boolean} true if the item is a listener on/off configuration, false otherwise.
      * @private
      */
-    dataLayer.Manager.prototype._isListener = function(item) {
+    DataLayer.Manager.prototype._isListener = function(item) {
         return !!((item.on && item.handler) || item.off);
     };
 
@@ -326,7 +326,7 @@ governing permissions and limitations under the License.
      *
      * @type {Object}
      */
-    dataLayer.utils = {};
+    DataLayer.utils = {};
 
     /**
      * Deep merges a source and target object.
@@ -335,7 +335,7 @@ governing permissions and limitations under the License.
      * @param {Object} source The source object.
      * @static
      */
-    dataLayer.utils.deepMerge = function(target, source) {
+    DataLayer.utils.deepMerge = function(target, source) {
         var tmpSource = {};
         var that = this;
         if (that.isObject(target) && that.isObject(source)) {
@@ -365,11 +365,11 @@ governing permissions and limitations under the License.
      * @returns {Boolean} true if it is an object, false otherwise.
      * @static
      */
-    dataLayer.utils.isObject = function(obj) {
+    DataLayer.utils.isObject = function(obj) {
         return (obj && typeof obj === 'object' && !Array.isArray(obj));
     };
 
-    new dataLayer.Manager({
+    new DataLayer.Manager({
         dataLayer: window.dataLayer
     });
 
