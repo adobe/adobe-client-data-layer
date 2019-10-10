@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
   const rename = require('gulp-rename');
-  const uglify = require('gulp-uglify');
+  const terser = require('gulp-terser');
 
   const config = {
     paths: require(`${__dirname}/../configs/paths.conf.js`)
@@ -20,7 +20,7 @@ module.exports = function(gulp) {
   gulp.task('scripts', () => {
     return gulp.src(config.paths.src.scripts)
       .pipe(gulp.dest(config.paths.dist))
-      .pipe(uglify())
+      .pipe(terser())
       .pipe(rename({suffix: '.min'}))
       .pipe(gulp.dest(config.paths.dist));
   });
