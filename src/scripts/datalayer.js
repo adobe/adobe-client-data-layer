@@ -179,19 +179,19 @@ governing permissions and limitations under the License.
      * @private
      */
     DataLayer.Manager.prototype._processItems = function() {
-        var that = this;
-
-        that._dataLayer.forEach(function(item, idx) {
-            // remove event listeners defined before the script load
-            if (that._isListener(item)) {
-                that._dataLayer.splice(idx, 1);
+        for (var i = 0; i < this._dataLayer.length; i++) {
+            var item = this._dataLayer[i];
+            this._processItem(item);
+            // remove event listeners from the data layer array
+            if (this._isListener(item)) {
+                this._dataLayer.splice(i, 1);
+                i--;
             }
-            that._processItem(item);
-        });
+        }
     };
 
     /**
-     * Processes an item pushed to the stack.
+     * Validates and processes an item pushed to the stack.
      *
      * @param {ItemConfig} item The item configuration.
      * @private
@@ -200,21 +200,25 @@ governing permissions and limitations under the License.
         if (!item) {
             return;
         }
-        if (this._isListener(item)) {
-            if (item.on) {
-                this._registerListener(item);
-                // this._triggerListener(item);
-            } else if (item.off) {
-                this._unregisterListener(item);
-            }
-        } else {
-            if (item.data) {
+        if (this._isData(item)) {
+            this._updateState(item);
+            this._triggerListeners(item, events.CHANGE);
+        } else if (this._isEvent(item)) {
+            this._triggerListeners(item, events.EVENT);
+            if (this._isEventWithData(item)) {
                 this._updateState(item);
                 this._triggerListeners(item, events.CHANGE);
             }
-            if (item.event) {
-                this._triggerListeners(item, events.EVENT);
-            }
+        } else if (this._isListenerOn(item)) {
+            this._registerListener(item);
+            // this._triggerListener(item);
+        } else if (this._isListenerOff(item)) {
+            this._unregisterListener(item);
+        } else {
+            var message = 'The following item cannot be handled by the data layer ' +
+                'because it does not have a valid format: ' +
+                JSON.stringify(item);
+            console.error(message);
         }
     };
 
@@ -311,6 +315,41 @@ governing permissions and limitations under the License.
     };
 
     /**
+     * Determines whether the passed item is a data configuration.
+     *
+     * @param {ItemConfig} item The data configuration.
+     * @returns {Boolean} true if the item is a data configuration, false otherwise.
+     * @private
+     */
+    DataLayer.Manager.prototype._isData = function(item) {
+        if (!item) {
+            return false;
+        }
+        return (Object.keys(item).length === 1 && item.data);
+    };
+
+    /**
+     * Determines whether the passed item is an event configuration.
+     *
+     * @param {ItemConfig} item The event configuration.
+     * @returns {Boolean} true if the item is an event configuration, false otherwise.
+     * @private
+     */
+    DataLayer.Manager.prototype._isEvent = function(item) {
+        if (!item) {
+            return false;
+        }
+        return (Object.keys(item).length === 1 && item.event) ||
+            (Object.keys(item).length === 2 && item.event && item.info) ||
+            (Object.keys(item).length === 2 && item.event && item.data) ||
+            (Object.keys(item).length === 3 && item.event && item.info && item.data);
+    };
+
+    DataLayer.Manager.prototype._isEventWithData = function(item) {
+        return this._isEvent(item) && item.data;
+    };
+
+    /**
      * Determines whether the passed item is a listener configuration.
      *
      * @param {ItemConfig} item The listener on/off configuration.
@@ -318,7 +357,42 @@ governing permissions and limitations under the License.
      * @private
      */
     DataLayer.Manager.prototype._isListener = function(item) {
-        return !!((item.on && item.handler) || item.off);
+        return this._isListenerOn(item) || this._isListenerOff(item);
+    };
+
+    /**
+     * Determines whether the passed item is a listener on configuration.
+     *
+     * @param {ItemConfig} item The listener on configuration.
+     * @returns {Boolean} true if the item is a listener on configuration, false otherwise.
+     * @private
+     */
+    DataLayer.Manager.prototype._isListenerOn = function(item) {
+        if (!item) {
+            return false;
+        }
+        return (Object.keys(item).length === 2 && item.on && item.handler) ||
+            (Object.keys(item).length === 3 && item.on && item.handler && item.scope) ||
+            (Object.keys(item).length === 3 && item.on && item.handler && item.selector) ||
+            (Object.keys(item).length === 4 && item.on && item.handler && item.scope && item.selector);
+    };
+
+    /**
+     * Determines whether the passed item is a listener off configuration.
+     *
+     * @param {ItemConfig} item The listener off configuration.
+     * @returns {Boolean} true if the item is a listener off configuration, false otherwise.
+     * @private
+     */
+    DataLayer.Manager.prototype._isListenerOff = function(item) {
+        if (!item) {
+            return false;
+        }
+        return (Object.keys(item).length === 1 && item.off) ||
+            (Object.keys(item).length === 2 && item.off && item.handler) ||
+            (Object.keys(item).length === 3 && item.off && item.handler && item.scope) ||
+            (Object.keys(item).length === 3 && item.off && item.handler && item.selector) ||
+            (Object.keys(item).length === 4 && item.off && item.handler && item.scope && item.selector);
     };
 
     /**
