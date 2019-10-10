@@ -24,13 +24,13 @@ governing permissions and limitations under the License.
     var DataLayer = {};
 
     /**
-     * @typedef {String} DataLayerEvents
+     * @typedef {String} DataLayer.Events
      **/
 
     /**
      * Enumeration of data layer events.
      *
-     * @enum {DataLayerEvents}
+     * @enum {DataLayer.Events}
      * @readonly
      */
     var events = {
@@ -43,13 +43,13 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * @typedef {String} ListenerScope
+     * @typedef {String} DataLayer.ListenerScope
      **/
 
     /**
      * Enumeration of listener scopes.
      *
-     * @enum {ListenerScope}
+     * @enum {DataLayer.ListenerScope}
      * @readonly
      */
     var listenerScope = {
@@ -148,11 +148,13 @@ governing permissions and limitations under the License.
             var filteredArguments = arguments;
 
             Object.keys(pushArguments).forEach(function(key) {
-                var item = pushArguments[key];
+                var itemConfig = pushArguments[key];
+                var item = new DataLayer.Item(itemConfig);
+
                 that._processItem(item);
 
                 // filter out event listeners
-                if (that._isListener(item)) {
+                if (item.utils.isListenerConfig(item.getConfig())) {
                     delete filteredArguments[key];
                 }
             });
@@ -179,47 +181,59 @@ governing permissions and limitations under the License.
      * @private
      */
     DataLayer.Manager.prototype._processItems = function() {
-        for (var i = 0; i < this._dataLayer.length; i++) {
-            var item = this._dataLayer[i];
-            this._processItem(item);
+        var that = this;
+
+        for (var i = 0; i < that._dataLayer.length; i++) {
+            var item = new DataLayer.Item(that._dataLayer[i]);
+
+            that._processItem(item);
+
             // remove event listeners from the data layer array
-            if (this._isListener(item)) {
-                this._dataLayer.splice(i, 1);
+            if (item.utils.isListenerConfig(item.getConfig())) {
+                that._dataLayer.splice(i, 1);
                 i--;
             }
         }
     };
 
     /**
-     * Validates and processes an item pushed to the stack.
+     * Processes an item pushed to the stack.
      *
-     * @param {ItemConfig} item The item configuration.
+     * @param {DataLayer.Item} item The item to process.
      * @private
      */
     DataLayer.Manager.prototype._processItem = function(item) {
-        if (!item) {
-            return;
-        }
-        if (this._isData(item)) {
-            this._updateState(item);
-            this._triggerListeners(item, events.CHANGE);
-        } else if (this._isEvent(item)) {
-            this._triggerListeners(item, events.EVENT);
-            if (this._isEventWithData(item)) {
-                this._updateState(item);
-                this._triggerListeners(item, events.CHANGE);
-            }
-        } else if (this._isListenerOn(item)) {
-            this._registerListener(item);
-            // this._triggerListener(item);
-        } else if (this._isListenerOff(item)) {
-            this._unregisterListener(item);
-        } else {
+        var that = this;
+
+        if (!item.isValid()) {
             var message = 'The following item cannot be handled by the data layer ' +
                 'because it does not have a valid format: ' +
                 JSON.stringify(item);
             console.error(message);
+            return;
         }
+
+        var typeProcessors = {
+            data: function(item) {
+                that._updateState(item);
+                that._triggerListeners(item.getConfig(), events.CHANGE);
+            },
+            event: function(item) {
+                that._triggerListeners(item);
+                if (item.getConfig().data) {
+                    that._updateState(item);
+                    that._triggerListeners(item.getConfig(), events.CHANGE);
+                }
+            },
+            listenerOn: function(item) {
+                that._registerListener(item.getConfig());
+            },
+            listenerOff: function(item) {
+                that._unregisterListener(item.getConfig());
+            }
+        };
+
+        typeProcessors[item.getType()](item);
     };
 
     /**
@@ -315,84 +329,154 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * Determines whether the passed item is a data configuration.
+     * @typedef {String} DataLayer.Item.Type
+     **/
+
+    /**
+     * Enumeration of data layer item types.
      *
-     * @param {ItemConfig} item The data configuration.
-     * @returns {Boolean} true if the item is a data configuration, false otherwise.
-     * @private
+     * @enum {DataLayer.Item.Type}
+     * @readonly
      */
-    DataLayer.Manager.prototype._isData = function(item) {
-        if (!item) {
-            return false;
-        }
-        return (Object.keys(item).length === 1 && item.data);
+    var itemType = {
+        DATA: 'data',
+        EVENT: 'event',
+        LISTENER_ON: 'listenerOn',
+        LISTENER_OFF: 'listenerOff'
     };
 
     /**
-     * Determines whether the passed item is an event configuration.
+     * DataLayer.Item
      *
-     * @param {ItemConfig} item The event configuration.
-     * @returns {Boolean} true if the item is an event configuration, false otherwise.
-     * @private
+     * @class DataLayer.Item
+     * @classdesc A data layer item.
+     * @param {ItemConfig} itemConfig The data layer item configuration.
      */
-    DataLayer.Manager.prototype._isEvent = function(item) {
-        if (!item) {
-            return false;
-        }
-        return (Object.keys(item).length === 1 && item.event) ||
-            (Object.keys(item).length === 2 && item.event && item.info) ||
-            (Object.keys(item).length === 2 && item.event && item.data) ||
-            (Object.keys(item).length === 3 && item.event && item.info && item.data);
-    };
+    DataLayer.Item = function DataLayer(itemConfig) {
+        var that = this;
+        that._config = itemConfig;
+        that._type = function(config) {
+            var type;
+            if (that.utils.isDataConfig(config)) {
+                type = itemType.DATA;
+            } else if (that.utils.isEventConfig(config)) {
+                type = itemType.EVENT;
+            } else if (that.utils.isListenerOnConfig(config)) {
+                type = itemType.LISTENER_ON;
+            } else if (that.utils.isListenerOffConfig(config)) {
+                type = itemType.LISTENER_OFF;
+            }
+            return type;
+        }(itemConfig);
 
-    DataLayer.Manager.prototype._isEventWithData = function(item) {
-        return this._isEvent(item) && item.data;
-    };
-
-    /**
-     * Determines whether the passed item is a listener configuration.
-     *
-     * @param {ItemConfig} item The listener on/off configuration.
-     * @returns {Boolean} true if the item is a listener on/off configuration, false otherwise.
-     * @private
-     */
-    DataLayer.Manager.prototype._isListener = function(item) {
-        return this._isListenerOn(item) || this._isListenerOff(item);
+        that._valid = !!that._type;
     };
 
     /**
-     * Determines whether the passed item is a listener on configuration.
+     * Indicates whether this is a valid item.
      *
-     * @param {ItemConfig} item The listener on configuration.
-     * @returns {Boolean} true if the item is a listener on configuration, false otherwise.
-     * @private
+     * @returns {Boolean} true if the item is valid, false otherwise.
      */
-    DataLayer.Manager.prototype._isListenerOn = function(item) {
-        if (!item) {
-            return false;
-        }
-        return (Object.keys(item).length === 2 && item.on && item.handler) ||
-            (Object.keys(item).length === 3 && item.on && item.handler && item.scope) ||
-            (Object.keys(item).length === 3 && item.on && item.handler && item.selector) ||
-            (Object.keys(item).length === 4 && item.on && item.handler && item.scope && item.selector);
+    DataLayer.Item.prototype.isValid = function() {
+        return this._valid;
     };
 
     /**
-     * Determines whether the passed item is a listener off configuration.
+     * Retrieves the item type.
      *
-     * @param {ItemConfig} item The listener off configuration.
-     * @returns {Boolean} true if the item is a listener off configuration, false otherwise.
-     * @private
+     * @returns {itemType} The item type.
      */
-    DataLayer.Manager.prototype._isListenerOff = function(item) {
-        if (!item) {
-            return false;
+    DataLayer.Item.prototype.getType = function() {
+        return this._type;
+    };
+
+    /**
+     * Retrieves the item configuration.
+     *
+     * @returns {ItemConfig} The item configuration.
+     */
+    DataLayer.Item.prototype.getConfig = function() {
+        return this._config;
+    };
+
+    /**
+     * Data layer item utilities.
+     *
+     * @type {Object}
+     */
+    DataLayer.Item.prototype.utils = {
+        /**
+         * Determines whether the passed item configuration is a data configuration.
+         *
+         * @param {ItemConfig} itemConfig The item configuration.
+         * @returns {Boolean} true if the item configuration is a data configuration, false otherwise.
+         * @static
+         */
+        isDataConfig: function(itemConfig) {
+            if (!itemConfig) {
+                return false;
+            }
+            return (Object.keys(itemConfig).length === 1 && itemConfig.data);
+        },
+        /**
+         * Determines whether the passed item configuration is an event configuration.
+         *
+         * @param {ItemConfig} itemConfig The item configuration.
+         * @returns {Boolean} true if the item configuration is an event configuration, false otherwise.
+         * @static
+         */
+        isEventConfig: function(itemConfig) {
+            if (!itemConfig) {
+                return false;
+            }
+            return (Object.keys(itemConfig).length === 1 && itemConfig.event) ||
+                (Object.keys(itemConfig).length === 2 && itemConfig.event && itemConfig.info) ||
+                (Object.keys(itemConfig).length === 2 && itemConfig.event && itemConfig.data) ||
+                (Object.keys(itemConfig).length === 3 && itemConfig.event && itemConfig.info && itemConfig.data);
+        },
+        /**
+         * Determines whether the passed item is a listener configuration.
+         *
+         * @param {ItemConfig} itemConfig The item configuration.
+         * @returns {Boolean} true if the item is a listener on or listener off configuration, false otherwise.
+         * @static
+         */
+        isListenerConfig: function(itemConfig) {
+            return this.isListenerOnConfig(itemConfig) || this.isListenerOffConfig(itemConfig);
+        },
+        /**
+         * Determines whether the passed item configuration is a listener on configuration.
+         *
+         * @param {ItemConfig} itemConfig The item configuration.
+         * @returns {Boolean} true if the item configuration is a listener on configuration, false otherwise.
+         * @static
+         */
+        isListenerOnConfig: function(itemConfig) {
+            if (!itemConfig) {
+                return false;
+            }
+            return (Object.keys(itemConfig).length === 2 && itemConfig.on && itemConfig.handler) ||
+                (Object.keys(itemConfig).length === 3 && itemConfig.on && itemConfig.handler && itemConfig.scope) ||
+                (Object.keys(itemConfig).length === 3 && itemConfig.on && itemConfig.handler && itemConfig.selector) ||
+                (Object.keys(itemConfig).length === 4 && itemConfig.on && itemConfig.handler && itemConfig.scope && itemConfig.selector);
+        },
+        /**
+         * Determines whether the passed item configuration is a listener off configuration.
+         *
+         * @param {ItemConfig} itemConfig The item configuration.
+         * @returns {Boolean} true if the item configuration is a listener off configuration, false otherwise.
+         * @static
+         */
+        isListenerOffConfig: function(itemConfig) {
+            if (!itemConfig) {
+                return false;
+            }
+            return (Object.keys(itemConfig).length === 1 && itemConfig.off) ||
+                (Object.keys(itemConfig).length === 2 && itemConfig.off && itemConfig.handler) ||
+                (Object.keys(itemConfig).length === 3 && itemConfig.off && itemConfig.handler && itemConfig.scope) ||
+                (Object.keys(itemConfig).length === 3 && itemConfig.off && itemConfig.handler && itemConfig.selector) ||
+                (Object.keys(itemConfig).length === 4 && itemConfig.off && itemConfig.handler && itemConfig.scope && itemConfig.selector);
         }
-        return (Object.keys(item).length === 1 && item.off) ||
-            (Object.keys(item).length === 2 && item.off && item.handler) ||
-            (Object.keys(item).length === 3 && item.off && item.handler && item.scope) ||
-            (Object.keys(item).length === 3 && item.off && item.handler && item.selector) ||
-            (Object.keys(item).length === 4 && item.off && item.handler && item.scope && item.selector);
     };
 
     /**
