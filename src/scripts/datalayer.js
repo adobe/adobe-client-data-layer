@@ -114,18 +114,8 @@ governing permissions and limitations under the License.
         that._state = {};
         that._listeners = [];
 
-        /**
-         * Returns a deep copy of the data layer state.
-         *
-         * @returns {Object} The deep copied state object.
-         */
-        that._dataLayer.getState = function() {
-            // use deep copying technique of JSON stringify and parsing the state.
-            return JSON.parse(JSON.stringify(that._state));
-        };
-
+        that._augment();
         that._handleItemsBeforeScriptLoad(that._dataLayer);
-        that._overridePush();
 
         that._triggerListeners({
             'event': events.READY
@@ -133,28 +123,11 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * Handles the items that were pushed before the data layer script loaded.
+     * Augments the data layer Array Object, overriding push() and adding getState().
      *
      * @private
      */
-    DataLayer.prototype._handleItemsBeforeScriptLoad = function() {
-        var that = this;
-
-        that._dataLayer.forEach(function(item, idx) {
-            // remove event listeners defined before the script load
-            if (that._isListener(item)) {
-                that._dataLayer.splice(idx, 1);
-            }
-            that._handleItem(item);
-        });
-    };
-
-    /**
-     * Overrides the push function of DataLayer.dataLayer to handle item pushes.
-     *
-     * @private
-     */
-    DataLayer.prototype._overridePush = function() {
+    DataLayer.prototype._augment = function() {
         var that = this;
 
         /**
@@ -181,6 +154,33 @@ governing permissions and limitations under the License.
                 return Array.prototype.push.apply(this, filteredArguments);
             }
         };
+
+        /**
+         * Returns a deep copy of the data layer state.
+         *
+         * @returns {Object} The deep copied state object.
+         */
+        that._dataLayer.getState = function() {
+            // use deep copying technique of JSON stringify and parsing the state.
+            return JSON.parse(JSON.stringify(that._state));
+        };
+    };
+
+    /**
+     * Handles the items that were pushed before the data layer script loaded.
+     *
+     * @private
+     */
+    DataLayer.prototype._handleItemsBeforeScriptLoad = function() {
+        var that = this;
+
+        that._dataLayer.forEach(function(item, idx) {
+            // remove event listeners defined before the script load
+            if (that._isListener(item)) {
+                that._dataLayer.splice(idx, 1);
+            }
+            that._handleItem(item);
+        });
     };
 
     /**
