@@ -243,7 +243,7 @@ governing permissions and limitations under the License.
      * @private
      */
     DataLayer.Manager.prototype._updateState = function(item) {
-        DataLayer.utils.deepMerge(this.state, item.data);
+        DataLayer.utils.deepMerge(this._state, item.data);
     };
 
     DataLayer.Manager.prototype._triggerListeners = function(item, event) {

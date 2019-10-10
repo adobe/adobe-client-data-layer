@@ -20,6 +20,12 @@ Then choose from the following gulp tasks:
 * `gulp` - generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
 * `gulp build` - generates the build in the `./dist` folder.
 
+### Run unit tests
+To run the unit tests execute the command:
+```
+npm test
+```
+
 ## Contributing
 
 Contributions are welcome! Read the [Contributing Guide](./.github/CONTRIBUTING.md) for more information.
