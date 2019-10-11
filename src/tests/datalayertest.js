@@ -11,7 +11,7 @@ governing pefrmissions and limitations under the License.
 */
 /* eslint strict: ["error", "global"] */
 'use strict';
-const DataLayer = require('../../src/scripts/datalayer');
+const DataLayer = require('../scripts/datalayer');
 let dataLayer;
 
 beforeEach(() => {
