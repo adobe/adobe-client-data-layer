@@ -1,10 +1,11 @@
 {
     "root": true,
     "parserOptions": {
-      "ecmaVersion": 5
+      "ecmaVersion": 6
     },
     "extends": "eslint:recommended",
     "rules": {
+        "no-console": "off",
         "array-bracket-newline": ["off", "consistent"],
         "array-bracket-spacing": ["error", "never", {
             "objectsInArrays": false,
@@ -79,7 +80,7 @@
                 "balanced": true
             }
         }],
-        "strict": "error",
+        "strict": ["error", "function"],
         "switch-colon-spacing": ["error", { "after": true, "before": false }],
         "valid-jsdoc": [ "warn", {
             "prefer": {
@@ -99,5 +100,11 @@
             "requireParamDescription": true,
             "requireReturnDescription": true
         }]
+    },
+    "env": {
+        "es6": true,
+        "browser": true,
+        "node": true,
+        "jest": true
     }
 }

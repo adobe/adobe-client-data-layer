@@ -10,25 +10,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-  'use strict';
+    'use strict';
 
-  require('./tasks/clean.js')(gulp);
-  require('./tasks/lint.js')(gulp);
-  require('./tasks/scripts.js')(gulp);
-  require('./tasks/watch.js')(gulp);
-  require('./tasks/test.js')(gulp);
+    const jestcli = require('jest-cli');
+    const config = require(`${__dirname}/../../jest.config.js`);
 
-  gulp.task('build',
-    gulp.series(
-      gulp.parallel('clean', 'lint', 'test'),
-      'scripts'
-    )
-  );
-
-  gulp.task('default',
-    gulp.series(
-      'build',
-      'watch'
-    )
-  );
+    gulp.task('test', (done) => {
+        jestcli.runCLI(config,['.']);
+        done();
+    });
 };
