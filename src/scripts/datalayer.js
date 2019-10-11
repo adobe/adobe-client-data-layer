@@ -214,13 +214,13 @@ governing permissions and limitations under the License.
 
         var typeProcessors = {
             data: function(item) {
-                that._updateState(item);
+                that._updateState(item.getConfig());
                 that._triggerListeners(item.getConfig(), events.CHANGE);
             },
             event: function(item) {
                 that._triggerListeners(item);
                 if (item.getConfig().data) {
-                    that._updateState(item);
+                    that._updateState(item.getConfig());
                     that._triggerListeners(item.getConfig(), events.CHANGE);
                 }
             },
