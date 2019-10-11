@@ -17,8 +17,9 @@ npm install
 ```   
  
 Then choose from the following gulp tasks:
-* `gulp` - generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
-* `gulp build` - generates the build in the `./dist` folder.
+* `gulp` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
+* `gulp build` - run the tests and generates the build in the `./dist` folder.
+* `gulp test` - run the unit tests
 
 ## Contributing
 

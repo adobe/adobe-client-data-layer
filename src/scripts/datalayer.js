@@ -9,7 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-/* global console, window, CustomEvent */
 (function() {
     'use strict';
 
@@ -215,13 +214,13 @@ governing permissions and limitations under the License.
 
         var typeProcessors = {
             data: function(item) {
-                that._updateState(item);
+                that._updateState(item.getConfig());
                 that._triggerListeners(item.getConfig(), events.CHANGE);
             },
             event: function(item) {
                 that._triggerListeners(item);
                 if (item.getConfig().data) {
-                    that._updateState(item);
+                    that._updateState(item.getConfig());
                     that._triggerListeners(item.getConfig(), events.CHANGE);
                 }
             },
@@ -243,7 +242,7 @@ governing permissions and limitations under the License.
      * @private
      */
     DataLayer.Manager.prototype._updateState = function(item) {
-        DataLayer.utils.deepMerge(this.state, item.data);
+        DataLayer.utils.deepMerge(this._state, item.data);
     };
 
     DataLayer.Manager.prototype._triggerListeners = function(item, event) {
@@ -566,4 +565,5 @@ governing permissions and limitations under the License.
      * @type {Object}
      */
 
+    module.exports = DataLayer;
 })();
