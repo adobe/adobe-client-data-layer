@@ -80,7 +80,7 @@
                 "balanced": true
             }
         }],
-        "strict": ["error", "function"],
+        "strict": ["error", "global"],
         "switch-colon-spacing": ["error", { "after": true, "before": false }],
         "valid-jsdoc": [ "warn", {
             "prefer": {

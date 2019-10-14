@@ -16,13 +16,20 @@
     "test": "jest --config jest.config.js"
   },
   "devDependencies": {
+    "@babel/core": "^7.6.4",
+    "@babel/preset-env": "^7.6.3",
     "browser-sync": "^2.26.7",
+    "browserify": "^16.5.0",
     "del": "^5.0.0",
     "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
     "gulp-eslint": "^6.0.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-terser": "^1.2.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-uglify": "^3.0.2",
+    "gulplog": "^1.0.0",
     "jest": "^24.9.0",
-    "jest-cli": "^24.9.0"
+    "jest-cli": "^24.9.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   }
 }
