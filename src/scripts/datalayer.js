@@ -81,7 +81,7 @@ governing permissions and limitations under the License.
 
     /**
      * @typedef {Object} EventConfig
-     * @property {String} name Name of the event.
+     * @property {String} event Name of the event.
      * @property {Object} [info] Additional information to pass to the event handler.
      * @property {DataConfig.data} [data] Data to be updated in the state.
      */
@@ -123,9 +123,10 @@ governing permissions and limitations under the License.
         that._augment();
         that._processItems();
 
-        that._triggerListeners({
+        var readyItem = new DataLayer.Item({
             'event': events.READY
-        }, events.READY);
+        }, -1);
+        that._triggerListeners(readyItem);
     };
 
     /**
@@ -148,12 +149,12 @@ governing permissions and limitations under the License.
 
             Object.keys(pushArguments).forEach(function(key) {
                 var itemConfig = pushArguments[key];
-                var item = new DataLayer.Item(itemConfig);
+                var item = new DataLayer.Item(itemConfig, -1);
 
                 that._processItem(item);
 
                 // filter out event listeners
-                if (item.utils.isListenerConfig(item.getConfig())) {
+                if (item.utils.isListenerConfig(itemConfig)) {
                     delete filteredArguments[key];
                 }
             });
@@ -183,7 +184,7 @@ governing permissions and limitations under the License.
         var that = this;
 
         for (var i = 0; i < that._dataLayer.length; i++) {
-            var item = new DataLayer.Item(that._dataLayer[i]);
+            var item = new DataLayer.Item(that._dataLayer[i], i);
 
             that._processItem(item);
 
@@ -207,28 +208,27 @@ governing permissions and limitations under the License.
         if (!item.isValid()) {
             var message = 'The following item cannot be handled by the data layer ' +
                 'because it does not have a valid format: ' +
-                JSON.stringify(item);
+                JSON.stringify(item.getConfig());
             console.error(message);
             return;
         }
 
         var typeProcessors = {
             data: function(item) {
-                that._updateState(item.getConfig());
-                that._triggerListeners(item.getConfig(), events.CHANGE);
+                that._updateState(item);
+                that._triggerListeners(item);
             },
             event: function(item) {
-                that._triggerListeners(item);
                 if (item.getConfig().data) {
-                    that._updateState(item.getConfig());
-                    that._triggerListeners(item.getConfig(), events.CHANGE);
+                    that._updateState(item);
                 }
+                that._triggerListeners(item);
             },
             listenerOn: function(item) {
-                that._registerListener(item.getConfig());
+                that._processListenerOn(item);
             },
             listenerOff: function(item) {
-                that._unregisterListener(item.getConfig());
+                that._unregisterListener(item);
             }
         };
 
@@ -236,66 +236,133 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * Updates the state with the passed data configuration.
+     * Processes the item of type: listener on.
      *
-     * @param {DataConfig} item The data configuration.
+     * @param {DataLayer.Item} listener The listener.
      * @private
      */
-    DataLayer.Manager.prototype._updateState = function(item) {
-        DataLayer.utils.deepMerge(this._state, item.data);
+    DataLayer.Manager.prototype._processListenerOn = function(listener) {
+        var scope = listener.getConfig().scope;
+        if (!scope) {
+            scope = listenerScope.FUTURE;
+        }
+        switch (scope) {
+            case listenerScope.PAST:
+                // trigger the handler for all the previous items
+                this._triggerListenerOnPreviousItems(listener);
+                break;
+            case listenerScope.FUTURE:
+                // register the listener
+                this._registerListener(listener);
+                break;
+            case listenerScope.ALL:
+                // trigger the handler for all the previous items
+                this._triggerListenerOnPreviousItems(listener);
+                // register the listener
+                this._registerListener(listener);
+                break;
+            default:
+                console.error('The listener does not have a valid scope: ' + scope);
+        }
     };
 
-    DataLayer.Manager.prototype._triggerListeners = function(item, event) {
+    /**
+     * Calls all the handlers matching the specified item.
+     *
+     * @param {DataLayer.Item} item The item.
+     * @private
+     */
+    DataLayer.Manager.prototype._triggerListeners = function(item) {
         var that = this;
-
-        console.debug('event triggered -', event);
-
-        that._listeners.forEach(function(listener) {
-            if (listener.on === event || listener.on === item.event) {
-                var copy = JSON.parse(JSON.stringify(item));
-
-                if (item.event) {
-                    copy.name = item.event;
-                }
-
-                listener.handler(copy);
-            }
+        that._listeners.forEach(function(listenerConfig) {
+            var listener = new DataLayer.Item(listenerConfig, -1);
+            that._triggerListener(listener, item);
         });
     };
 
-    DataLayer.Manager.prototype._triggerListener = function(listener) {
-        this.dataLayer.forEach(function(item) {
-            if (listener.on === events.READY || listener.on === events.CHANGE || listener.on === events.EVENT || listener.on === item.event) {
-                listener.handler(item);
+    /**
+     * Calls the specified handler on all the previous items of the data layer.
+     *
+     * @param {DataLayer.Item} listener The listener.
+     * @private
+     */
+    DataLayer.Manager.prototype._triggerListenerOnPreviousItems = function(listener) {
+        var that = this;
+        var listenerIdx = listener.getIndex();
+
+        if (listenerIdx === 0 || this._dataLayer.length === 0 || listenerIdx > this._dataLayer.length - 1) {
+            return;
+        }
+
+        var processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
+        for (var i = 0; i < processLength; i++) {
+            var itemConfig = this._dataLayer[i];
+            var item = new DataLayer.Item(itemConfig, i);
+            that._triggerListener(listener, item);
+        }
+    };
+
+    /**
+     * If a match is found, calls the handler on the item.
+     *
+     * @param {DataLayer.Item} listener The listener.
+     * @param {DataLayer.Item} item The item.
+     * @private
+     */
+    DataLayer.Manager.prototype._triggerListener = function(listener, item) {
+        var isMatching = false;
+        var listenerConfig = listener.getConfig();
+        var itemConfig = item.getConfig();
+
+        if (item.utils.isDataConfig(itemConfig)) {
+            if (listenerConfig.on === events.CHANGE) {
+                isMatching = true;
             }
-        });
+        } else if (item.utils.isEventConfig(itemConfig)) {
+            if (listenerConfig.on === events.EVENT ||
+                listenerConfig.on === itemConfig.event) {
+                isMatching = true;
+            }
+            if (itemConfig.data &&
+                listenerConfig.on === events.CHANGE) {
+                isMatching = true;
+            }
+        }
+
+        if (isMatching) {
+            var itemCopy = JSON.parse(JSON.stringify(item.getConfig()));
+            listenerConfig.handler(itemCopy);
+        }
     };
 
     /**
      * Registers a listener based on a listener on configuration.
      *
-     * @param {ListenerOnConfig} item The listener on configuration.
+     * @param {DataLayer.Item} listenerOn The listener on.
      * @private
      */
-    DataLayer.Manager.prototype._registerListener = function(item) {
-        if (this._getListenerIndexes(item).length === 0) {
-            this._listeners.push(item);
+    DataLayer.Manager.prototype._registerListener = function(listenerOn) {
+        var listenerOnConfig = listenerOn.getConfig();
+        if (this._getRegisteredListeners(listenerOnConfig).length === 0) {
+            this._listeners.push(listenerOnConfig);
 
-            console.debug('listener registered on -', item.on);
+            console.debug('listener registered on -', listenerOnConfig.on);
         }
     };
 
     /**
-     * Unregisters a listener based on a listener off configuration.
+     * Unregisters a listener.
      *
-     * @param {ListenerOffConfig} item The listener off configuration.
+     * @param {DataLayer.Item} listenerOff The listener off.
      * @private
      */
-    DataLayer.Manager.prototype._unregisterListener = function(item) {
-        var tmp = JSON.parse(JSON.stringify(item));
-        tmp.on = item.off;
+    DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
+        var listenerOffConfig = listenerOff.getConfig();
+        var tmp = JSON.parse(JSON.stringify(listenerOffConfig));
+        tmp.on = listenerOffConfig.off;
+        tmp.handler = listenerOffConfig.handler;
         delete tmp.off;
-        var indexes = this._getListenerIndexes(tmp);
+        var indexes = this._getRegisteredListeners(tmp);
         for (var i = 0; i < indexes.length; i++) {
             if (indexes[i] > -1) {
                 this._listeners.splice(indexes[i], 1);
@@ -306,22 +373,31 @@ governing permissions and limitations under the License.
     };
 
     /**
-     * Gets the indexes listener matches based on a listener on configuration.
+     * Updates the state with the item.
      *
-     * @param {ListenerOnConfig} item The listener on configuration.
+     * @param {DataLayer.Item} item The item .
+     * @private
+     */
+    DataLayer.Manager.prototype._updateState = function(item) {
+        DataLayer.utils.deepMerge(this._state, item.getConfig().data);
+    };
+
+    /**
+     * Returns the indexes of the registered listeners that match the specified listener.
+     *
+     * @param {ListenerOnConfig} listenerOnConfig The listener on configuration.
      * @returns {Array} The indexes of the listener matches.
      * @private
      */
-    DataLayer.Manager.prototype._getListenerIndexes = function(item) {
+    DataLayer.Manager.prototype._getRegisteredListeners = function(listenerOnConfig) {
         var listenerIndexes = [];
         for (var i = 0; i <  this._listeners.length; i++) {
             var existingListener = this._listeners[i];
-            if (item.on === existingListener.on) {
-                if (item.handler && (item.handler.toString() !== existingListener.handler.toString())) {
+            if (listenerOnConfig.on === existingListener.on) {
+                if (listenerOnConfig.handler && (listenerOnConfig.handler.toString() !== existingListener.handler.toString())) {
                     continue;
                 }
                 listenerIndexes.push(i);
-                continue;
             }
         }
         return listenerIndexes;
@@ -350,10 +426,12 @@ governing permissions and limitations under the License.
      * @class DataLayer.Item
      * @classdesc A data layer item.
      * @param {ItemConfig} itemConfig The data layer item configuration.
+     * @param {Number} idx The item index in the array of existing items.
      */
-    DataLayer.Item = function DataLayer(itemConfig) {
+    DataLayer.Item = function DataLayer(itemConfig, idx) {
         var that = this;
         that._config = itemConfig;
+        that._index = idx;
         that._type = function(config) {
             var type;
             if (that.utils.isDataConfig(config)) {
@@ -369,6 +447,15 @@ governing permissions and limitations under the License.
         }(itemConfig);
 
         that._valid = !!that._type;
+    };
+
+    /**
+     * Returns the index of the item in the array of existing items (added with the standard Array.prototype.push())
+     *
+     * @returns {Number} The index of the item in the array of existing items if it exists, -1 otherwise.
+     */
+    DataLayer.Item.prototype.getIndex = function() {
+        return this._index;
     };
 
     /**
@@ -566,4 +653,5 @@ governing permissions and limitations under the License.
      */
 
     module.exports = DataLayer;
+
 })();
