@@ -9,9 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing pefrmissions and limitations under the License.
 */
-/* eslint strict: ["error", "global"] */
 'use strict';
-const DataLayer = require('../scripts/datalayer');
+const DataLayer = require('../scripts/DataLayer');
 let dataLayer;
 
 beforeEach(() => {

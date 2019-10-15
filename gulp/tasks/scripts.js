@@ -10,18 +10,34 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-  const rename = require('gulp-rename');
-  const terser = require('gulp-terser');
+    const browserify = require('browserify');
+    const source = require('vinyl-source-stream');
+    const buffer = require('vinyl-buffer');
+    const babel = require('gulp-babel');
+    const uglify = require('gulp-uglify');
+    const sourcemaps = require('gulp-sourcemaps');
+    const log = require('gulplog');
 
-  const config = {
-    paths: require(`${__dirname}/../configs/paths.conf.js`)
-  };
+    const config = {
+        paths: require(`${__dirname}/../configs/paths.conf.js`)
+    };
 
-  gulp.task('scripts', () => {
-    return gulp.src(config.paths.src.scripts)
-      .pipe(gulp.dest(config.paths.dist))
-      .pipe(terser())
-      .pipe(rename({suffix: '.min'}))
-      .pipe(gulp.dest(config.paths.dist));
-  });
+    gulp.task('scripts', () => {
+        const b = browserify({
+            entries: './src/scripts/DataLayer.js',
+            debug: true
+        });
+
+        return b.bundle()
+            .pipe(source('datalayer.js'))
+            .pipe(buffer())
+            .pipe(sourcemaps.init({loadMaps: true}))
+            .pipe((babel({
+                presets: ['@babel/env']
+            })))
+            .pipe(uglify())
+            .on('error', log.error)
+            .pipe(sourcemaps.write('./'))
+            .pipe(gulp.dest('./dist/'));
+    });
 };
