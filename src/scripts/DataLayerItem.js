@@ -9,7 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const itemUtils = require('./DataLayerItemUtils');
+const utils = require('./DataLayerUtils');
 
 /**
  * @typedef {String} DataLayer.Item.Type
@@ -46,13 +46,13 @@ class Item {
     that._config = itemConfig;
     that._type = (function(config) {
       let type;
-      if (itemUtils.isDataConfig(config)) {
+      if (utils.isDataConfig(config)) {
         type = itemType.DATA;
-      } else if (itemUtils.isEventConfig(config)) {
+      } else if (utils.isEventConfig(config)) {
         type = itemType.EVENT;
-      } else if (itemUtils.isListenerOnConfig(config)) {
+      } else if (utils.isListenerOnConfig(config)) {
         type = itemType.LISTENER_ON;
-      } else if (itemUtils.isListenerOffConfig(config)) {
+      } else if (utils.isListenerOffConfig(config)) {
         type = itemType.LISTENER_OFF;
       }
       return type;

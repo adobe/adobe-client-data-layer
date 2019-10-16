@@ -20,7 +20,6 @@ governing permissions and limitations under the License.
  */
 const DataLayer = {};
 DataLayer.Item = require('./DataLayerItem');
-DataLayer.itemUtils = require('./DataLayerItemUtils');
 DataLayer.utils = require('./DataLayerUtils');
 
 /**
@@ -155,7 +154,7 @@ DataLayer.Manager.prototype._augment = function() {
       that._processItem(item);
 
       // filter out event listeners and invalid items
-      if (DataLayer.itemUtils.isListenerConfig(itemConfig) || !item.valid) {
+      if (DataLayer.utils.isListenerConfig(itemConfig) || !item.valid) {
         delete filteredArguments[key];
       }
     });
@@ -190,7 +189,7 @@ DataLayer.Manager.prototype._processItems = function() {
     that._processItem(item);
 
     // remove event listener or invalid item from the data layer array
-    if (DataLayer.itemUtils.isListenerConfig(item.config) || !item.valid) {
+    if (DataLayer.utils.isListenerConfig(item.config) || !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
     }
@@ -315,11 +314,11 @@ DataLayer.Manager.prototype._triggerListener = function(listener, item) {
   const itemConfig = item.config;
   let isMatching = false;
 
-  if (DataLayer.itemUtils.isDataConfig(itemConfig)) {
+  if (DataLayer.utils.isDataConfig(itemConfig)) {
     if (listenerConfig.on === events.CHANGE) {
       isMatching = true;
     }
-  } else if (DataLayer.itemUtils.isEventConfig(itemConfig)) {
+  } else if (DataLayer.utils.isEventConfig(itemConfig)) {
     if (listenerConfig.on === events.EVENT ||
       listenerConfig.on === itemConfig.event) {
       isMatching = true;
