@@ -12,7 +12,7 @@ governing permissions and limitations under the License.
 /* eslint no-console: "off" */
 /* eslint no-unused-vars: "off" */
 'use strict';
-var DataLayer = {};
+const DataLayer = {};
 
 /**
  * @typedef {String} DataLayer.Item.Type
@@ -24,7 +24,7 @@ var DataLayer = {};
  * @enum {DataLayer.Item.Type}
  * @readonly
  */
-var itemType = {
+const itemType = {
   DATA: 'data',
   EVENT: 'event',
   LISTENER_ON: 'listenerOn',
@@ -40,11 +40,11 @@ var itemType = {
  * @param {Number} idx The item index in the array of existing items.
  */
 DataLayer.Item = function DataLayer(itemConfig, idx) {
-  var that = this;
+  const that = this;
   that._config = itemConfig;
   that._index = idx;
   that._type = (function(config) {
-    var type;
+    let type;
     if (that.utils.isDataConfig(config)) {
       type = itemType.DATA;
     } else if (that.utils.isEventConfig(config)) {
@@ -126,7 +126,7 @@ DataLayer.Item.prototype.utils = {
     if (!itemConfig) {
       return false;
     }
-    var keys = Object.keys(itemConfig);
+    const keys = Object.keys(itemConfig);
     return (keys.length === 1 && itemConfig.event) ||
       (keys.length === 2 && itemConfig.event && (itemConfig.info || itemConfig.data)) ||
       (keys.length === 3 && itemConfig.event && itemConfig.info && itemConfig.data);
@@ -152,7 +152,7 @@ DataLayer.Item.prototype.utils = {
     if (!itemConfig) {
       return false;
     }
-    var keys = Object.keys(itemConfig);
+    const keys = Object.keys(itemConfig);
     return (keys.length === 2 && itemConfig.on && itemConfig.handler) ||
       (keys.length === 3 && itemConfig.on && itemConfig.handler && (itemConfig.scope || itemConfig.selector)) ||
       (keys.length === 4 && itemConfig.on && itemConfig.handler && itemConfig.scope && itemConfig.selector);
@@ -168,7 +168,7 @@ DataLayer.Item.prototype.utils = {
     if (!itemConfig) {
       return false;
     }
-    var keys = Object.keys(itemConfig);
+    const keys = Object.keys(itemConfig);
     return (keys.length === 1 && itemConfig.off) ||
       (keys.length === 2 && itemConfig.off && itemConfig.handler) ||
       (keys.length === 3 && itemConfig.off && itemConfig.handler && (itemConfig.scope || itemConfig.selector)) ||

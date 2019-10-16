@@ -18,7 +18,7 @@ governing permissions and limitations under the License.
  *
  * @type {Object}
  */
-var DataLayer = {};
+const DataLayer = {};
 DataLayer.Item = require('./DataLayerItem');
 DataLayer.utils = require('./DataLayerUtils');
 
@@ -32,7 +32,7 @@ DataLayer.utils = require('./DataLayerUtils');
  * @enum {DataLayer.Events}
  * @readonly
  */
-var events = {
+const events = {
   /** Represents an event triggered for any change in the data layer state */
   CHANGE: 'datalayer:change',
   /** Represents an event triggered for any event push to the data layer */
@@ -51,7 +51,7 @@ var events = {
  * @enum {DataLayer.ListenerScope}
  * @readonly
  */
-var listenerScope = {
+const listenerScope = {
   /** Past events only */
   PAST: 'past',
   /** Future events only */
@@ -98,7 +98,7 @@ var listenerScope = {
  * @param {Object} config The Data Layer manager configuration.
  */
 DataLayer.Manager = function DataLayer(config) {
-  var that = this;
+  const that = this;
 
   that._config = config;
   that._initialize();
@@ -110,7 +110,7 @@ DataLayer.Manager = function DataLayer(config) {
  * @private
  */
 DataLayer.Manager.prototype._initialize = function() {
-  var that = this;
+  const that = this;
 
   if (!Array.isArray(that._config.dataLayer)) {
     that._config.dataLayer = [];
@@ -123,7 +123,7 @@ DataLayer.Manager.prototype._initialize = function() {
   that._augment();
   that._processItems();
 
-  var readyItem = new DataLayer.Item({
+  const readyItem = new DataLayer.Item({
     event: events.READY
   }, -1);
   that._triggerListeners(readyItem);
@@ -135,7 +135,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._augment = function() {
-  var that = this;
+  const that = this;
 
   /**
    * Pushes one or more items to the data layer.
@@ -144,12 +144,12 @@ DataLayer.Manager.prototype._augment = function() {
    * @returns {Number} The length of the data layer following push.
    */
   that._dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
-    var pushArguments = arguments;
-    var filteredArguments = arguments;
+    const pushArguments = arguments;
+    const filteredArguments = arguments;
 
     Object.keys(pushArguments).forEach(function(key) {
-      var itemConfig = pushArguments[key];
-      var item = new DataLayer.Item(itemConfig, -1);
+      const itemConfig = pushArguments[key];
+      const item = new DataLayer.Item(itemConfig, -1);
 
       that._processItem(item);
 
@@ -181,10 +181,10 @@ DataLayer.Manager.prototype._augment = function() {
  * @private
  */
 DataLayer.Manager.prototype._processItems = function() {
-  var that = this;
+  const that = this;
 
-  for (var i = 0; i < that._dataLayer.length; i++) {
-    var item = new DataLayer.Item(that._dataLayer[i], i);
+  for (let i = 0; i < that._dataLayer.length; i++) {
+    const item = new DataLayer.Item(that._dataLayer[i], i);
 
     that._processItem(item);
 
@@ -203,17 +203,17 @@ DataLayer.Manager.prototype._processItems = function() {
  * @private
  */
 DataLayer.Manager.prototype._processItem = function(item) {
-  var that = this;
+  const that = this;
 
   if (!item.isValid()) {
-    var message = 'The following item cannot be handled by the data layer ' +
+    const message = 'The following item cannot be handled by the data layer ' +
       'because it does not have a valid format: ' +
       JSON.stringify(item.getConfig());
     console.error(message);
     return;
   }
 
-  var typeProcessors = {
+  const typeProcessors = {
     data: function(item) {
       that._updateState(item);
       that._triggerListeners(item);
@@ -242,7 +242,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._processListenerOn = function(listener) {
-  var scope = listener.getConfig().scope;
+  let scope = listener.getConfig().scope;
   if (!scope) {
     scope = listenerScope.FUTURE;
   }
@@ -273,9 +273,9 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
  * @private
  */
 DataLayer.Manager.prototype._triggerListeners = function(item) {
-  var that = this;
+  const that = this;
   that._listeners.forEach(function(listenerConfig) {
-    var listener = new DataLayer.Item(listenerConfig, -1);
+    const listener = new DataLayer.Item(listenerConfig, -1);
     that._triggerListener(listener, item);
   });
 };
@@ -287,17 +287,17 @@ DataLayer.Manager.prototype._triggerListeners = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._triggerListenerOnPreviousItems = function(listener) {
-  var that = this;
-  var listenerIdx = listener.getIndex();
+  const that = this;
+  const listenerIdx = listener.getIndex();
 
   if (listenerIdx === 0 || this._dataLayer.length === 0 || listenerIdx > this._dataLayer.length - 1) {
     return;
   }
 
-  var processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
-  for (var i = 0; i < processLength; i++) {
-    var itemConfig = this._dataLayer[i];
-    var item = new DataLayer.Item(itemConfig, i);
+  const processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
+  for (let i = 0; i < processLength; i++) {
+    const itemConfig = this._dataLayer[i];
+    const item = new DataLayer.Item(itemConfig, i);
     that._triggerListener(listener, item);
   }
 };
@@ -310,9 +310,9 @@ DataLayer.Manager.prototype._triggerListenerOnPreviousItems = function(listener)
  * @private
  */
 DataLayer.Manager.prototype._triggerListener = function(listener, item) {
-  var isMatching = false;
-  var listenerConfig = listener.getConfig();
-  var itemConfig = item.getConfig();
+  const listenerConfig = listener.getConfig();
+  const itemConfig = item.getConfig();
+  let isMatching = false;
 
   if (item.utils.isDataConfig(itemConfig)) {
     if (listenerConfig.on === events.CHANGE) {
@@ -330,7 +330,7 @@ DataLayer.Manager.prototype._triggerListener = function(listener, item) {
   }
 
   if (isMatching) {
-    var itemCopy = JSON.parse(JSON.stringify(item.getConfig()));
+    const itemCopy = JSON.parse(JSON.stringify(item.getConfig()));
     listenerConfig.handler(itemCopy);
   }
 };
@@ -342,7 +342,7 @@ DataLayer.Manager.prototype._triggerListener = function(listener, item) {
  * @private
  */
 DataLayer.Manager.prototype._registerListener = function(listenerOn) {
-  var listenerOnConfig = listenerOn.getConfig();
+  const listenerOnConfig = listenerOn.getConfig();
   if (this._getRegisteredListeners(listenerOnConfig).length === 0) {
     this._listeners.push(listenerOnConfig);
 
@@ -357,13 +357,13 @@ DataLayer.Manager.prototype._registerListener = function(listenerOn) {
  * @private
  */
 DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
-  var listenerOffConfig = listenerOff.getConfig();
-  var tmp = JSON.parse(JSON.stringify(listenerOffConfig));
+  const listenerOffConfig = listenerOff.getConfig();
+  const tmp = JSON.parse(JSON.stringify(listenerOffConfig));
   tmp.on = listenerOffConfig.off;
   tmp.handler = listenerOffConfig.handler;
   delete tmp.off;
-  var indexes = this._getRegisteredListeners(tmp);
-  for (var i = 0; i < indexes.length; i++) {
+  const indexes = this._getRegisteredListeners(tmp);
+  for (let i = 0; i < indexes.length; i++) {
     if (indexes[i] > -1) {
       this._listeners.splice(indexes[i], 1);
 
@@ -390,15 +390,14 @@ DataLayer.Manager.prototype._updateState = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._getRegisteredListeners = function(listenerOnConfig) {
-  var listenerIndexes = [];
-  for (var i = 0; i < this._listeners.length; i++) {
-    var existingListener = this._listeners[i];
+  const listenerIndexes = [];
+  for (let i = 0; i < this._listeners.length; i++) {
+    const existingListener = this._listeners[i];
     if (listenerOnConfig.on === existingListener.on) {
       if (listenerOnConfig.handler && (listenerOnConfig.handler.toString() !== existingListener.handler.toString())) {
         continue;
       }
       listenerIndexes.push(i);
-      continue;
     }
   }
   return listenerIndexes;

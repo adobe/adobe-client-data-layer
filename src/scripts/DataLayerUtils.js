@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 /* eslint no-unused-vars: "off" */
 'use strict';
 
-var DataLayer = {};
+const DataLayer = {};
 
 /**
  * Data Layer utilities.
@@ -30,8 +30,8 @@ DataLayer.utils = {};
  * @static
  */
 DataLayer.utils.deepMerge = function(target, source) {
-  var tmpSource = {};
-  var that = this;
+  const tmpSource = {};
+  const that = this;
   if (that.isObject(target) && that.isObject(source)) {
     Object.keys(source).forEach(function(key) {
       if (that.isObject(source[key])) {
