@@ -357,10 +357,10 @@ test.skip('high load', () => {
   };
   dataLayer.push(argOn);
 
-  var data = {};
-  for (var i= 0; i < 1000; i++) {
-    var pageId = '/content/mysite/en/products/crossfit' + i;
-    var pageKey = 'page' + i;
+  const data = {};
+  for (let i= 0; i < 1000; i++) {
+    let pageId = '/content/mysite/en/products/crossfit' + i;
+    let pageKey = 'page' + i;
     data[pageKey] = {
       'id': pageId,
       'siteLanguage': 'en-us',
