@@ -9,18 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-module.exports = function(gulp) {
-  const eslint = require('gulp-eslint');
-
-  const configs = {
-    eslint: require(`${__dirname}/../configs/eslint.config.js`),
-    paths: require(`${__dirname}/../configs/paths.config.js`)
-  };
-
-  gulp.task('lint', () => {
-    return gulp.src(configs.paths.src.scripts)
-      .pipe(eslint({baseConfig: configs.eslint}))
-      .pipe(eslint.format())
-      .pipe(eslint.failAfterError());
-  });
+module.exports = {
+  collectCoverage: true,
+  coverageDirectory: '<rootDir>/test/unit-test-coverage',
+  testMatch: ['<rootDir>/src/tests/**/*Test.js']
 };

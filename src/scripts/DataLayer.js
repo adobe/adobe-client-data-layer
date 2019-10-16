@@ -13,7 +13,6 @@ governing permissions and limitations under the License.
 /* eslint no-unused-vars: "off" */
 'use strict';
 
-
 /**
  * Data Layer.
  *
@@ -34,12 +33,12 @@ DataLayer.utils = require('./DataLayerUtils');
  * @readonly
  */
 var events = {
-    /** Represents an event triggered for any change in the data layer state */
-    CHANGE: 'datalayer:change',
-    /** Represents an event triggered for any event push to the data layer */
-    EVENT: 'datalayer:event',
-    /** Represents an event triggered when the data layer has initialized */
-    READY: 'datalayer:ready'
+  /** Represents an event triggered for any change in the data layer state */
+  CHANGE: 'datalayer:change',
+  /** Represents an event triggered for any event push to the data layer */
+  EVENT: 'datalayer:event',
+  /** Represents an event triggered when the data layer has initialized */
+  READY: 'datalayer:ready'
 };
 
 /**
@@ -53,12 +52,12 @@ var events = {
  * @readonly
  */
 var listenerScope = {
-    /** Past events only */
-    PAST: 'past',
-    /** Future events only */
-    FUTURE: 'future',
-    /** All events, past and future */
-    ALL: 'all'
+  /** Past events only */
+  PAST: 'past',
+  /** Future events only */
+  FUTURE: 'future',
+  /** All events, past and future */
+  ALL: 'all'
 };
 
 /**
@@ -99,10 +98,10 @@ var listenerScope = {
  * @param {Object} config The Data Layer manager configuration.
  */
 DataLayer.Manager = function DataLayer(config) {
-    var that = this;
+  var that = this;
 
-    that._config = config;
-    that._initialize();
+  that._config = config;
+  that._initialize();
 };
 
 /**
@@ -111,23 +110,23 @@ DataLayer.Manager = function DataLayer(config) {
  * @private
  */
 DataLayer.Manager.prototype._initialize = function() {
-    var that = this;
+  var that = this;
 
-    if (!Array.isArray(that._config.dataLayer)) {
-        that._config.dataLayer = [];
-    }
+  if (!Array.isArray(that._config.dataLayer)) {
+    that._config.dataLayer = [];
+  }
 
-    that._dataLayer = that._config.dataLayer;
-    that._state = {};
-    that._listeners = [];
+  that._dataLayer = that._config.dataLayer;
+  that._state = {};
+  that._listeners = [];
 
-    that._augment();
-    that._processItems();
+  that._augment();
+  that._processItems();
 
-    var readyItem = new DataLayer.Item({
-        'event': events.READY
-    }, -1);
-    that._triggerListeners(readyItem);
+  var readyItem = new DataLayer.Item({
+    event: events.READY
+  }, -1);
+  that._triggerListeners(readyItem);
 };
 
 /**
@@ -136,44 +135,44 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._augment = function() {
-    var that = this;
+  var that = this;
 
-    /**
-     * Pushes one or more items to the data layer.
-     *
-     * @param {...ItemConfig} var_args The items to add to the data layer.
-     * @returns {Number} The length of the data layer following push.
-     */
-    that._dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
-        var pushArguments = arguments;
-        var filteredArguments = arguments;
+  /**
+   * Pushes one or more items to the data layer.
+   *
+   * @param {...ItemConfig} var_args The items to add to the data layer.
+   * @returns {Number} The length of the data layer following push.
+   */
+  that._dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
+    var pushArguments = arguments;
+    var filteredArguments = arguments;
 
-        Object.keys(pushArguments).forEach(function(key) {
-            var itemConfig = pushArguments[key];
-            var item = new DataLayer.Item(itemConfig, -1);
+    Object.keys(pushArguments).forEach(function(key) {
+      var itemConfig = pushArguments[key];
+      var item = new DataLayer.Item(itemConfig, -1);
 
-            that._processItem(item);
+      that._processItem(item);
 
-            // filter out event listeners and invalid items
-            if (item.utils.isListenerConfig(itemConfig) || !item.isValid()) {
-                delete filteredArguments[key];
-            }
-        });
+      // filter out event listeners and invalid items
+      if (item.utils.isListenerConfig(itemConfig) || !item.isValid()) {
+        delete filteredArguments[key];
+      }
+    });
 
-        if (filteredArguments[0]) {
-            return Array.prototype.push.apply(this, filteredArguments);
-        }
-    };
+    if (filteredArguments[0]) {
+      return Array.prototype.push.apply(this, filteredArguments);
+    }
+  };
 
-    /**
-     * Returns a deep copy of the data layer state.
-     *
-     * @returns {Object} The deep copied state object.
-     */
-    that._dataLayer.getState = function() {
-        // use deep copying technique of JSON stringify and parsing the state.
-        return JSON.parse(JSON.stringify(that._state));
-    };
+  /**
+   * Returns a deep copy of the data layer state.
+   *
+   * @returns {Object} The deep copied state object.
+   */
+  that._dataLayer.getState = function() {
+    // use deep copying technique of JSON stringify and parsing the state.
+    return JSON.parse(JSON.stringify(that._state));
+  };
 };
 
 /**
@@ -182,19 +181,19 @@ DataLayer.Manager.prototype._augment = function() {
  * @private
  */
 DataLayer.Manager.prototype._processItems = function() {
-    var that = this;
+  var that = this;
 
-    for (var i = 0; i < that._dataLayer.length; i++) {
-        var item = new DataLayer.Item(that._dataLayer[i], i);
+  for (var i = 0; i < that._dataLayer.length; i++) {
+    var item = new DataLayer.Item(that._dataLayer[i], i);
 
-        that._processItem(item);
+    that._processItem(item);
 
-        // remove event listener or invalid item from the data layer array
-        if (item.utils.isListenerConfig(item.getConfig()) || !item.isValid()) {
-            that._dataLayer.splice(i, 1);
-            i--;
-        }
+    // remove event listener or invalid item from the data layer array
+    if (item.utils.isListenerConfig(item.getConfig()) || !item.isValid()) {
+      that._dataLayer.splice(i, 1);
+      i--;
     }
+  }
 };
 
 /**
@@ -204,36 +203,36 @@ DataLayer.Manager.prototype._processItems = function() {
  * @private
  */
 DataLayer.Manager.prototype._processItem = function(item) {
-    var that = this;
+  var that = this;
 
-    if (!item.isValid()) {
-        var message = 'The following item cannot be handled by the data layer ' +
-            'because it does not have a valid format: ' +
-            JSON.stringify(item.getConfig());
-        console.error(message);
-        return;
+  if (!item.isValid()) {
+    var message = 'The following item cannot be handled by the data layer ' +
+      'because it does not have a valid format: ' +
+      JSON.stringify(item.getConfig());
+    console.error(message);
+    return;
+  }
+
+  var typeProcessors = {
+    data: function(item) {
+      that._updateState(item);
+      that._triggerListeners(item);
+    },
+    event: function(item) {
+      if (item.getConfig().data) {
+        that._updateState(item);
+      }
+      that._triggerListeners(item);
+    },
+    listenerOn: function(item) {
+      that._processListenerOn(item);
+    },
+    listenerOff: function(item) {
+      that._unregisterListener(item);
     }
+  };
 
-    var typeProcessors = {
-        data: function(item) {
-            that._updateState(item);
-            that._triggerListeners(item);
-        },
-        event: function(item) {
-            if (item.getConfig().data) {
-                that._updateState(item);
-            }
-            that._triggerListeners(item);
-        },
-        listenerOn: function(item) {
-            that._processListenerOn(item);
-        },
-        listenerOff: function(item) {
-            that._unregisterListener(item);
-        }
-    };
-
-    typeProcessors[item.getType()](item);
+  typeProcessors[item.getType()](item);
 };
 
 /**
@@ -243,28 +242,28 @@ DataLayer.Manager.prototype._processItem = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._processListenerOn = function(listener) {
-    var scope = listener.getConfig().scope;
-    if (!scope) {
-        scope = listenerScope.FUTURE;
-    }
-    switch (scope) {
-        case listenerScope.PAST:
-            // trigger the handler for all the previous items
-            this._triggerListenerOnPreviousItems(listener);
-            break;
-        case listenerScope.FUTURE:
-            // register the listener
-            this._registerListener(listener);
-            break;
-        case listenerScope.ALL:
-            // trigger the handler for all the previous items
-            this._triggerListenerOnPreviousItems(listener);
-            // register the listener
-            this._registerListener(listener);
-            break;
-        default:
-            console.error('The listener does not have a valid scope: ' + scope);
-    }
+  var scope = listener.getConfig().scope;
+  if (!scope) {
+    scope = listenerScope.FUTURE;
+  }
+  switch (scope) {
+    case listenerScope.PAST:
+      // trigger the handler for all the previous items
+      this._triggerListenerOnPreviousItems(listener);
+      break;
+    case listenerScope.FUTURE:
+      // register the listener
+      this._registerListener(listener);
+      break;
+    case listenerScope.ALL:
+      // trigger the handler for all the previous items
+      this._triggerListenerOnPreviousItems(listener);
+      // register the listener
+      this._registerListener(listener);
+      break;
+    default:
+      console.error('The listener does not have a valid scope: ' + scope);
+  }
 };
 
 /**
@@ -274,11 +273,11 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
  * @private
  */
 DataLayer.Manager.prototype._triggerListeners = function(item) {
-    var that = this;
-    that._listeners.forEach(function(listenerConfig) {
-        var listener = new DataLayer.Item(listenerConfig, -1);
-        that._triggerListener(listener, item);
-    });
+  var that = this;
+  that._listeners.forEach(function(listenerConfig) {
+    var listener = new DataLayer.Item(listenerConfig, -1);
+    that._triggerListener(listener, item);
+  });
 };
 
 /**
@@ -288,19 +287,19 @@ DataLayer.Manager.prototype._triggerListeners = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._triggerListenerOnPreviousItems = function(listener) {
-    var that = this;
-    var listenerIdx = listener.getIndex();
+  var that = this;
+  var listenerIdx = listener.getIndex();
 
-    if (listenerIdx === 0 || this._dataLayer.length === 0 || listenerIdx > this._dataLayer.length - 1) {
-        return;
-    }
+  if (listenerIdx === 0 || this._dataLayer.length === 0 || listenerIdx > this._dataLayer.length - 1) {
+    return;
+  }
 
-    var processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
-    for (var i = 0; i < processLength; i++) {
-        var itemConfig = this._dataLayer[i];
-        var item = new DataLayer.Item(itemConfig, i);
-        that._triggerListener(listener, item);
-    }
+  var processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
+  for (var i = 0; i < processLength; i++) {
+    var itemConfig = this._dataLayer[i];
+    var item = new DataLayer.Item(itemConfig, i);
+    that._triggerListener(listener, item);
+  }
 };
 
 /**
@@ -311,29 +310,29 @@ DataLayer.Manager.prototype._triggerListenerOnPreviousItems = function(listener)
  * @private
  */
 DataLayer.Manager.prototype._triggerListener = function(listener, item) {
-    var isMatching = false;
-    var listenerConfig = listener.getConfig();
-    var itemConfig = item.getConfig();
+  var isMatching = false;
+  var listenerConfig = listener.getConfig();
+  var itemConfig = item.getConfig();
 
-    if (item.utils.isDataConfig(itemConfig)) {
-        if (listenerConfig.on === events.CHANGE) {
-            isMatching = true;
-        }
-    } else if (item.utils.isEventConfig(itemConfig)) {
-        if (listenerConfig.on === events.EVENT ||
-            listenerConfig.on === itemConfig.event) {
-            isMatching = true;
-        }
-        if (itemConfig.data &&
-            listenerConfig.on === events.CHANGE) {
-            isMatching = true;
-        }
+  if (item.utils.isDataConfig(itemConfig)) {
+    if (listenerConfig.on === events.CHANGE) {
+      isMatching = true;
     }
+  } else if (item.utils.isEventConfig(itemConfig)) {
+    if (listenerConfig.on === events.EVENT ||
+      listenerConfig.on === itemConfig.event) {
+      isMatching = true;
+    }
+    if (itemConfig.data &&
+      listenerConfig.on === events.CHANGE) {
+      isMatching = true;
+    }
+  }
 
-    if (isMatching) {
-        var itemCopy = JSON.parse(JSON.stringify(item.getConfig()));
-        listenerConfig.handler(itemCopy);
-    }
+  if (isMatching) {
+    var itemCopy = JSON.parse(JSON.stringify(item.getConfig()));
+    listenerConfig.handler(itemCopy);
+  }
 };
 
 /**
@@ -343,12 +342,12 @@ DataLayer.Manager.prototype._triggerListener = function(listener, item) {
  * @private
  */
 DataLayer.Manager.prototype._registerListener = function(listenerOn) {
-    var listenerOnConfig = listenerOn.getConfig();
-    if (this._getRegisteredListeners(listenerOnConfig).length === 0) {
-        this._listeners.push(listenerOnConfig);
+  var listenerOnConfig = listenerOn.getConfig();
+  if (this._getRegisteredListeners(listenerOnConfig).length === 0) {
+    this._listeners.push(listenerOnConfig);
 
-        console.debug('listener registered on -', listenerOnConfig.on);
-    }
+    console.debug('listener registered on -', listenerOnConfig.on);
+  }
 };
 
 /**
@@ -358,19 +357,19 @@ DataLayer.Manager.prototype._registerListener = function(listenerOn) {
  * @private
  */
 DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
-    var listenerOffConfig = listenerOff.getConfig();
-    var tmp = JSON.parse(JSON.stringify(listenerOffConfig));
-    tmp.on = listenerOffConfig.off;
-    tmp.handler = listenerOffConfig.handler;
-    delete tmp.off;
-    var indexes = this._getRegisteredListeners(tmp);
-    for (var i = 0; i < indexes.length; i++) {
-        if (indexes[i] > -1) {
-            this._listeners.splice(indexes[i], 1);
+  var listenerOffConfig = listenerOff.getConfig();
+  var tmp = JSON.parse(JSON.stringify(listenerOffConfig));
+  tmp.on = listenerOffConfig.off;
+  tmp.handler = listenerOffConfig.handler;
+  delete tmp.off;
+  var indexes = this._getRegisteredListeners(tmp);
+  for (var i = 0; i < indexes.length; i++) {
+    if (indexes[i] > -1) {
+      this._listeners.splice(indexes[i], 1);
 
-            console.debug('listener unregistered on -', tmp.on);
-        }
+      console.debug('listener unregistered on -', tmp.on);
     }
+  }
 };
 
 /**
@@ -380,7 +379,7 @@ DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-    DataLayer.utils.deepMerge(this._state, item.getConfig().data);
+  DataLayer.utils.deepMerge(this._state, item.getConfig().data);
 };
 
 /**
@@ -391,22 +390,22 @@ DataLayer.Manager.prototype._updateState = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._getRegisteredListeners = function(listenerOnConfig) {
-    var listenerIndexes = [];
-    for (var i = 0; i <  this._listeners.length; i++) {
-        var existingListener = this._listeners[i];
-        if (listenerOnConfig.on === existingListener.on) {
-            if (listenerOnConfig.handler && (listenerOnConfig.handler.toString() !== existingListener.handler.toString())) {
-                continue;
-            }
-            listenerIndexes.push(i);
-            continue;
-        }
+  var listenerIndexes = [];
+  for (var i = 0; i < this._listeners.length; i++) {
+    var existingListener = this._listeners[i];
+    if (listenerOnConfig.on === existingListener.on) {
+      if (listenerOnConfig.handler && (listenerOnConfig.handler.toString() !== existingListener.handler.toString())) {
+        continue;
+      }
+      listenerIndexes.push(i);
+      continue;
     }
-    return listenerIndexes;
+  }
+  return listenerIndexes;
 };
 
 new DataLayer.Manager({
-    dataLayer: window.dataLayer
+  dataLayer: window.dataLayer
 });
 
 /**
@@ -445,4 +444,3 @@ new DataLayer.Manager({
  */
 
 module.exports = DataLayer;
-

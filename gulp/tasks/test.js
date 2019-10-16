@@ -10,13 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-    'use strict';
+  const jestcli = require('jest-cli');
 
-    const jestcli = require('jest-cli');
-    const config = require(`${__dirname}/../../jest.config.js`);
+  const configs = {
+    jest: require(`${__dirname}/../configs/jest.config.js`)
+  };
 
-    gulp.task('test', (done) => {
-        jestcli.runCLI(config,['.']);
-        done();
-    });
+  gulp.task('test', (done) => {
+    jestcli.runCLI(configs.jest,['.']);
+    done();
+  });
 };

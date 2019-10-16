@@ -12,14 +12,14 @@ governing permissions and limitations under the License.
 module.exports = function(gulp) {
   const browserSync = require('browser-sync').create();
 
-  const config = {
-    paths: require(`${__dirname}/../configs/paths.conf.js`)
+  const configs = {
+    paths: require(`${__dirname}/../configs/paths.config.js`)
   };
 
   gulp.task('serve', () => {
     browserSync.init({
       server: {
-        baseDir: [config.paths.serve.examples, config.paths.serve.base]
+        baseDir: [configs.paths.serve.examples, configs.paths.serve.base]
       }
     });
   });
@@ -30,11 +30,11 @@ module.exports = function(gulp) {
   });
 
   gulp.task('watch-examples', () => {
-    return gulp.watch([config.paths.examples.html, config.paths.examples.js], gulp.series('reload'));
+    return gulp.watch([configs.paths.examples.html, configs.paths.examples.js], gulp.series('reload'));
   });
 
   gulp.task('watch-scripts', () => {
-    return gulp.watch(config.paths.src.scripts, gulp.series('scripts', 'reload'));
+    return gulp.watch(configs.paths.src.scripts, gulp.series('scripts', 'reload'));
   });
 
   gulp.task('watch',
