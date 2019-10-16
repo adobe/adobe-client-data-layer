@@ -19,7 +19,7 @@ module.exports = function(gulp) {
     const log = require('gulplog');
 
     const config = {
-        paths: require(`${__dirname}/../configs/paths.conf.js`)
+        paths: require(`${__dirname}/../configs/paths.config.js`)
     };
 
     gulp.task('scripts', () => {

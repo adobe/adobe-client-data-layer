@@ -13,7 +13,7 @@ module.exports = function(gulp) {
   const eslint = require('gulp-eslint');
 
   const config = {
-    paths: require(`${__dirname}/../configs/paths.conf.js`)
+    paths: require(`${__dirname}/../configs/paths.config.js`)
   };
 
   gulp.task('lint', () => {

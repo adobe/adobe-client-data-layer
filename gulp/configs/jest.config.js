@@ -9,15 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-module.exports = function(gulp) {
-  const del = require('del');
-
-  const config = {
-    paths: require(`${__dirname}/../configs/paths.config.js`)
-  };
-
-  gulp.task('clean', (done) => {
-    del.sync(config.paths.dist);
-    done();
-  });
+module.exports = {
+  collectCoverage: true,
+  coverageDirectory: '<rootDir>/test/unit-test-coverage',
+  testMatch: ['<rootDir>/src/tests/**/*Test.js']
 };
