@@ -12,12 +12,12 @@ governing permissions and limitations under the License.
 module.exports = function(gulp) {
   const del = require('del');
 
-  const config = {
+  const configs = {
     paths: require(`${__dirname}/../configs/paths.config.js`)
   };
 
   gulp.task('clean', (done) => {
-    del.sync(config.paths.dist);
+    del.sync(configs.paths.dist);
     done();
   });
 };

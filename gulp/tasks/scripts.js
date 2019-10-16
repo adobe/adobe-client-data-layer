@@ -10,34 +10,30 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-    const browserify = require('browserify');
-    const source = require('vinyl-source-stream');
-    const buffer = require('vinyl-buffer');
-    const babel = require('gulp-babel');
-    const uglify = require('gulp-uglify');
-    const sourcemaps = require('gulp-sourcemaps');
-    const log = require('gulplog');
+  const babel = require('gulp-babel');
+  const browserify = require('browserify');
+  const buffer = require('vinyl-buffer');
+  const log = require('gulplog');
+  const source = require('vinyl-source-stream');
+  const sourcemaps = require('gulp-sourcemaps');
+  const uglify = require('gulp-uglify');
 
-    const config = {
-        paths: require(`${__dirname}/../configs/paths.config.js`)
-    };
-
-    gulp.task('scripts', () => {
-        const b = browserify({
-            entries: './src/scripts/DataLayer.js',
-            debug: true
-        });
-
-        return b.bundle()
-            .pipe(source('datalayer.js'))
-            .pipe(buffer())
-            .pipe(sourcemaps.init({loadMaps: true}))
-            .pipe((babel({
-                presets: ['@babel/env']
-            })))
-            .pipe(uglify())
-            .on('error', log.error)
-            .pipe(sourcemaps.write('./'))
-            .pipe(gulp.dest('./dist/'));
+  gulp.task('scripts', () => {
+    const b = browserify({
+      entries: './src/scripts/DataLayer.js',
+      debug: true
     });
+
+    return b.bundle()
+      .pipe(source('datalayer.js'))
+      .pipe(buffer())
+      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe((babel({
+        presets: ['@babel/env']
+      })))
+      .pipe(uglify())
+      .on('error', log.error)
+      .pipe(sourcemaps.write('./'))
+      .pipe(gulp.dest('./dist/'));
+  });
 };

@@ -30,26 +30,26 @@ DataLayer.utils = {};
  * @static
  */
 DataLayer.utils.deepMerge = function(target, source) {
-    var tmpSource = {};
-    var that = this;
-    if (that.isObject(target) && that.isObject(source)) {
-        Object.keys(source).forEach(function(key) {
-            if (that.isObject(source[key])) {
-                if (!target[key]) {
-                    tmpSource[key] = {};
-                    Object.assign(target, tmpSource);
-                }
-                that.deepMerge(target[key], source[key]);
-            } else {
-                if (source[key] === undefined) {
-                    delete target[key];
-                } else {
-                    tmpSource[key] = source[key];
-                    Object.assign(target, tmpSource);
-                }
-            }
-        });
-    }
+  var tmpSource = {};
+  var that = this;
+  if (that.isObject(target) && that.isObject(source)) {
+    Object.keys(source).forEach(function(key) {
+      if (that.isObject(source[key])) {
+        if (!target[key]) {
+          tmpSource[key] = {};
+          Object.assign(target, tmpSource);
+        }
+        that.deepMerge(target[key], source[key]);
+      } else {
+        if (source[key] === undefined) {
+          delete target[key];
+        } else {
+          tmpSource[key] = source[key];
+          Object.assign(target, tmpSource);
+        }
+      }
+    });
+  }
 };
 
 /**
@@ -60,7 +60,7 @@ DataLayer.utils.deepMerge = function(target, source) {
  * @static
  */
 DataLayer.utils.isObject = function(obj) {
-    return (obj && typeof obj === 'object' && !Array.isArray(obj));
+  return (obj && typeof obj === 'object' && !Array.isArray(obj));
 };
 
 module.exports = DataLayer.utils;
