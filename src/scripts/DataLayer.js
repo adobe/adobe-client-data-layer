@@ -125,7 +125,7 @@ DataLayer.Manager.prototype._initialize = function() {
 
   const readyItem = new DataLayer.Item({
     event: events.READY
-  }, -1);
+  });
   that._triggerListeners(readyItem);
 };
 
@@ -149,7 +149,7 @@ DataLayer.Manager.prototype._augment = function() {
 
     Object.keys(pushArguments).forEach(function(key) {
       const itemConfig = pushArguments[key];
-      const item = new DataLayer.Item(itemConfig, -1);
+      const item = new DataLayer.Item(itemConfig);
 
       that._processItem(item);
 
@@ -275,7 +275,7 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
 DataLayer.Manager.prototype._triggerListeners = function(item) {
   const that = this;
   that._listeners.forEach(function(listenerConfig) {
-    const listener = new DataLayer.Item(listenerConfig, -1);
+    const listener = new DataLayer.Item(listenerConfig);
     that._triggerListener(listener, item);
   });
 };
