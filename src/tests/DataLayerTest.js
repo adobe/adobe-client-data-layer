@@ -348,6 +348,88 @@ test('invalid listener off', () => {
     expect(mockCallback.mock.calls.length).toBe(2);
 });
 
+// high load benchmark: runs alone in 10.139s with commit: df0fef59c86635d3c29e6f698352491dcf39003c (15/oct/2019)
+test.skip('high load', () => {
+    const mockCallback = jest.fn();
+    const argOn = {
+        'on': 'carousel clicked',
+        'handler': mockCallback
+    };
+    dataLayer.push(argOn);
+
+    var data = {};
+    for (var i= 0; i < 1000; i++) {
+        var pageId = '/content/mysite/en/products/crossfit' + i;
+        var pageKey = 'page' + i;
+        data[pageKey] = {
+            'id': pageId,
+            'siteLanguage': 'en-us',
+            'siteCountry': 'US',
+            'pageType': 'product detail',
+            'pageName': 'pdp - crossfit zoom',
+            'pageCategory': 'womens > shoes > athletic'
+        };
+
+        dataLayer.push({
+            'event': 'carousel clicked',
+            'data': data
+        });
+        expect(dataLayer.getState()).toMatchObject(data);
+        expect(mockCallback.mock.calls.length).toBe(i + 1);
+    }
+
+});
+
+test('invalid item is filtered out from array', () => {
+    dataLayer = [
+        {
+            'off': 'carousel 15 clicked'
+        },
+        {
+            'on': 'carousel 15 clicked'
+        },
+        {
+            'data': {
+                'invalid': {}
+            },
+            'invalid': 'invalid'
+        },
+        {
+            'event': 'clicked',
+            'data': {
+                'invalid': {}
+            },
+            'invalid': 'invalid'
+        }
+    ];
+    new DataLayer.Manager({ dataLayer: dataLayer });
+    dataLayer.push({
+        'data': {
+            'invalid': {}
+        },
+        'invalid': 'invalid'
+    });
+    dataLayer.push({
+        'event': 'clicked',
+        'data': {
+            'invalid': {}
+        },
+        'invalid': 'invalid'
+    });
+    dataLayer.push({
+        'on': 'carousel 14 clicked',
+        'handler': function(event) {
+            //
+        },
+    });
+    dataLayer.push({
+        'off': 'carousel 14 clicked',
+    });
+    expect(dataLayer.length).toEqual(0);
+});
+
+
+
 /**
  * Tests for DataLayer.utils functions
  */

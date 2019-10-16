@@ -154,8 +154,8 @@ DataLayer.Manager.prototype._augment = function() {
 
             that._processItem(item);
 
-            // filter out event listeners
-            if (item.utils.isListenerConfig(itemConfig)) {
+            // filter out event listeners and invalid items
+            if (item.utils.isListenerConfig(itemConfig) || !item.isValid()) {
                 delete filteredArguments[key];
             }
         });
@@ -189,8 +189,8 @@ DataLayer.Manager.prototype._processItems = function() {
 
         that._processItem(item);
 
-        // remove event listeners from the data layer array
-        if (item.utils.isListenerConfig(item.getConfig())) {
+        // remove event listener or invalid item from the data layer array
+        if (item.utils.isListenerConfig(item.getConfig()) || !item.isValid()) {
             that._dataLayer.splice(i, 1);
             i--;
         }
