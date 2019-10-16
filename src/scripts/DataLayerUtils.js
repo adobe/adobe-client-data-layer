@@ -9,58 +9,46 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-/* eslint no-console: "off" */
-/* eslint no-unused-vars: "off" */
-'use strict';
-
-const DataLayer = {};
-
-/**
- * Data Layer utilities.
- *
- * @type {Object}
- */
-DataLayer.utils = {};
-
-/**
- * Deep merges a source and target object.
- *
- * @param {Object} target The target object.
- * @param {Object} source The source object.
- * @static
- */
-DataLayer.utils.deepMerge = function(target, source) {
-  const tmpSource = {};
-  const that = this;
-  if (that.isObject(target) && that.isObject(source)) {
-    Object.keys(source).forEach(function(key) {
-      if (that.isObject(source[key])) {
-        if (!target[key]) {
-          tmpSource[key] = {};
-          Object.assign(target, tmpSource);
-        }
-        that.deepMerge(target[key], source[key]);
-      } else {
-        if (source[key] === undefined) {
-          delete target[key];
+const utils = {
+  /**
+   * Deep merges a source and target object.
+   *
+   * @param {Object} target The target object.
+   * @param {Object} source The source object.
+   * @static
+   */
+  deepMerge: function(target, source) {
+    const tmpSource = {};
+    const that = this;
+    if (that.isObject(target) && that.isObject(source)) {
+      Object.keys(source).forEach(function(key) {
+        if (that.isObject(source[key])) {
+          if (!target[key]) {
+            tmpSource[key] = {};
+            Object.assign(target, tmpSource);
+          }
+          that.deepMerge(target[key], source[key]);
         } else {
-          tmpSource[key] = source[key];
-          Object.assign(target, tmpSource);
+          if (source[key] === undefined) {
+            delete target[key];
+          } else {
+            tmpSource[key] = source[key];
+            Object.assign(target, tmpSource);
+          }
         }
-      }
-    });
+      });
+    }
+  },
+  /**
+   * Checks whether the passed object is an object.
+   *
+   * @param {Object} obj The object that will be checked.
+   * @returns {Boolean} true if it is an object, false otherwise.
+   * @static
+   */
+  isObject: function(obj) {
+    return (obj && typeof obj === 'object' && !Array.isArray(obj));
   }
 };
 
-/**
- * Checks whether the passed object is an object.
- *
- * @param {Object} obj The object that will be checked.
- * @returns {Boolean} true if it is an object, false otherwise.
- * @static
- */
-DataLayer.utils.isObject = function(obj) {
-  return (obj && typeof obj === 'object' && !Array.isArray(obj));
-};
-
-module.exports = DataLayer.utils;
+module.exports = utils;
