@@ -296,8 +296,8 @@ DataLayer.Manager.prototype._triggerListener = function(listener) {
  */
 DataLayer.Manager.prototype._triggerListeners = function(item) {
   const that = this;
-  const eventNames = item.eventNames;
-  eventNames.forEach(function(eventName) {
+  const triggeredEvents = that._getTriggeredEvents(item);
+  triggeredEvents.forEach(function(eventName) {
     if (that._listeners[eventName]) {
       that._listeners[eventName].forEach(function(listener) {
         that._callListenerHandler(listener, item);
@@ -353,6 +353,31 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
     }
   }
   return isMatching;
+};
+
+/**
+ * Returns the names of the events that are triggered for this item.
+ *
+ * @param {DataLayer.Item} item The item.
+ * @returns {Array} An array with the names of the events that are triggered for this item.
+ * @private
+ */
+DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
+  if (!item) {
+    return [];
+  }
+  const triggeredEvents = [];
+  const itemConfig = item.config;
+  if (DataLayer.utils.isDataConfig(itemConfig)) {
+    triggeredEvents.push(events.CHANGE);
+  } else if (DataLayer.utils.isEventConfig(itemConfig)) {
+    triggeredEvents.push(events.EVENT);
+    triggeredEvents.push(itemConfig.event);
+    if (itemConfig.data) {
+      triggeredEvents.push(events.CHANGE);
+    }
+  }
+  return triggeredEvents;
 };
 
 /**

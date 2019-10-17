@@ -28,15 +28,6 @@ const itemType = {
   LISTENER_OFF: 'listenerOff'
 };
 
-const events = {
-  /** Represents an event triggered for any change in the data layer state */
-  CHANGE: 'datalayer:change',
-  /** Represents an event triggered for any event push to the data layer */
-  EVENT: 'datalayer:event',
-  /** Represents an event triggered when the data layer has initialized */
-  READY: 'datalayer:ready'
-};
-
 /**
  * A data layer item.
  *
@@ -52,24 +43,21 @@ class Item {
    */
   constructor(itemConfig, index) {
     const that = this;
-    that._eventNames = [];
     that._config = itemConfig;
-    that._index = index;
-    if (utils.isDataConfig(itemConfig)) {
-      that._type = itemType.DATA;
-      that._eventNames.push(events.CHANGE);
-    } else if (utils.isEventConfig(itemConfig)) {
-      that._type = itemType.EVENT;
-      that._eventNames.push(events.EVENT);
-      that._eventNames.push(itemConfig.event);
-      if (itemConfig.data) {
-        that._eventNames.push(events.CHANGE);
+    that._type = (function(config) {
+      let type;
+      if (utils.isDataConfig(config)) {
+        type = itemType.DATA;
+      } else if (utils.isEventConfig(config)) {
+        type = itemType.EVENT;
+      } else if (utils.isListenerOnConfig(config)) {
+        type = itemType.LISTENER_ON;
+      } else if (utils.isListenerOffConfig(config)) {
+        type = itemType.LISTENER_OFF;
       }
-    } else if (utils.isListenerOnConfig(itemConfig)) {
-      that._type = itemType.LISTENER_ON;
-    } else if (utils.isListenerOffConfig(itemConfig)) {
-      that._type = itemType.LISTENER_OFF;
-    }
+      return type;
+    }(itemConfig));
+    that._index = index;
     that._valid = !!that._type;
   }
 
@@ -107,15 +95,6 @@ class Item {
    */
   get index() {
     return this._index;
-  };
-
-  /**
-   * Returns the names of the events that this item can be listened to.
-   *
-   * @returns {Array} The names of the events that this item can be listened to.
-   */
-  get eventNames() {
-    return this._eventNames;
   };
 }
 
