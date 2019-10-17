@@ -371,8 +371,8 @@ DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
   if (DataLayer.utils.isDataConfig(itemConfig)) {
     triggeredEvents.push(events.CHANGE);
   } else if (DataLayer.utils.isEventConfig(itemConfig)) {
-    triggeredEvents.push(events.EVENT);
     triggeredEvents.push(itemConfig.event);
+    triggeredEvents.push(events.EVENT);
     if (itemConfig.data) {
       triggeredEvents.push(events.CHANGE);
     }
