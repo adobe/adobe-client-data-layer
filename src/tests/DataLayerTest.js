@@ -118,7 +118,7 @@ test('listener on: datalayer:event', () => {
   };
   dataLayer.push(argOn);
   dataLayer.push({
-    'event': 'datalayer:event',
+    'event': 'clicked',
     'info': {
       'id': '/content/mysite/en/home/jcr:content/root/carousel5'
     }
