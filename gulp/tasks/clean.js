@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
   const del = require('del');
+  const fs = require('fs');
 
   const configs = {
     paths: require(`${__dirname}/../configs/paths.config.js`)
@@ -18,6 +19,7 @@ module.exports = function(gulp) {
 
   gulp.task('clean', (done) => {
     del.sync(configs.paths.dist);
+    fs.mkdirSync(configs.paths.dist);
     done();
   });
 };
