@@ -12,9 +12,6 @@
   "bugs": {
     "url": "https://github.com/adobe/adobe-client-data-layer/issues"
   },
-  "scripts": {
-    "test": "jest --config jest.config.js"
-  },
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/preset-env": "^7.6.3",
