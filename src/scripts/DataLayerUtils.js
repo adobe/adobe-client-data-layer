@@ -70,13 +70,20 @@ const utils = {
    * @static
    */
   isEventConfig: function(itemConfig) {
-    if (!itemConfig) {
+    if (!itemConfig || !itemConfig.event || typeof itemConfig.event !== 'string') {
       return false;
     }
     const keys = Object.keys(itemConfig);
-    return (keys.length === 1 && itemConfig.event) ||
-      (keys.length === 2 && itemConfig.event && (itemConfig.info || itemConfig.data)) ||
-      (keys.length === 3 && itemConfig.event && itemConfig.info && itemConfig.data);
+    if (keys.length > 3) {
+      return false;
+    }
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (!(key === 'event' || key === 'info' || key === 'data')) {
+        return false;
+      }
+    }
+    return true;
   },
   /**
    * Determines whether the passed item is a listener configuration.
@@ -96,13 +103,32 @@ const utils = {
    * @static
    */
   isListenerOnConfig: function(itemConfig) {
-    if (!itemConfig) {
+    if (!itemConfig ||
+        !itemConfig.on || typeof itemConfig.on !== 'string' ||
+        !itemConfig.handler || typeof itemConfig.handler !== 'function') {
       return false;
     }
     const keys = Object.keys(itemConfig);
-    return (keys.length === 2 && itemConfig.on && itemConfig.handler) ||
-      (keys.length === 3 && itemConfig.on && itemConfig.handler && (itemConfig.scope || itemConfig.selector)) ||
-      (keys.length === 4 && itemConfig.on && itemConfig.handler && itemConfig.scope && itemConfig.selector);
+    if (keys.length > 4) {
+      return false;
+    }
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      if (!(key === 'on' || key === 'handler' || key === 'scope' || key === 'selector')) {
+        return false;
+      }
+    }
+    if (itemConfig.selector) {
+      if (typeof itemConfig.selector !== 'string') {
+        return false;
+      }
+    }
+    if (itemConfig.scope) {
+      if (!(itemConfig.scope === 'past' || itemConfig.scope === 'future' || itemConfig.scope === 'all')) {
+        return false;
+      }
+    }
+    return true;
   },
   /**
    * Determines whether the passed item configuration is a listener off configuration.
