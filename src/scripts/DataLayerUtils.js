@@ -117,9 +117,11 @@ const utils = {
     }
     const keys = Object.keys(itemConfig);
     return (keys.length === 1 && itemConfig.off) ||
-      (keys.length === 2 && itemConfig.off && itemConfig.handler) ||
-      (keys.length === 3 && itemConfig.off && itemConfig.handler && (itemConfig.scope || itemConfig.selector)) ||
-      (keys.length === 4 && itemConfig.off && itemConfig.handler && itemConfig.scope && itemConfig.selector);
+      (keys.length === 2 && itemConfig.off && (itemConfig.handler || itemConfig.scope || itemConfig.selector)) ||
+        (keys.length === 3 && itemConfig.off && itemConfig.handler && (itemConfig.scope || itemConfig.selector)) ||
+        (keys.length === 3 && itemConfig.off && itemConfig.scope && (itemConfig.handler || itemConfig.selector)) ||
+        (keys.length === 3 && itemConfig.off && itemConfig.selector && (itemConfig.scope || itemConfig.handler)) ||
+        (keys.length === 4 && itemConfig.off && itemConfig.handler && itemConfig.scope && itemConfig.selector);
   }
 };
 

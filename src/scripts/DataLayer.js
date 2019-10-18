@@ -130,6 +130,16 @@ DataLayer.Manager.prototype._initialize = function() {
 };
 
 /**
+ * Updates the state with the item.
+ *
+ * @param {DataLayer.Item} item The item .
+ * @private
+ */
+DataLayer.Manager.prototype._updateState = function(item) {
+  DataLayer.utils.deepMerge(this._state, item.config.data);
+};
+
+/**
  * Augments the data layer Array Object, overriding push() and adding getState().
  *
  * @private
@@ -387,9 +397,8 @@ DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._registerListener = function(listenerOn) {
-  const listenerOnConfig = listenerOn.config;
-  const eventName = listenerOnConfig.on;
-  if (this._getRegisteredListeners(listenerOnConfig).length === 0) {
+  const eventName = listenerOn.config.on;
+  if (!this._isRegisteredListener(listenerOn)) {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
     }
@@ -406,13 +415,8 @@ DataLayer.Manager.prototype._registerListener = function(listenerOn) {
  * @private
  */
 DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
-  const listenerOffConfig = listenerOff.config;
-  const eventName = listenerOffConfig.off;
-  const listenerOnConfig = JSON.parse(JSON.stringify(listenerOffConfig));
-  listenerOnConfig.on = eventName;
-  listenerOnConfig.handler = listenerOffConfig.handler;
-  delete listenerOnConfig.off;
-  const indexes = this._getRegisteredListeners(listenerOnConfig);
+  const indexes = this._getListenersMatchingListenerOff(listenerOff);
+  const eventName = listenerOff.config.off;
   for (let i = 0; i < indexes.length; i++) {
     if (indexes[i] > -1) {
       this._listeners[eventName].splice(indexes[i], 1);
@@ -423,37 +427,95 @@ DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
 };
 
 /**
- * Updates the state with the item.
+ * Returns the indexes of the registered listeners that match the listener off.
  *
- * @param {DataLayer.Item} item The item .
+ * @param {DataLayer.Item} listenerOff The listener off.
+ * @returns {Array} The indexes of the matching listeners.
  * @private
  */
-DataLayer.Manager.prototype._updateState = function(item) {
-  DataLayer.utils.deepMerge(this._state, item.config.data);
-};
-
-/**
- * Returns the indexes of the registered listeners that match the specified listener.
- *
- * @param {ListenerOnConfig} listenerOnConfig The listener on configuration.
- * @returns {Array} The indexes of the listener matches.
- * @private
- */
-DataLayer.Manager.prototype._getRegisteredListeners = function(listenerOnConfig) {
+DataLayer.Manager.prototype._getListenersMatchingListenerOff = function(listenerOff) {
+  const that = this;
   const listenerIndexes = [];
-  const eventName = listenerOnConfig.on;
-  if (this._listeners[eventName]) {
-    for (let i = 0; i < this._listeners[eventName].length; i++) {
-      const existingListenerOnConfig = this._listeners[eventName][i].config;
-      if (eventName === existingListenerOnConfig.on) {
-        if (listenerOnConfig.handler && (listenerOnConfig.handler.toString() !== existingListenerOnConfig.handler.toString())) {
-          continue;
-        }
+  const eventName = listenerOff.config.off;
+  if (that._listeners[eventName]) {
+    for (let i = 0; i < that._listeners[eventName].length; i++) {
+      const listenerOn = that._listeners[eventName][i];
+      if (that._listenerOffMatchesListenerOn(listenerOff, listenerOn)) {
         listenerIndexes.push(i);
       }
     }
   }
   return listenerIndexes;
+};
+
+/**
+ * Checks whether the listener on matches the listener off.
+ *
+ * @param {DataLayer.Item} listenerOff The listener off.
+ * @param {DataLayer.Item} listenerOn The listener on.
+ * @returns {Boolean} true if the listener on matches the listener off, false otherwise.
+ * @private
+ */
+DataLayer.Manager.prototype._listenerOffMatchesListenerOn = function(listenerOff, listenerOn) {
+  const listenerOffConfig = listenerOff.config;
+  const listenerOnConfig = listenerOn.config;
+
+  for (let i = 0; i < Object.keys(listenerOffConfig).length; i++) {
+    const key = Object.keys(listenerOffConfig)[i];
+    if (key === 'off') {
+      if (listenerOffConfig.off !== listenerOnConfig.on) {
+        return false;
+      }
+      continue;
+    }
+    if (listenerOffConfig[key] !== listenerOnConfig[key]) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * Checks whether the listener is registered.
+ *
+ * @param {DataLayer.Item} listenerOn The listener on.
+ * @returns {Boolean} true if the listener is registered, false otherwise.
+ * @private
+ */
+DataLayer.Manager.prototype._isRegisteredListener = function(listenerOn) {
+  const that = this;
+  const eventName = listenerOn.config.on;
+  if (that._listeners[eventName]) {
+    for (let i = 0; i < that._listeners[eventName].length; i++) {
+      const existingListenerOn = that._listeners[eventName][i];
+      if (that.listenersAreEqual(listenerOn, existingListenerOn)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+/**
+ * Checks whether the listeners are equal.
+ *
+ * @param {DataLayer.Item} listener1 The listener.
+ * @param {DataLayer.Item} listener2 The listener.
+ * @returns {Boolean} true if the listeners are equal, false otherwise.
+ * @private
+ */
+DataLayer.Manager.prototype.listenersAreEqual = function(listener1, listener2) {
+  const listenerConfig1 = listener1.config;
+  const listenerConfig2 = listener2.config;
+  if (Object.keys(listenerConfig1).length !== Object.keys(listenerConfig2).length) {
+    return false;
+  }
+  Object.keys(listenerConfig1).forEach(function(key) {
+    if (listenerConfig1[key] !== listenerConfig2[key]) {
+      return false;
+    }
+  });
+  return true;
 };
 
 new DataLayer.Manager({
