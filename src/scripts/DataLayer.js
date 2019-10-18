@@ -71,6 +71,8 @@ const listenerScope = {
 /**
  * @typedef  {Object} ListenerOffConfig
  * @property {String} off Name of the event to unbind.
+ * @property {String} [selector] Object key in the state to bind to.
+ * @property {ListenerScope} [scope] Scope of the listener.
  * @property {Function} [handler] Handler for a previously attached event to unbind.
  */
 
