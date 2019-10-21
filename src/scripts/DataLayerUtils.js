@@ -57,10 +57,17 @@ const utils = {
    * @static
    */
   isDataConfig: function(itemConfig) {
-    if (!itemConfig) {
-      return false;
-    }
-    return (Object.keys(itemConfig).length === 1 && itemConfig.data);
+    const constraints = {
+      properties: [
+        {
+          key: 'data',
+          type: 'object',
+          mandatory: true
+        }
+      ],
+      customPropertiesAllowed: false
+    };
+    return utils.itemConfigMatchesConstraints(itemConfig, constraints);
   },
   /**
    * Determines whether the passed item configuration is an event configuration.
@@ -70,20 +77,27 @@ const utils = {
    * @static
    */
   isEventConfig: function(itemConfig) {
-    if (!itemConfig || !itemConfig.event || typeof itemConfig.event !== 'string') {
-      return false;
-    }
-    const keys = Object.keys(itemConfig);
-    if (keys.length > 3) {
-      return false;
-    }
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (!(key === 'event' || key === 'info' || key === 'data')) {
-        return false;
-      }
-    }
-    return true;
+    const constraints = {
+      properties: [
+        {
+          key: 'event',
+          type: 'string',
+          mandatory: true
+        },
+        {
+          key: 'info',
+          type: 'object',
+          mandatory: false
+        },
+        {
+          key: 'data',
+          type: 'object',
+          mandatory: false
+        }
+      ],
+      customPropertiesAllowed: false
+    };
+    return utils.itemConfigMatchesConstraints(itemConfig, constraints);
   },
   /**
    * Determines whether the passed item is a listener configuration.
@@ -103,32 +117,33 @@ const utils = {
    * @static
    */
   isListenerOnConfig: function(itemConfig) {
-    if (!itemConfig ||
-        !itemConfig.on || typeof itemConfig.on !== 'string' ||
-        !itemConfig.handler || typeof itemConfig.handler !== 'function') {
-      return false;
-    }
-    const keys = Object.keys(itemConfig);
-    if (keys.length > 4) {
-      return false;
-    }
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (!(key === 'on' || key === 'handler' || key === 'scope' || key === 'selector')) {
-        return false;
-      }
-    }
-    if (itemConfig.selector) {
-      if (typeof itemConfig.selector !== 'string') {
-        return false;
-      }
-    }
-    if (itemConfig.scope) {
-      if (!(itemConfig.scope === 'past' || itemConfig.scope === 'future' || itemConfig.scope === 'all')) {
-        return false;
-      }
-    }
-    return true;
+    const constraints = {
+      properties: [
+        {
+          key: 'on',
+          type: 'string',
+          mandatory: true
+        },
+        {
+          key: 'handler',
+          type: 'function',
+          mandatory: true
+        },
+        {
+          key: 'scope',
+          type: 'string',
+          values: ['past', 'future', 'all'],
+          mandatory: false
+        },
+        {
+          key: 'selector',
+          type: 'string',
+          mandatory: false
+        }
+      ],
+      customPropertiesAllowed: false
+    };
+    return utils.itemConfigMatchesConstraints(itemConfig, constraints);
   },
   /**
    * Determines whether the passed item configuration is a listener off configuration.
@@ -138,35 +153,113 @@ const utils = {
    * @static
    */
   isListenerOffConfig: function(itemConfig) {
-    if (!itemConfig || !itemConfig.off || typeof itemConfig.off !== 'string') {
+    const constraints = {
+      properties: [
+        {
+          key: 'off',
+          type: 'string',
+          mandatory: true
+        },
+        {
+          key: 'handler',
+          type: 'function',
+          mandatory: false
+        },
+        {
+          key: 'scope',
+          type: 'string',
+          values: ['past', 'future', 'all'],
+          mandatory: false
+        },
+        {
+          key: 'selector',
+          type: 'string',
+          mandatory: false
+        }
+      ],
+      customPropertiesAllowed: false
+    };
+    return utils.itemConfigMatchesConstraints(itemConfig, constraints);
+  },
+  /**
+   * Determines whether the item configuration matches the constraints.
+   *
+   * @param {ItemConfig} itemConfig The item configuration.
+   * @param {Object} constraints The constraints on the item configuration.
+   * @returns {Boolean} true if the item configuration matches the constraints, false otherwise.
+   * @static
+   */
+  itemConfigMatchesConstraints: function(itemConfig, constraints) {
+    if (!itemConfig) {
       return false;
     }
-    const keys = Object.keys(itemConfig);
-    if (keys.length > 4) {
-      return false;
-    }
-    for (let i = 0; i < keys.length; i++) {
-      const key = keys[i];
-      if (!(key === 'off' || key === 'handler' || key === 'scope' || key === 'selector')) {
-        return false;
+    for (let i = 0; i < constraints.properties.length; i++) {
+      const key = constraints.properties[i].key;
+      const type = constraints.properties[i].type;
+      const values = constraints.properties[i].values;
+      const mandatory = constraints.properties[i].mandatory;
+      const configValue = itemConfig[key];
+      const configValueType = typeof configValue;
+      if (mandatory) {
+        if (!configValue || (configValueType !== type) || !utils.valueIsAllowed(configValue, values)) {
+          return false;
+        }
+      } else {
+        if (configValue && ((configValueType !== type) || !utils.valueIsAllowed(configValue, values))) {
+          return false;
+        }
       }
     }
-    if (itemConfig.handler) {
-      if (typeof itemConfig.handler !== 'function') {
-        return false;
+    return constraints.customPropertiesAllowed || !utils.itemConfigHasCustomProperties(itemConfig, constraints);
+  },
+  /**
+   * Determines whether the item configuration has custom properties.
+   *
+   * @param {ItemConfig} itemConfig The item configuration.
+   * @param {Object} constraints The constraints on the item configuration.
+   * @returns {Boolean} true if the item configuration has custom properties, false otherwise.
+   * @static
+   */
+  itemConfigHasCustomProperties: function(itemConfig, constraints) {
+    const itemConfigKeys = Object.keys(itemConfig);
+    if (itemConfigKeys.length > constraints.properties.length) {
+      return true;
+    }
+    for (let j = 0; j < itemConfigKeys.length; j++) {
+      const itemConfigKey = itemConfigKeys[j];
+      let itemConfigKeyMatchesConstraintKey = false;
+      for (let k = 0; k < constraints.properties.length; k++) {
+        const key = constraints.properties[k].key;
+        if (itemConfigKey === key) {
+          itemConfigKeyMatchesConstraintKey = true;
+          break;
+        }
+      }
+      if (!itemConfigKeyMatchesConstraintKey) {
+        return true;
       }
     }
-    if (itemConfig.selector) {
-      if (typeof itemConfig.selector !== 'string') {
-        return false;
+    return false;
+  },
+  /**
+   * Determines whether the value is allowed by the constraints.
+   *
+   * @param {String} value The value.
+   * @param {Array} allowedValues The array of allowed values.
+   * @returns {Boolean} true if the value is allowed by the constraints, false otherwise.
+   * @static
+   */
+  valueIsAllowed: function(value, allowedValues) {
+    if (!allowedValues) {
+      return true;
+    }
+    for (let i = 0; i < allowedValues.length; i++) {
+      const allowed = allowedValues[i];
+      if (value === allowed) {
+        return true;
       }
     }
-    if (itemConfig.scope) {
-      if (!(itemConfig.scope === 'past' || itemConfig.scope === 'future' || itemConfig.scope === 'all')) {
-        return false;
-      }
-    }
-    return true;
+    return false;
   }
 };
 
