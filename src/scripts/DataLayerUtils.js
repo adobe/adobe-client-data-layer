@@ -190,9 +190,6 @@ const utils = {
    * @static
    */
   itemConfigMatchesConstraints: function(itemConfig, constraints) {
-    if (!itemConfig) {
-      return false;
-    }
     for (let i = 0; i < constraints.properties.length; i++) {
       const key = constraints.properties[i].key;
       const type = constraints.properties[i].type;

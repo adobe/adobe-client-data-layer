@@ -272,9 +272,6 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
       this._triggerListener(listener);
       // register the listener
       this._registerListener(listener);
-      break;
-    default:
-      console.error('The listener does not have a valid scope: ' + scope);
   }
 };
 
@@ -292,7 +289,7 @@ DataLayer.Manager.prototype._triggerListener = function(listener) {
     return;
   }
 
-  const processLength = (!listenerIdx || listenerIdx === -1) ? this._dataLayer.length : listenerIdx;
+  const processLength = (!listenerIdx) ? this._dataLayer.length : listenerIdx;
   for (let i = 0; i < processLength; i++) {
     const itemConfig = this._dataLayer[i];
     const item = new DataLayer.Item(itemConfig, i);
@@ -343,9 +340,6 @@ DataLayer.Manager.prototype._callListenerHandler = function(listener, item) {
  * @private
  */
 DataLayer.Manager.prototype._isMatching = function(listener, item) {
-  if (!listener || !item) {
-    return false;
-  }
   const listenerConfig = listener.config;
   const itemConfig = item.config;
   let isMatching = false;
@@ -375,9 +369,6 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
  * @private
  */
 DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
-  if (!item) {
-    return [];
-  }
   const triggeredEvents = [];
   const itemConfig = item.config;
   if (DataLayer.utils.isDataConfig(itemConfig)) {
