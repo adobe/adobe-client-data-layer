@@ -18,6 +18,10 @@ beforeEach(() => {
   new DataLayer.Manager({ dataLayer: dataLayer });
 });
 
+// -----------------------------------------------------------------------------------------------------------------
+// Data
+// -----------------------------------------------------------------------------------------------------------------
+
 test('add data', () => {
   const data = {
     'page': {
@@ -63,6 +67,10 @@ test('remove data', () => {
   expect(dataLayer.getState()).toMatchObject(updatedData);
 });
 
+// -----------------------------------------------------------------------------------------------------------------
+// Event
+// -----------------------------------------------------------------------------------------------------------------
+
 test('add event', () => {
   const data = {
     'component': {
@@ -80,6 +88,10 @@ test('add event', () => {
   });
   expect(dataLayer.getState()).toMatchObject(data);
 });
+
+// -----------------------------------------------------------------------------------------------------------------
+// Event listener on
+// -----------------------------------------------------------------------------------------------------------------
 
 test('check dataLayer change event was executed', () => {
   const mockCallback = jest.fn();
@@ -130,6 +142,38 @@ test('listener on: datalayer:event', () => {
   dataLayer.push(argOff);
   dataLayer.push({
     'event': 'datalayer:event',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+test('listener on: datalayer:change', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'datalayer:change',
+    'handler': mockCallback
+  };
+  dataLayer.push(argOn);
+  dataLayer.push({
+    'event': 'clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    },
+    data: {
+      'page': {
+        'id': '/content/mysite/en/products/running'
+      }
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+  const argOff = {
+    'off': 'datalayer:change'
+  };
+  dataLayer.push(argOff);
+  dataLayer.push({
+    'event': 'datalayer:change',
     'info': {
       'id': '/content/mysite/en/home/jcr:content/root/carousel5'
     }
@@ -263,6 +307,164 @@ test('listener on: scope = undefined (default to future)', () => {
   expect(mockCallback.mock.calls.length).toBe(1);
 });
 
+test('listener on: register a handler that has already been registered', () => {
+  const mockCallback = jest.fn();
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  const argOn = {
+    'on': 'carousel clicked',
+    'handler': mockCallback
+  };
+  dataLayer.push(argOn);
+  dataLayer.push(argOn);
+  expect(mockCallback.mock.calls.length).toBe(0);
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+test('listener on: register a handler (with a static function) that has already been registered', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'carousel clicked',
+    'handler': function() {
+      mockCallback();
+    }
+  };
+  dataLayer.push(argOn);
+  dataLayer.push(argOn);
+
+  // -> only one listener is registered
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Event listener off
+// -----------------------------------------------------------------------------------------------------------------
+
+test('listener off: unregister one handler', () => {
+  const mockCallback = jest.fn();
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  const argOn = {
+    'on': 'carousel clicked',
+    'scope': 'all',
+    'handler': mockCallback
+  };
+  dataLayer.push(argOn);
+  expect(mockCallback.mock.calls.length).toBe(1);
+
+  const argOff = {
+    'off': 'carousel clicked',
+    'scope': 'all',
+    'handler': mockCallback
+  };
+  dataLayer.push(argOff);
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+test('listener off: unregister a handler with a static function', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'carousel clicked',
+    'scope': 'all',
+    'handler': function() {
+      mockCallback();
+    }
+  };
+  dataLayer.push(argOn);
+
+  const argOff = {
+    'off': 'carousel clicked',
+    'scope': 'all',
+    'handler': function() {
+      mockCallback();
+    }
+  };
+  dataLayer.push(argOff);
+
+  // -> does not unregister the listener
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+test('listener off: unregister multiple handlers', () => {
+  const mockCallback1 = jest.fn();
+  const mockCallback2 = jest.fn();
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  const argOn1 = {
+    'on': 'carousel clicked',
+    'scope': 'all',
+    'handler': mockCallback1
+  };
+  dataLayer.push(argOn1);
+  expect(mockCallback1.mock.calls.length).toBe(1);
+  const argOn2 = {
+    'on': 'carousel clicked',
+    'scope': 'all',
+    'handler': mockCallback2
+  };
+  dataLayer.push(argOn2);
+  expect(mockCallback2.mock.calls.length).toBe(1);
+
+  const argOff = {
+    'off': 'carousel clicked',
+    'scope': 'all',
+  };
+  dataLayer.push(argOff);
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback1.mock.calls.length).toBe(1);
+  expect(mockCallback2.mock.calls.length).toBe(1);
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Invalid: data, event, listeners
+// -----------------------------------------------------------------------------------------------------------------
+
 test('invalid data', () => {
   const data = {
     'page': {
@@ -318,6 +520,24 @@ test('invalid listener on', () => {
   expect(mockCallback.mock.calls.length).toBe(0);
 });
 
+test('invalid listener on scope', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'carousel clicked',
+    'handler': mockCallback,
+    'scope': 'invalid'
+  };
+  dataLayer.push(argOn);
+
+  dataLayer.push({
+    'event': 'carousel clicked',
+    'info': {
+      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(0);
+});
+
 test('invalid listener off', () => {
   const mockCallback = jest.fn();
   const argOn = {
@@ -346,38 +566,6 @@ test('invalid listener off', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(2);
-});
-
-// high load benchmark: runs alone in 10.139s with commit: df0fef59c86635d3c29e6f698352491dcf39003c (15/oct/2019)
-test.skip('high load', () => {
-  const mockCallback = jest.fn();
-  const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback
-  };
-  dataLayer.push(argOn);
-
-  const data = {};
-  for (let i= 0; i < 1000; i++) {
-    let pageId = '/content/mysite/en/products/crossfit' + i;
-    let pageKey = 'page' + i;
-    data[pageKey] = {
-      'id': pageId,
-      'siteLanguage': 'en-us',
-      'siteCountry': 'US',
-      'pageType': 'product detail',
-      'pageName': 'pdp - crossfit zoom',
-      'pageCategory': 'womens > shoes > athletic'
-    };
-
-    dataLayer.push({
-      'event': 'carousel clicked',
-      'data': data
-    });
-    expect(dataLayer.getState()).toMatchObject(data);
-    expect(mockCallback.mock.calls.length).toBe(i + 1);
-  }
-
 });
 
 test('invalid item is filtered out from array', () => {
@@ -428,11 +616,46 @@ test('invalid item is filtered out from array', () => {
   expect(dataLayer.length).toEqual(0);
 });
 
+// -----------------------------------------------------------------------------------------------------------------
+// Performance
+// -----------------------------------------------------------------------------------------------------------------
 
+// high load benchmark: runs alone in 10.139s with commit: df0fef59c86635d3c29e6f698352491dcf39003c (15/oct/2019)
+test.skip('high load', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'carousel clicked',
+    'handler': mockCallback
+  };
+  dataLayer.push(argOn);
 
-/**
- * Tests for DataLayer.utils functions
- */
+  const data = {};
+  for (let i= 0; i < 1000; i++) {
+    let pageId = '/content/mysite/en/products/crossfit' + i;
+    let pageKey = 'page' + i;
+    data[pageKey] = {
+      'id': pageId,
+      'siteLanguage': 'en-us',
+      'siteCountry': 'US',
+      'pageType': 'product detail',
+      'pageName': 'pdp - crossfit zoom',
+      'pageCategory': 'womens > shoes > athletic'
+    };
+
+    dataLayer.push({
+      'event': 'carousel clicked',
+      'data': data
+    });
+    expect(dataLayer.getState()).toMatchObject(data);
+    expect(mockCallback.mock.calls.length).toBe(i + 1);
+  }
+
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// DataLayer.utils functions
+// -----------------------------------------------------------------------------------------------------------------
+
 test('deep merge of target and source object', () => {
   let target = {
     a: {
