@@ -410,7 +410,7 @@ DataLayer.Manager.prototype._registerListener = function(listenerOn) {
 DataLayer.Manager.prototype._unregisterListener = function(listenerOff) {
   const indexes = this._getListenersMatchingListenerOff(listenerOff);
   const eventName = listenerOff.config.off;
-  for (let i = 0; i < indexes.length; i++) {
+  for (let i = indexes.length - 1; i > -1; i--) {
     if (indexes[i] > -1) {
       this._listeners[eventName].splice(indexes[i], 1);
 
@@ -503,11 +503,14 @@ DataLayer.Manager.prototype.listenersAreEqual = function(listener1, listener2) {
   if (Object.keys(listenerConfig1).length !== Object.keys(listenerConfig2).length) {
     return false;
   }
-  Object.keys(listenerConfig1).forEach(function(key) {
+  const listenerConfig1Keys = Object.keys(listenerConfig1);
+
+  for (let i = 0; i < listenerConfig1Keys.length; i++) {
+    const key = listenerConfig1Keys[i];
     if (listenerConfig1[key] !== listenerConfig2[key]) {
       return false;
     }
-  });
+  }
   return true;
 };
 

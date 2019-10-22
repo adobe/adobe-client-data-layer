@@ -321,6 +321,9 @@ test('listener on: register a handler that has already been registered', () => {
   };
   dataLayer.push(argOn);
   dataLayer.push(argOn);
+
+  // -> only one listener is registered
+
   expect(mockCallback.mock.calls.length).toBe(0);
 
   dataLayer.push({
@@ -334,16 +337,22 @@ test('listener on: register a handler that has already been registered', () => {
 
 test('listener on: register a handler (with a static function) that has already been registered', () => {
   const mockCallback = jest.fn();
-  const argOn = {
+  const argOn1 = {
     'on': 'carousel clicked',
     'handler': function() {
       mockCallback();
     }
   };
-  dataLayer.push(argOn);
-  dataLayer.push(argOn);
+  const argOn2 = {
+    'on': 'carousel clicked',
+    'handler': function() {
+      mockCallback();
+    }
+  };
+  dataLayer.push(argOn1);
+  dataLayer.push(argOn2);
 
-  // -> only one listener is registered
+  // both listeners are registered
 
   dataLayer.push({
     'event': 'carousel clicked',
@@ -351,7 +360,7 @@ test('listener on: register a handler (with a static function) that has already 
       'id': '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  expect(mockCallback.mock.calls.length).toBe(1);
+  expect(mockCallback.mock.calls.length).toBe(2);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
