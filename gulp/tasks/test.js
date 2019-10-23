@@ -13,7 +13,7 @@ module.exports = function(gulp) {
   const jestcli = require('jest-cli');
 
   const configs = {
-    jest: require(`${__dirname}/../configs/jest.config.js`)
+    jest: require(`${__dirname}/../../jest.config.js`)
   };
 
   gulp.task('test', (done) => {

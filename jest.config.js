@@ -12,5 +12,5 @@ governing permissions and limitations under the License.
 module.exports = {
   collectCoverage: true,
   coverageDirectory: '<rootDir>/test/unit-test-coverage',
-  testMatch: ['<rootDir>/src/tests/**/*Test.js']
+  testMatch: ['<rootDir>/src/tests/**/*.test.js']
 };
