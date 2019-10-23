@@ -9,23 +9,73 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const utils = require('./DataLayerUtils');
-
+const DataLayer = {};
+DataLayer.constants = require('./DataLayerConstants');
 /**
- * @typedef {String} DataLayer.Item.Type
- **/
-
-/**
- * Enumeration of data layer item types.
- *
- * @enum {DataLayer.Item.Type}
- * @readonly
+ * Constraints for each type of the item configuration.
  */
-const itemType = {
-  DATA: 'data',
-  EVENT: 'event',
-  LISTENER_ON: 'listenerOn',
-  LISTENER_OFF: 'listenerOff'
+const constraints = {
+  data: {
+    properties: {
+      data: {
+        type: 'object'
+      }
+    }
+  },
+  event: {
+    properties: {
+      event: {
+        type: 'string'
+      },
+      info: {
+        type: 'object',
+        optional: true
+      },
+      data: {
+        type: 'object',
+        optional: true
+      }
+    }
+  },
+  listenerOn: {
+    properties: {
+      on: {
+        type: 'string'
+      },
+      handler: {
+        type: 'function'
+      },
+      scope: {
+        type: 'string',
+        values: ['past', 'future', 'all'],
+        optional: true
+      },
+      selector: {
+        type: 'string',
+        optional: true
+      }
+    }
+  },
+  listenerOff: {
+    properties: {
+      off: {
+        type: 'string'
+      },
+      handler: {
+        type: 'function',
+        optional: true
+      },
+      scope: {
+        type: 'string',
+        values: ['past', 'future', 'all'],
+        optional: true
+      },
+      selector: {
+        type: 'string',
+        optional: true
+      }
+    }
+  }
 };
 
 /**
@@ -46,14 +96,14 @@ class Item {
     that._config = itemConfig;
     that._type = (function(config) {
       let type;
-      if (utils.isDataConfig(config)) {
-        type = itemType.DATA;
-      } else if (utils.isEventConfig(config)) {
-        type = itemType.EVENT;
-      } else if (utils.isListenerOnConfig(config)) {
-        type = itemType.LISTENER_ON;
-      } else if (utils.isListenerOffConfig(config)) {
-        type = itemType.LISTENER_OFF;
+      if (utils.itemConfigMatchesConstraints(config, constraints.data)) {
+        type = DataLayer.constants.itemType.DATA;
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.event)) {
+        type = DataLayer.constants.itemType.EVENT;
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOn)) {
+        type = DataLayer.constants.itemType.LISTENER_ON;
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOff)) {
+        type = DataLayer.constants.itemType.LISTENER_OFF;
       }
       return type;
     }(itemConfig));
@@ -98,4 +148,69 @@ class Item {
   };
 }
 
-module.exports = Item;
+const utils = {
+  /**
+   * Determines whether the item configuration matches the constraints.
+   *
+   * @param {ItemConfig} itemConfig The item configuration.
+   * @param {Object} itemConstraints The constraints on the item configuration.
+   * @returns {Boolean} true if the item configuration matches the constraints, false otherwise.
+   * @static
+   */
+  itemConfigMatchesConstraints: function(itemConfig, itemConstraints) {
+    const keys = Object.keys(itemConstraints.properties);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const type = itemConstraints.properties[key].type;
+      const supportedValues = itemConstraints.properties[key].values;
+      const mandatory = !itemConstraints.properties[key].optional;
+      const configValue = itemConfig[key];
+      const configValueType = typeof configValue;
+      if (mandatory) {
+        if (!configValue || (configValueType !== type) || (supportedValues && !supportedValues.includes(configValue))) {
+          return false;
+        }
+      } else {
+        if (configValue && ((configValueType !== type) || (supportedValues && !supportedValues.includes(configValue)))) {
+          return false;
+        }
+      }
+    }
+    return !utils.itemConfigHasCustomProperties(itemConfig, itemConstraints);
+  },
+  /**
+   * Determines whether the item configuration has custom properties.
+   *
+   * @param {ItemConfig} itemConfig The item configuration.
+   * @param {Object} itemConstraints The constraints on the item configuration.
+   * @returns {Boolean} true if the item configuration has custom properties, false otherwise.
+   * @static
+   */
+  itemConfigHasCustomProperties: function(itemConfig, itemConstraints) {
+    const itemConfigKeys = Object.keys(itemConfig);
+    const itemConstraintsKeys = Object.keys(itemConstraints.properties);
+    if (itemConfigKeys.length > itemConstraintsKeys.length) {
+      return true;
+    }
+    for (let j = 0; j < itemConfigKeys.length; j++) {
+      const itemConfigKey = itemConfigKeys[j];
+      let itemConfigKeyMatchesConstraintKey = false;
+      for (let k = 0; k < itemConstraintsKeys.length; k++) {
+        const key = itemConstraintsKeys[k];
+        if (itemConfigKey === key) {
+          itemConfigKeyMatchesConstraintKey = true;
+          break;
+        }
+      }
+      if (!itemConfigKeyMatchesConstraintKey) {
+        return true;
+      }
+    }
+    return false;
+  }
+};
+
+module.exports = {
+  item: Item,
+  utils: utils
+};
