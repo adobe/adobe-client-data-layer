@@ -9,110 +9,73 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-
-/**
- * @typedef {String} DataLayer.Item.Type
- **/
-
-/**
- * Enumeration of data layer item types.
- *
- * @enum {DataLayer.Item.Type}
- * @readonly
- */
-const itemType = {
-  DATA: 'data',
-  EVENT: 'event',
-  LISTENER_ON: 'listenerOn',
-  LISTENER_OFF: 'listenerOff'
-};
-
+const DataLayer = {};
+DataLayer.constants = require('./DataLayerConstants');
 /**
  * Constraints for each type of the item configuration.
  */
 const constraints = {
   data: {
-    properties: [
-      {
-        key: 'data',
-        type: 'object',
-        mandatory: true
+    properties: {
+      data: {
+        type: 'object'
       }
-    ],
-    customPropertiesAllowed: false
+    }
   },
   event: {
-    properties: [
-      {
-        key: 'event',
-        type: 'string',
-        mandatory: true
+    properties: {
+      event: {
+        type: 'string'
       },
-      {
-        key: 'info',
+      info: {
         type: 'object',
-        mandatory: false
+        optional: true
       },
-      {
-        key: 'data',
+      data: {
         type: 'object',
-        mandatory: false
+        optional: true
       }
-    ],
-    customPropertiesAllowed: false
+    }
   },
   listenerOn: {
-    properties: [
-      {
-        key: 'on',
-        type: 'string',
-        mandatory: true
+    properties: {
+      on: {
+        type: 'string'
       },
-      {
-        key: 'handler',
-        type: 'function',
-        mandatory: true
+      handler: {
+        type: 'function'
       },
-      {
-        key: 'scope',
+      scope: {
         type: 'string',
         values: ['past', 'future', 'all'],
-        mandatory: false
+        optional: true
       },
-      {
-        key: 'selector',
+      selector: {
         type: 'string',
-        mandatory: false
+        optional: true
       }
-    ],
-    customPropertiesAllowed: false
+    }
   },
   listenerOff: {
-    properties: [
-      {
-        key: 'off',
-        type: 'string',
-        mandatory: true
+    properties: {
+      off: {
+        type: 'string'
       },
-      {
-        key: 'handler',
+      handler: {
         type: 'function',
-        mandatory: false
+        optional: true
       },
-      {
-        key: 'scope',
+      scope: {
         type: 'string',
         values: ['past', 'future', 'all'],
-        mandatory: false
+        optional: true
       },
-      {
-        key: 'selector',
+      selector: {
         type: 'string',
-        mandatory: false
+        optional: true
       }
-    ],
-    customPropertiesAllowed: false
-  },
+    }
+  }
 };
 
 /**
@@ -134,13 +97,13 @@ class Item {
     that._type = (function(config) {
       let type;
       if (utils.itemConfigMatchesConstraints(config, constraints.data)) {
-        type = itemType.DATA;
+        type = DataLayer.constants.itemType.DATA;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.event)) {
-        type = itemType.EVENT;
+        type = DataLayer.constants.itemType.EVENT;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOn)) {
-        type = itemType.LISTENER_ON;
+        type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOff)) {
-        type = itemType.LISTENER_OFF;
+        type = DataLayer.constants.itemType.LISTENER_OFF;
       }
       return type;
     }(itemConfig));
@@ -183,52 +146,6 @@ class Item {
   get index() {
     return this._index;
   };
-
-  /**
-   * Indicates whether the item is a data item.
-   *
-   * @returns {Boolean} true if the item is a data item, false otherwise.
-   */
-  get isData() {
-    return this._type === itemType.DATA;
-  };
-
-  /**
-   * Indicates whether the item is an event item.
-   *
-   * @returns {Boolean} true if the item is an event item, false otherwise.
-   */
-  get isEvent() {
-    return this._type === itemType.EVENT;
-  };
-
-  /**
-   * Indicates whether the item is a listener on item.
-   *
-   * @returns {Boolean} true if the item is a listener on item, false otherwise.
-   */
-  get isListenerOn() {
-    return this._type === itemType.LISTENER_ON;
-  };
-
-  /**
-   * Indicates whether the item is a listener off item.
-   *
-   * @returns {Boolean} true if the item is a listener off item, false otherwise.
-   */
-  get isListenerOff() {
-    return this._type === itemType.LISTENER_OFF;
-  };
-
-  /**
-   * Indicates whether the item is a listener on or off item.
-   *
-   * @returns {Boolean} true if the item is a listener on or off item, false otherwise.
-   */
-  get isListener() {
-    return (this._type === itemType.LISTENER_ON || this._type === itemType.LISTENER_OFF);
-  };
-
 }
 
 const utils = {
@@ -236,48 +153,50 @@ const utils = {
    * Determines whether the item configuration matches the constraints.
    *
    * @param {ItemConfig} itemConfig The item configuration.
-   * @param {Object} constraints The constraints on the item configuration.
+   * @param {Object} itemConstraints The constraints on the item configuration.
    * @returns {Boolean} true if the item configuration matches the constraints, false otherwise.
    * @static
    */
-  itemConfigMatchesConstraints: function(itemConfig, constraints) {
-    for (let i = 0; i < constraints.properties.length; i++) {
-      const key = constraints.properties[i].key;
-      const type = constraints.properties[i].type;
-      const values = constraints.properties[i].values;
-      const mandatory = constraints.properties[i].mandatory;
+  itemConfigMatchesConstraints: function(itemConfig, itemConstraints) {
+    const keys = Object.keys(itemConstraints.properties);
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const type = itemConstraints.properties[key].type;
+      const supportedValues = itemConstraints.properties[key].values;
+      const mandatory = !itemConstraints.properties[key].optional;
       const configValue = itemConfig[key];
       const configValueType = typeof configValue;
       if (mandatory) {
-        if (!configValue || (configValueType !== type) || !utils.valueIsAllowed(configValue, values)) {
+        if (!configValue || (configValueType !== type) || (supportedValues && !supportedValues.includes(configValue))) {
           return false;
         }
       } else {
-        if (configValue && ((configValueType !== type) || !utils.valueIsAllowed(configValue, values))) {
+        if (configValue && ((configValueType !== type) || (supportedValues && !supportedValues.includes(configValue)))) {
           return false;
         }
       }
     }
-    return constraints.customPropertiesAllowed || !utils.itemConfigHasCustomProperties(itemConfig, constraints);
+    return !utils.itemConfigHasCustomProperties(itemConfig, itemConstraints);
   },
   /**
    * Determines whether the item configuration has custom properties.
    *
    * @param {ItemConfig} itemConfig The item configuration.
-   * @param {Object} constraints The constraints on the item configuration.
+   * @param {Object} itemConstraints The constraints on the item configuration.
    * @returns {Boolean} true if the item configuration has custom properties, false otherwise.
    * @static
    */
-  itemConfigHasCustomProperties: function(itemConfig, constraints) {
+  itemConfigHasCustomProperties: function(itemConfig, itemConstraints) {
     const itemConfigKeys = Object.keys(itemConfig);
-    if (itemConfigKeys.length > constraints.properties.length) {
+    const itemConstraintsKeys = Object.keys(itemConstraints.properties);
+    if (itemConfigKeys.length > itemConstraintsKeys.length) {
       return true;
     }
     for (let j = 0; j < itemConfigKeys.length; j++) {
       const itemConfigKey = itemConfigKeys[j];
       let itemConfigKeyMatchesConstraintKey = false;
-      for (let k = 0; k < constraints.properties.length; k++) {
-        const key = constraints.properties[k].key;
+      for (let k = 0; k < itemConstraintsKeys.length; k++) {
+        const key = itemConstraintsKeys[k];
         if (itemConfigKey === key) {
           itemConfigKeyMatchesConstraintKey = true;
           break;
@@ -288,27 +207,10 @@ const utils = {
       }
     }
     return false;
-  },
-  /**
-   * Determines whether the value is allowed by the constraints.
-   *
-   * @param {String} value The value.
-   * @param {Array} allowedValues The array of allowed values.
-   * @returns {Boolean} true if the value is allowed by the constraints, false otherwise.
-   * @static
-   */
-  valueIsAllowed: function(value, allowedValues) {
-    if (!allowedValues) {
-      return true;
-    }
-    for (let i = 0; i < allowedValues.length; i++) {
-      const allowed = allowedValues[i];
-      if (value === allowed) {
-        return true;
-      }
-    }
-    return false;
   }
 };
 
-module.exports = Item;
+module.exports = {
+  item: Item,
+  utils: utils
+};

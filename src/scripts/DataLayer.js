@@ -19,46 +19,9 @@ governing permissions and limitations under the License.
  * @type {Object}
  */
 const DataLayer = {};
-DataLayer.Item = require('./DataLayerItem');
+DataLayer.Item = require('./DataLayerItem').item;
 DataLayer.utils = require('./DataLayerUtils');
-
-/**
- * @typedef {String} DataLayer.Events
- **/
-
-/**
- * Enumeration of data layer events.
- *
- * @enum {DataLayer.Events}
- * @readonly
- */
-const events = {
-  /** Represents an event triggered for any change in the data layer state */
-  CHANGE: 'datalayer:change',
-  /** Represents an event triggered for any event push to the data layer */
-  EVENT: 'datalayer:event',
-  /** Represents an event triggered when the data layer has initialized */
-  READY: 'datalayer:ready'
-};
-
-/**
- * @typedef {String} DataLayer.ListenerScope
- **/
-
-/**
- * Enumeration of listener scopes.
- *
- * @enum {DataLayer.ListenerScope}
- * @readonly
- */
-const listenerScope = {
-  /** Past events only */
-  PAST: 'past',
-  /** Future events only */
-  FUTURE: 'future',
-  /** All events, past and future */
-  ALL: 'all'
-};
+DataLayer.constants = require('./DataLayerConstants');
 
 /**
  * @typedef  {Object} ListenerOnConfig
@@ -126,7 +89,7 @@ DataLayer.Manager.prototype._initialize = function() {
   that._processItems();
 
   const readyItem = new DataLayer.Item({
-    event: events.READY
+    event: DataLayer.constants.event.READY
   });
   that._triggerListeners(readyItem);
 };
@@ -166,7 +129,9 @@ DataLayer.Manager.prototype._augment = function() {
       that._processItem(item);
 
       // filter out event listeners and invalid items
-      if (item.isListener || !item.valid) {
+      if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
+        item.type === DataLayer.constants.itemType.LISTENER_OFF ||
+        !item.valid) {
         delete filteredArguments[key];
       }
     });
@@ -201,7 +166,9 @@ DataLayer.Manager.prototype._processItems = function() {
     that._processItem(item);
 
     // remove event listener or invalid item from the data layer array
-    if (item.isListener || !item.valid) {
+    if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
+      item.type === DataLayer.constants.itemType.LISTENER_OFF ||
+      !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
     }
@@ -256,18 +223,18 @@ DataLayer.Manager.prototype._processItem = function(item) {
 DataLayer.Manager.prototype._processListenerOn = function(listener) {
   let scope = listener.config.scope;
   if (!scope) {
-    scope = listenerScope.FUTURE;
+    scope = DataLayer.constants.listenerScope.FUTURE;
   }
   switch (scope) {
-    case listenerScope.PAST:
+    case DataLayer.constants.listenerScope.PAST:
       // trigger the handler for all the previous items
       this._triggerListener(listener);
       break;
-    case listenerScope.FUTURE:
+    case DataLayer.constants.listenerScope.FUTURE:
       // register the listener
       this._registerListener(listener);
       break;
-    case listenerScope.ALL:
+    case DataLayer.constants.listenerScope.ALL:
       // trigger the handler for all the previous items
       this._triggerListener(listener);
       // register the listener
@@ -344,17 +311,17 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
   const itemConfig = item.config;
   let isMatching = false;
 
-  if (item.isData) {
-    if (listenerConfig.on === events.CHANGE) {
+  if (item.type === DataLayer.constants.itemType.DATA) {
+    if (listenerConfig.on === DataLayer.constants.event.CHANGE) {
       isMatching = true;
     }
-  } else if (item.isEvent) {
-    if (listenerConfig.on === events.EVENT ||
+  } else if (item.type === DataLayer.constants.itemType.EVENT) {
+    if (listenerConfig.on === DataLayer.constants.event.EVENT ||
       listenerConfig.on === itemConfig.event) {
       isMatching = true;
     }
     if (itemConfig.data &&
-      listenerConfig.on === events.CHANGE) {
+      listenerConfig.on === DataLayer.constants.event.CHANGE) {
       isMatching = true;
     }
   }
@@ -371,13 +338,13 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
 DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
   const triggeredEvents = [];
   const itemConfig = item.config;
-  if (item.isData) {
-    triggeredEvents.push(events.CHANGE);
-  } else if (item.isEvent) {
+  if (item.type === DataLayer.constants.itemType.DATA) {
+    triggeredEvents.push(DataLayer.constants.event.CHANGE);
+  } else if (item.type === DataLayer.constants.itemType.EVENT) {
     triggeredEvents.push(itemConfig.event);
-    triggeredEvents.push(events.EVENT);
+    triggeredEvents.push(DataLayer.constants.event.EVENT);
     if (itemConfig.data) {
-      triggeredEvents.push(events.CHANGE);
+      triggeredEvents.push(DataLayer.constants.event.CHANGE);
     }
   }
   return triggeredEvents;
