@@ -13,6 +13,9 @@ governing permissions and limitations under the License.
 /* eslint no-unused-vars: "off" */
 'use strict';
 
+const merge = require('lodash.merge');
+const isEqual = require('lodash.isequal');
+
 /**
  * Data Layer.
  *
@@ -20,7 +23,6 @@ governing permissions and limitations under the License.
  */
 const DataLayer = {};
 DataLayer.Item = require('./DataLayerItem').item;
-DataLayer.utils = require('./DataLayerUtils');
 DataLayer.constants = require('./DataLayerConstants');
 
 /**
@@ -101,7 +103,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-  DataLayer.utils.deepMerge(this._state, item.config.data);
+  merge(this._state, item.config.data);
 };
 
 /**
@@ -448,37 +450,12 @@ DataLayer.Manager.prototype._isRegisteredListener = function(listenerOn) {
   if (that._listeners[eventName]) {
     for (let i = 0; i < that._listeners[eventName].length; i++) {
       const existingListenerOn = that._listeners[eventName][i];
-      if (that.listenersAreEqual(listenerOn, existingListenerOn)) {
+      if (isEqual(listenerOn, existingListenerOn)) {
         return true;
       }
     }
   }
   return false;
-};
-
-/**
- * Checks whether the listeners are equal.
- *
- * @param {DataLayer.Item} listener1 The listener.
- * @param {DataLayer.Item} listener2 The listener.
- * @returns {Boolean} true if the listeners are equal, false otherwise.
- * @private
- */
-DataLayer.Manager.prototype.listenersAreEqual = function(listener1, listener2) {
-  const listenerConfig1 = listener1.config;
-  const listenerConfig2 = listener2.config;
-  if (Object.keys(listenerConfig1).length !== Object.keys(listenerConfig2).length) {
-    return false;
-  }
-  const listenerConfig1Keys = Object.keys(listenerConfig1);
-
-  for (let i = 0; i < listenerConfig1Keys.length; i++) {
-    const key = listenerConfig1Keys[i];
-    if (listenerConfig1[key] !== listenerConfig2[key]) {
-      return false;
-    }
-  }
-  return true;
 };
 
 new DataLayer.Manager({
