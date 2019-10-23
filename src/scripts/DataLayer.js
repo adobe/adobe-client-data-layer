@@ -166,7 +166,7 @@ DataLayer.Manager.prototype._augment = function() {
       that._processItem(item);
 
       // filter out event listeners and invalid items
-      if (DataLayer.utils.isListenerConfig(itemConfig) || !item.valid) {
+      if (item.isListener || !item.valid) {
         delete filteredArguments[key];
       }
     });
@@ -201,7 +201,7 @@ DataLayer.Manager.prototype._processItems = function() {
     that._processItem(item);
 
     // remove event listener or invalid item from the data layer array
-    if (DataLayer.utils.isListenerConfig(item.config) || !item.valid) {
+    if (item.isListener || !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
     }
@@ -344,11 +344,11 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
   const itemConfig = item.config;
   let isMatching = false;
 
-  if (DataLayer.utils.isDataConfig(itemConfig)) {
+  if (item.isData) {
     if (listenerConfig.on === events.CHANGE) {
       isMatching = true;
     }
-  } else if (DataLayer.utils.isEventConfig(itemConfig)) {
+  } else if (item.isEvent) {
     if (listenerConfig.on === events.EVENT ||
       listenerConfig.on === itemConfig.event) {
       isMatching = true;
@@ -371,9 +371,9 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
 DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
   const triggeredEvents = [];
   const itemConfig = item.config;
-  if (DataLayer.utils.isDataConfig(itemConfig)) {
+  if (item.isData) {
     triggeredEvents.push(events.CHANGE);
-  } else if (DataLayer.utils.isEventConfig(itemConfig)) {
+  } else if (item.isEvent) {
     triggeredEvents.push(itemConfig.event);
     triggeredEvents.push(events.EVENT);
     if (itemConfig.data) {
