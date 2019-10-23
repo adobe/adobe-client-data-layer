@@ -15,65 +15,57 @@ DataLayer.constants = require('./DataLayerConstants');
  * Constraints for each type of the item configuration.
  */
 const constraints = {
-  data: {
-    properties: {
-      data: {
-        type: 'object'
-      }
+  dataConfig: {
+    data: {
+      type: 'object'
     }
   },
-  event: {
-    properties: {
-      event: {
-        type: 'string'
-      },
-      info: {
-        type: 'object',
-        optional: true
-      },
-      data: {
-        type: 'object',
-        optional: true
-      }
+  eventConfig: {
+    event: {
+      type: 'string'
+    },
+    info: {
+      type: 'object',
+      optional: true
+    },
+    data: {
+      type: 'object',
+      optional: true
     }
   },
-  listenerOn: {
-    properties: {
-      on: {
-        type: 'string'
-      },
-      handler: {
-        type: 'function'
-      },
-      scope: {
-        type: 'string',
-        values: ['past', 'future', 'all'],
-        optional: true
-      },
-      selector: {
-        type: 'string',
-        optional: true
-      }
+  listenerOnConfig: {
+    on: {
+      type: 'string'
+    },
+    handler: {
+      type: 'function'
+    },
+    scope: {
+      type: 'string',
+      values: ['past', 'future', 'all'],
+      optional: true
+    },
+    selector: {
+      type: 'string',
+      optional: true
     }
   },
-  listenerOff: {
-    properties: {
-      off: {
-        type: 'string'
-      },
-      handler: {
-        type: 'function',
-        optional: true
-      },
-      scope: {
-        type: 'string',
-        values: ['past', 'future', 'all'],
-        optional: true
-      },
-      selector: {
-        type: 'string',
-        optional: true
-      }
+  listenerOffConfig: {
+    off: {
+      type: 'string'
+    },
+    handler: {
+      type: 'function',
+      optional: true
+    },
+    scope: {
+      type: 'string',
+      values: ['past', 'future', 'all'],
+      optional: true
+    },
+    selector: {
+      type: 'string',
+      optional: true
     }
   }
 };
@@ -96,13 +88,13 @@ class Item {
     that._config = itemConfig;
     that._type = (function(config) {
       let type;
-      if (utils.itemConfigMatchesConstraints(config, constraints.data)) {
+      if (utils.itemConfigMatchesConstraints(config, constraints.dataConfig)) {
         type = DataLayer.constants.itemType.DATA;
-      } else if (utils.itemConfigMatchesConstraints(config, constraints.event)) {
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
-      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOn)) {
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOnConfig)) {
         type = DataLayer.constants.itemType.LISTENER_ON;
-      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOff)) {
+      } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
       }
       return type;
@@ -158,12 +150,12 @@ const utils = {
    * @static
    */
   itemConfigMatchesConstraints: function(itemConfig, itemConstraints) {
-    const keys = Object.keys(itemConstraints.properties);
+    const keys = Object.keys(itemConstraints);
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i];
-      const type = itemConstraints.properties[key].type;
-      const supportedValues = itemConstraints.properties[key].values;
-      const mandatory = !itemConstraints.properties[key].optional;
+      const type = itemConstraints[key].type;
+      const supportedValues = itemConstraints[key].values;
+      const mandatory = !itemConstraints[key].optional;
       const configValue = itemConfig[key];
       const configValueType = typeof configValue;
       if (mandatory) {
@@ -188,7 +180,7 @@ const utils = {
    */
   itemConfigHasCustomProperties: function(itemConfig, itemConstraints) {
     const itemConfigKeys = Object.keys(itemConfig);
-    const itemConstraintsKeys = Object.keys(itemConstraints.properties);
+    const itemConstraintsKeys = Object.keys(itemConstraints);
     if (itemConfigKeys.length > itemConstraintsKeys.length) {
       return true;
     }
