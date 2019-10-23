@@ -315,19 +315,36 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
 
   if (item.type === DataLayer.constants.itemType.DATA) {
     if (listenerConfig.on === DataLayer.constants.event.CHANGE) {
-      isMatching = true;
+      isMatching = this._isSelectorMatching(listenerConfig, item);
     }
   } else if (item.type === DataLayer.constants.itemType.EVENT) {
     if (listenerConfig.on === DataLayer.constants.event.EVENT ||
       listenerConfig.on === itemConfig.event) {
-      isMatching = true;
+      isMatching = this._isSelectorMatching(listenerConfig, item);
     }
     if (itemConfig.data &&
       listenerConfig.on === DataLayer.constants.event.CHANGE) {
-      isMatching = true;
+      isMatching = this._isSelectorMatching(listenerConfig, item);
     }
   }
   return isMatching;
+};
+
+/**
+ * Checks if the given listenerConfig has a selector that points to an object in the data payload of the itemConfig.
+ *
+ * @param {ListenerOnConfig} listenerConfig Config of the listener to extract the selector from.
+ * @param {DataLayer.Item} item The item.
+ * @returns {Boolean} true if a selector is not provided or if the given selector is matching, false otherwise.
+ * @private
+ */
+DataLayer.Manager.prototype._isSelectorMatching = function(listenerConfig, item) {
+  const itemConfig = item.config;
+  if (listenerConfig.selector && itemConfig.data) {
+    return DataLayer.utils.hasOwnNestedProperty(listenerConfig.selector, itemConfig.data);
+  } else {
+    return true;
+  }
 };
 
 /**
@@ -343,7 +360,9 @@ DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
   if (item.type === DataLayer.constants.itemType.DATA) {
     triggeredEvents.push(DataLayer.constants.event.CHANGE);
   } else if (item.type === DataLayer.constants.itemType.EVENT) {
-    triggeredEvents.push(itemConfig.event);
+    if (itemConfig.event !== DataLayer.constants.event.CHANGE) {
+      triggeredEvents.push(itemConfig.event);
+    }
     triggeredEvents.push(DataLayer.constants.event.EVENT);
     if (itemConfig.data) {
       triggeredEvents.push(DataLayer.constants.event.CHANGE);
@@ -360,13 +379,14 @@ DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
  */
 DataLayer.Manager.prototype._registerListener = function(listenerOn) {
   const eventName = listenerOn.config.on;
+  const selector = listenerOn.config.selector;
   if (!this._isRegisteredListener(listenerOn)) {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
     }
     this._listeners[eventName].push(listenerOn);
 
-    console.debug('listener registered on: ', eventName);
+    console.debug('listener registered on: ', eventName, selector);
   }
 };
 

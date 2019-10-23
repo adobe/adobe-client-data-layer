@@ -362,6 +362,101 @@ test('listener on: register a handler (with a static function) that has already 
   expect(mockCallback.mock.calls.length).toBe(2);
 });
 
+describe('listener with selector', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    'on': 'datalayer:change',
+    'selector': 'component.image',
+    'handler': mockCallback
+  };
+  const carouselData = {
+    'component': {
+      'carousel': {
+        'carousel1': {
+          'id': '/content/mysite/en/home/jcr:content/root/carousel1',
+          'items': {}
+        }
+      }
+    }
+  };
+  const imageData = {
+    'component': {
+      'image': {
+        'src': '/content/image/test.jpg'
+      }
+    }
+  };
+
+  beforeEach(() => {
+    mockCallback.mockClear();
+  });
+
+
+
+  test('on change listener with selector for image component data', () => {
+    dataLayer.push(argOn);
+    dataLayer.push({ data: carouselData });
+    expect(mockCallback.mock.calls.length).toBe(0);
+    dataLayer.push({ data: imageData });
+    expect(mockCallback.mock.calls.length).toBe(1);
+  });
+
+  test('custom listener with selector for image component data', () => {
+    let argOn = {
+      'on': 'viewed',
+      'selector': 'component.image',
+      'handler': mockCallback
+    };
+    dataLayer.push(argOn);
+    dataLayer.push({
+      'event': 'viewed',
+      'data': carouselData
+    });
+    expect(mockCallback.mock.calls.length).toBe(0);
+    dataLayer.push({
+      'event': 'viewed',
+      'data': imageData
+    });
+    expect(mockCallback.mock.calls.length).toBe(1);
+  });
+
+  test('listener on: datalayer:change with selector', () => {
+    dataLayer.push(argOn);
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': carouselData
+    });
+    expect(mockCallback.mock.calls.length).toBe(0);
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': imageData
+    });
+    expect(mockCallback.mock.calls.length).toBe(1);
+  });
+
+  test('listener: custom event, selector and scope: all', () => {
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': carouselData
+    });
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': imageData
+    });
+    dataLayer.push({
+      'on': 'datalayer:change',
+      'selector': 'component',
+      'scope': 'all',
+      'handler': mockCallback
+    });
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': imageData
+    });
+    expect(mockCallback.mock.calls.length).toBe(3);
+  });
+});
+
 // -----------------------------------------------------------------------------------------------------------------
 // Event listener off
 // -----------------------------------------------------------------------------------------------------------------
