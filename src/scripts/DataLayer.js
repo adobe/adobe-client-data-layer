@@ -450,7 +450,7 @@ DataLayer.Manager.prototype._isRegisteredListener = function(listenerOn) {
   if (that._listeners[eventName]) {
     for (let i = 0; i < that._listeners[eventName].length; i++) {
       const existingListenerOn = that._listeners[eventName][i];
-      if (isEqual(listenerOn, existingListenerOn)) {
+      if (isEqual(listenerOn.config, existingListenerOn.config)) {
         return true;
       }
     }
