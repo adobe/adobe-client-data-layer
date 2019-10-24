@@ -16,9 +16,16 @@ const isEqual = require('lodash.isequal');
 /**
  * Factory that creates a listener manager.
  *
+ * @typedef ListenerManagerFactory
+ */
+const ListenerManagerFactory = {};
+
+/**
+ * Creates a listener manager.
+ *
  * @returns {ListenerManager} A listener manager.
  */
-const ListenerManagerFactory = function() {
+ListenerManagerFactory.create = function() {
   const _listeners = {};
 
   /**
@@ -106,14 +113,14 @@ const ListenerManagerFactory = function() {
     const triggeredEvents = [];
     const itemConfig = item.config;
     if (item.type === constants.itemType.DATA) {
-      triggeredEvents.push(constants.eventType.CHANGE);
+      triggeredEvents.push(constants.dataLayerEvent.CHANGE);
     } else if (item.type === constants.itemType.EVENT) {
-      if (itemConfig.event !== constants.eventType.CHANGE) {
+      if (itemConfig.event !== constants.dataLayerEvent.CHANGE) {
         triggeredEvents.push(itemConfig.event);
       }
-      triggeredEvents.push(constants.eventType.EVENT);
+      triggeredEvents.push(constants.dataLayerEvent.EVENT);
       if (itemConfig.data) {
-        triggeredEvents.push(constants.eventType.CHANGE);
+        triggeredEvents.push(constants.dataLayerEvent.CHANGE);
       }
     }
     return triggeredEvents;
@@ -133,16 +140,16 @@ const ListenerManagerFactory = function() {
     let isMatching = false;
 
     if (item.type === constants.itemType.DATA) {
-      if (listenerConfig.on === constants.eventType.CHANGE) {
+      if (listenerConfig.on === constants.dataLayerEvent.CHANGE) {
         isMatching = _isSelectorMatching(listenerConfig, item);
       }
     } else if (item.type === constants.itemType.EVENT) {
-      if (listenerConfig.on === constants.eventType.EVENT ||
+      if (listenerConfig.on === constants.dataLayerEvent.EVENT ||
         listenerConfig.on === itemConfig.event) {
         isMatching = _isSelectorMatching(listenerConfig, item);
       }
       if (itemConfig.data &&
-        listenerConfig.on === constants.eventType.CHANGE) {
+        listenerConfig.on === constants.dataLayerEvent.CHANGE) {
         isMatching = _isSelectorMatching(listenerConfig, item);
       }
     }

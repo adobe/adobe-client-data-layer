@@ -28,16 +28,16 @@ const constants = {
   },
 
   /**
-   * @typedef {String} EventType
+   * @typedef {String} DataLayerEvent
    **/
 
   /**
-   * Enumeration of data layer event types.
+   * Enumeration of data layer events.
    *
-   * @enum {EventType}
+   * @enum {DataLayerEvent}
    * @readonly
    */
-  eventType: {
+  dataLayerEvent: {
     /** Represents an event triggered for any change in the data layer state */
     CHANGE: 'datalayer:change',
     /** Represents an event triggered for any event push to the data layer */

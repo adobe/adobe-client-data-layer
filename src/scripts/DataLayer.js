@@ -85,13 +85,13 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._dataLayer = that._config.dataLayer;
   that._state = {};
-  that._listenerManager = DataLayer.ListenerManagerFactory();
+  that._listenerManager = DataLayer.ListenerManagerFactory.create();
 
   that._augment();
   that._processItems();
 
   const readyItem = new DataLayer.Item({
-    event: DataLayer.constants.eventType.READY
+    event: DataLayer.constants.dataLayerEvent.READY
   });
   that._listenerManager.triggerListeners(readyItem);
 };
@@ -274,7 +274,7 @@ new DataLayer.Manager({
 /**
  * Triggered when there is change in the data layer state.
  *
- * @event EventType.CHANGE
+ * @event DataLayerEvent.CHANGE
  * @type {Object}
  * @property {Object} data Data pushed that caused a change in the data layer state.
  */
@@ -282,7 +282,7 @@ new DataLayer.Manager({
 /**
  * Triggered when an event is pushed to the data layer.
  *
- * @event EventType.EVENT
+ * @event DataLayerEvent.EVENT
  * @type {Object}
  * @property {String} name Name of the committed event.
  * @property {Object} info Additional information passed with the committed event.
@@ -302,7 +302,7 @@ new DataLayer.Manager({
 /**
  * Triggered when the data layer has initialized.
  *
- * @event EventType.READY
+ * @event DataLayerEvent.READY
  * @type {Object}
  */
 
