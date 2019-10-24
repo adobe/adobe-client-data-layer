@@ -24,6 +24,7 @@ const ListenerManagerFactory = {};
 /**
  * Creates a listener manager.
  *
+ * @param {Manager} dataLayerManager The data layer manager.
  * @returns {ListenerManager} A listener manager.
  */
 ListenerManagerFactory.create = function(dataLayerManager) {
@@ -37,73 +38,76 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    */
   const ListenerManager = {
     /**
-     * Registers a listener based on a listener on item.
+     * Registers a listener.
      *
      * @function
-     * @param {Item} listenerOn The listener on.
+     * @param {Listener} listener The listener to register.
      */
-    register: function(listenerOn) {
-      const event = listenerOn.config.on;
+    register: function(listener) {
+      const event = listener.event;
 
       if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
-        if (!_isRegistered(listenerOn)) {
-          _listeners[event].push(listenerOn);
+        if (_indexOf(listener) === -1) {
+          _listeners[listener.event].push(listener);
         }
       } else {
-        _listeners[event] = [listenerOn];
+        _listeners[listener.event] = [listener];
       }
     },
     /**
-     * Unregisters a listener based on a listener off item.
+     * Unregisters a listener.
      *
      * @function
-     * @param {Item} listenerOff The listener off.
+     * @param {Listener} listener The listener to unregister.
      */
-    unregister: function(listenerOff) {
-      const indexes = _getListenersMatchingListenerOff(listenerOff);
-      const event = listenerOff.config.off;
+    unregister: function(listener) {
+      const event = listener.event;
 
-      for (let i = indexes.length - 1; i > -1; i--) {
-        if (indexes[i] > -1) {
-          _listeners[event].splice(indexes[i], 1);
+      if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
+        if (!listener.handler) {
+          _listeners[event] = [];
+        } else {
+          const index = _indexOf(listener);
+          if (index > -1) {
+            _listeners[event].splice(index, 1);
+          }
         }
       }
     },
     /**
-     * Triggers all the registered listeners matching the item.
+     * Triggers events related to the passed item.
      *
      * @function
-     * @param {Item} item The item.
+     * @param {Item} item The item for which to trigger events.
      */
-    triggerListeners: function(item) {
+    triggerEvents: function(item) {
       const that = this;
       const triggeredEvents = _getTriggeredEvents(item);
-      triggeredEvents.forEach(function(eventName) {
-        if (_listeners[eventName]) {
-          _listeners[eventName].forEach(function(listener) {
-            that.callListenerHandler(listener, item);
-          });
+      triggeredEvents.forEach(function(event) {
+        if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
+          for (const listener of _listeners[event]) {
+            that.callHandler(listener, item);
+          }
         }
       });
     },
     /**
-     * Calls the listener on the item if a match is found.
+     * Calls the listener handler on the item if a match is found.
      *
      * @function
-     * @param {Item} listener The listener.
+     * @param {Listener} listener The listener.
      * @param {Item} item The item.
      */
-    callListenerHandler: function(listener, item) {
-      if (_isMatching(listener, item)) {
-        const listenerConfig = listener.config;
+    callHandler: function(listener, item) {
+      if (_matches(listener, item)) {
         const itemConfig = item.config;
         const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
-        if (listener.config.selector) {
-          const oldValue = get(dataLayerManager._state, listenerConfig.selector);
-          const newValue = get(itemConfig.data, listenerConfig.selector);
-          listenerConfig.handler(itemConfigCopy, oldValue, newValue);
+        if (listener.selector) {
+          const oldValue = get(dataLayerManager._state, listener.selector);
+          const newValue = get(itemConfig.data, listener.selector);
+          listener.handler(itemConfigCopy, oldValue, newValue);
         } else {
-          listenerConfig.handler(itemConfigCopy);
+          listener.handler(itemConfigCopy);
         }
       }
     }
@@ -113,7 +117,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    * Returns the names of the events that are triggered for this item.
    *
    * @param {Item} item The item.
-   * @returns {Array} An array with the names of the events that are triggered for this item.
+   * @returns {Array} The names of the events that are triggered for this item.
    * @private
    */
   function _getTriggeredEvents(item) {
@@ -136,116 +140,69 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   /**
    * Checks if the listener matches the item.
    *
-   * @param {Item} listener The listener.
+   * @param {Listener} listener The listener.
    * @param {Item} item The item.
    * @returns {Boolean} true if listener matches the item, false otherwise.
    * @private
    */
-  function _isMatching(listener, item) {
-    const listenerConfig = listener.config;
+  function _matches(listener, item) {
+    const event = listener.event;
     const itemConfig = item.config;
-    let isMatching = false;
+    let matches = false;
 
     if (item.type === constants.itemType.DATA) {
-      if (listenerConfig.on === constants.dataLayerEvent.CHANGE) {
-        isMatching = _isSelectorMatching(listenerConfig, item);
+      if (event === constants.dataLayerEvent.CHANGE) {
+        matches = _selectorMatches(listener, item);
       }
     } else if (item.type === constants.itemType.EVENT) {
-      if (listenerConfig.on === constants.dataLayerEvent.EVENT ||
-        listenerConfig.on === itemConfig.event) {
-        isMatching = _isSelectorMatching(listenerConfig, item);
+      if (event === constants.dataLayerEvent.EVENT || event === itemConfig.event) {
+        matches = _selectorMatches(listener, item);
       }
-      if (itemConfig.data &&
-        listenerConfig.on === constants.dataLayerEvent.CHANGE) {
-        isMatching = _isSelectorMatching(listenerConfig, item);
+      if (itemConfig.data && event === constants.dataLayerEvent.CHANGE) {
+        matches = _selectorMatches(listener, item);
       }
     }
-    return isMatching;
+
+    return matches;
   }
 
   /**
-   * Returns the indexes of the registered listeners that match the listener off.
+   * Checks if a listener has a selector that points to an object in the data payload of an item.
    *
-   * @param {Item} listenerOff The listener off.
-   * @returns {Array} The indexes of the matching listeners.
-   * @private
-   */
-  function _getListenersMatchingListenerOff(listenerOff) {
-    const listenerIndexes = [];
-    const eventName = listenerOff.config.off;
-    if (_listeners[eventName]) {
-      for (let i = 0; i < _listeners[eventName].length; i++) {
-        const listenerOn = _listeners[eventName][i];
-        if (_listenerOffMatchesListenerOn(listenerOff, listenerOn)) {
-          listenerIndexes.push(i);
-        }
-      }
-    }
-    return listenerIndexes;
-  }
-
-  /**
-   * Checks whether the listener on matches the listener off.
-   *
-   * @param {Item} listenerOff The listener off.
-   * @param {Item} listenerOn The listener on.
-   * @returns {Boolean} true if the listener on matches the listener off, false otherwise.
-   * @private
-   */
-  function _listenerOffMatchesListenerOn(listenerOff, listenerOn) {
-    const listenerOffConfig = listenerOff.config;
-    const listenerOnConfig = listenerOn.config;
-
-    for (let i = 0; i < Object.keys(listenerOffConfig).length; i++) {
-      const key = Object.keys(listenerOffConfig)[i];
-      if (key === 'off') {
-        if (listenerOffConfig.off !== listenerOnConfig.on) {
-          return false;
-        }
-        continue;
-      }
-      if (listenerOffConfig[key] !== listenerOnConfig[key]) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  /**
-   * Checks whether the listener is registered.
-   *
-   * @param {Item} listenerOn The listener on.
-   * @returns {Boolean} true if the listener is registered, false otherwise.
-   * @private
-   */
-  function _isRegistered(listenerOn) {
-    const eventName = listenerOn.config.on;
-    if (_listeners[eventName]) {
-      for (let i = 0; i < _listeners[eventName].length; i++) {
-        const existingListenerOn = _listeners[eventName][i];
-        if (isEqual(listenerOn.config, existingListenerOn.config)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Checks if the given listenerConfig has a selector that points to an object in the data payload of the itemConfig.
-   *
-   * @param {ListenerOnConfig} listenerConfig Config of the listener to extract the selector from.
+   * @param {Listener} listener The listener to extract the selector from.
    * @param {Item} item The item.
    * @returns {Boolean} true if a selector is not provided or if the given selector is matching, false otherwise.
    * @private
    */
-  function _isSelectorMatching(listenerConfig, item) {
+  function _selectorMatches(listener, item) {
     const itemConfig = item.config;
-    if (listenerConfig.selector && itemConfig.data) {
-      return has(itemConfig.data, listenerConfig.selector);
-    } else {
-      return true;
+
+    if (listener.selector && itemConfig.data) {
+      return has(itemConfig.data, listener.selector);
     }
+
+    return true;
+  }
+
+  /**
+   * Returns the index of a listener in the registry, or -1 if not present.
+   *
+   * @param {Listener} listener The listener to locate.
+   * @returns {Number} The index of the listener in the registry, or -1 if not present.
+   * @private
+   */
+  function _indexOf(listener) {
+    const event = listener.event;
+
+    if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
+      for (const [index, registeredListener] of _listeners[event].entries()) {
+        if (isEqual(registeredListener, listener)) {
+          return index;
+        }
+      }
+    }
+
+    return -1;
   }
 
   return ListenerManager;

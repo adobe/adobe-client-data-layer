@@ -10,9 +10,6 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 /* eslint no-console: "off" */
-/* eslint no-unused-vars: "off" */
-'use strict';
-
 const merge = require('lodash.merge');
 
 /**
@@ -22,6 +19,7 @@ const merge = require('lodash.merge');
  */
 const DataLayer = {};
 DataLayer.Item = require('./DataLayerItem').item;
+DataLayer.Listener = require('./DataLayerListener');
 DataLayer.ListenerManagerFactory = require('./DataLayerListenerManagerFactory');
 DataLayer.constants = require('./DataLayerConstants');
 
@@ -93,7 +91,7 @@ DataLayer.Manager.prototype._initialize = function() {
   const readyItem = new DataLayer.Item({
     event: DataLayer.constants.dataLayerEvent.READY
   });
-  that._listenerManager.triggerListeners(readyItem);
+  that._listenerManager.triggerEvents(readyItem);
 };
 
 /**
@@ -196,11 +194,11 @@ DataLayer.Manager.prototype._processItem = function(item) {
 
   const typeProcessors = {
     data: function(item) {
-      that._listenerManager.triggerListeners(item);
+      that._listenerManager.triggerEvents(item);
       that._updateState(item);
     },
     event: function(item) {
-      that._listenerManager.triggerListeners(item);
+      that._listenerManager.triggerEvents(item);
       if (item.config.data) {
         that._updateState(item);
       }
@@ -209,7 +207,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       that._processListenerOn(item);
     },
     listenerOff: function(item) {
-      that._listenerManager.unregister(item);
+      that._listenerManager.unregister(new DataLayer.Listener(item));
     }
   };
 
@@ -219,7 +217,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
 /**
  * Processes the item of type: listener on.
  *
- * @param {Item} listener The listener.
+ * @param {Item} listener The listener item.
  * @private
  */
 DataLayer.Manager.prototype._processListenerOn = function(listener) {
@@ -234,21 +232,19 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
       this._triggerListener(listener);
       break;
     case DataLayer.constants.listenerScope.FUTURE:
-      // register the listener
-      that._listenerManager.register(listener);
+      that._listenerManager.register(new DataLayer.Listener(listener));
       break;
     case DataLayer.constants.listenerScope.ALL:
       // trigger the handler for all the previous items
       this._triggerListener(listener);
-      // register the listener
-      that._listenerManager.register(listener);
+      that._listenerManager.register(new DataLayer.Listener(listener));
   }
 };
 
 /**
  * Triggers the listener on all the items that were registered before.
  *
- * @param {Item} listener The listener.
+ * @param {Item} listener The listener item.
  * @private
  */
 DataLayer.Manager.prototype._triggerListener = function(listener) {
@@ -263,7 +259,7 @@ DataLayer.Manager.prototype._triggerListener = function(listener) {
   for (let i = 0; i < processLength; i++) {
     const itemConfig = this._dataLayer[i];
     const item = new DataLayer.Item(itemConfig, i);
-    that._listenerManager.callListenerHandler(listener, item);
+    that._listenerManager.callHandler(new DataLayer.Listener(listener), item);
   }
 };
 
