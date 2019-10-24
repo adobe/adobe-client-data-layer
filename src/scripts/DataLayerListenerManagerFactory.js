@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 const constants = require('./DataLayerConstants');
 const has = require('lodash.has');
+const get = require('lodash.get');
 const isEqual = require('lodash.isequal');
 
 /**
@@ -25,7 +26,7 @@ const ListenerManagerFactory = {};
  *
  * @returns {ListenerManager} A listener manager.
  */
-ListenerManagerFactory.create = function() {
+ListenerManagerFactory.create = function(dataLayerManager) {
   const _listeners = {};
 
   /**
@@ -97,7 +98,13 @@ ListenerManagerFactory.create = function() {
         const listenerConfig = listener.config;
         const itemConfig = item.config;
         const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
-        listenerConfig.handler(itemConfigCopy);
+        if (listener.config.selector) {
+          const oldValue = get(dataLayerManager._state, listenerConfig.selector);
+          const newValue = get(itemConfig.data, listenerConfig.selector);
+          listenerConfig.handler(itemConfigCopy, oldValue, newValue);
+        } else {
+          listenerConfig.handler(itemConfigCopy);
+        }
       }
     }
   };
