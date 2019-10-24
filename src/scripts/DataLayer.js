@@ -85,7 +85,7 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._dataLayer = that._config.dataLayer;
   that._state = {};
-  that._listenerManager = DataLayer.ListenerManagerFactory.create();
+  that._listenerManager = DataLayer.ListenerManagerFactory.create(that);
 
   that._augment();
   that._processItems();
@@ -196,14 +196,14 @@ DataLayer.Manager.prototype._processItem = function(item) {
 
   const typeProcessors = {
     data: function(item) {
-      that._updateState(item);
       that._listenerManager.triggerListeners(item);
+      that._updateState(item);
     },
     event: function(item) {
+      that._listenerManager.triggerListeners(item);
       if (item.config.data) {
         that._updateState(item);
       }
-      that._listenerManager.triggerListeners(item);
     },
     listenerOn: function(item) {
       that._processListenerOn(item);

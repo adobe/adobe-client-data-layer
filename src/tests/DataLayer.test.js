@@ -391,8 +391,6 @@ describe('listener with selector', () => {
     mockCallback.mockClear();
   });
 
-
-
   test('on change listener with selector for image component data', () => {
     dataLayer.push(listenerOn);
     dataLayer.push({ data: carouselData });
@@ -454,6 +452,48 @@ describe('listener with selector', () => {
       'data': imageData
     });
     expect(mockCallback.mock.calls.length).toBe(3);
+  });
+
+  test('listener: selector: old/new value', () => {
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': {
+        'component': {
+          'carousel': {
+            'carousel1': {
+              'id': 'old',
+              'items': {}
+            }
+          }
+        }
+      }
+    });
+    dataLayer.push({
+      'on': 'datalayer:change',
+      'selector': 'component.carousel.carousel1.id',
+      'handler': function(event, oldValue, newValue) {
+        if (oldValue === 'old') {
+          mockCallback();
+        }
+        if (newValue === 'new') {
+          mockCallback();
+        }
+      }
+    });
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': {
+        'component': {
+          'carousel': {
+            'carousel1': {
+              'id': 'new',
+              'items': {}
+            }
+          }
+        }
+      }
+    });
+    expect(mockCallback.mock.calls.length).toBe(2);
   });
 });
 
