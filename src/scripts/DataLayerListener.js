@@ -23,11 +23,10 @@ class Listener {
    * @constructor
    */
   constructor(item) {
-    const that = this;
-    that._event = item.config.on ? item.config.on : item.config.off;
-    that._handler = item.config.handler;
-    that._scope = item.config.scope;
-    that._selector = item.config.selector;
+    this._event = item.config.on ? item.config.on : item.config.off;
+    this._handler = item.config.handler;
+    this._scope = item.config.scope;
+    this._selector = item.config.selector;
   }
 
   /**

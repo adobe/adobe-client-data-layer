@@ -21,9 +21,13 @@ const constants = {
    * @readonly
    */
   itemType: {
+    /** Represents an item of type data */
     DATA: 'data',
+    /** Represents an item of type event */
     EVENT: 'event',
+    /** Represents an item of type listener on */
     LISTENER_ON: 'listenerOn',
+    /** Represents an item of type listener off */
     LISTENER_OFF: 'listenerOff'
   },
 
