@@ -64,7 +64,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const event = listener.event;
 
       if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
-        if (!listener.handler) {
+        if (!(listener.handler || listener.scope || listener.selector)) {
           _listeners[event] = [];
         } else {
           const index = _indexOf(listener);
