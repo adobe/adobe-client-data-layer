@@ -22,9 +22,9 @@ const ListenerManager = function() {
    *
    * @param {DataLayer.Item} listenerOn The listener on.
    */
-  that.registerListener = function(listenerOn) {
+  that.register = function(listenerOn) {
     const eventName = listenerOn.config.on;
-    if (!_isRegisteredListener(listenerOn)) {
+    if (!_isRegistered(listenerOn)) {
       if (!_listeners[eventName]) {
         _listeners[eventName] = [];
       }
@@ -39,7 +39,7 @@ const ListenerManager = function() {
    *
    * @param {DataLayer.Item} listenerOff The listener off.
    */
-  that.unregisterListener = function(listenerOff) {
+  that.unregister = function(listenerOff) {
     const indexes = _getListenersMatchingListenerOff(listenerOff);
     const eventName = listenerOff.config.off;
     for (let i = indexes.length - 1; i > -1; i--) {
@@ -191,7 +191,7 @@ const ListenerManager = function() {
    * @returns {Boolean} true if the listener is registered, false otherwise.
    * @private
    */
-  function _isRegisteredListener(listenerOn) {
+  function _isRegistered(listenerOn) {
     const eventName = listenerOn.config.on;
     if (_listeners[eventName]) {
       for (let i = 0; i < _listeners[eventName].length; i++) {

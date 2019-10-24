@@ -209,7 +209,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       that._processListenerOn(item);
     },
     listenerOff: function(item) {
-      that._listenerManager.unregisterListener(item);
+      that._listenerManager.unregister(item);
     }
   };
 
@@ -234,13 +234,13 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
       break;
     case DataLayer.constants.listenerScope.FUTURE:
       // register the listener
-      this._listenerManager.registerListener(listener);
+      this._listenerManager.register(listener);
       break;
     case DataLayer.constants.listenerScope.ALL:
       // trigger the handler for all the previous items
       this._triggerListener(listener);
       // register the listener
-      this._listenerManager.registerListener(listener);
+      this._listenerManager.register(listener);
   }
 };
 
