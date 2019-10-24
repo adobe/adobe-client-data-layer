@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const constants = require('./DataLayerConstants');
+const has = require('lodash.has');
 const isEqual = require('lodash.isequal');
 
 const ListenerManager = function() {
@@ -94,7 +95,9 @@ const ListenerManager = function() {
     if (item.type === constants.itemType.DATA) {
       triggeredEvents.push(constants.event.CHANGE);
     } else if (item.type === constants.itemType.EVENT) {
-      triggeredEvents.push(itemConfig.event);
+      if (itemConfig.event !== constants.event.CHANGE) {
+        triggeredEvents.push(itemConfig.event);
+      }
       triggeredEvents.push(constants.event.EVENT);
       if (itemConfig.data) {
         triggeredEvents.push(constants.event.CHANGE);
@@ -118,16 +121,16 @@ const ListenerManager = function() {
 
     if (item.type === constants.itemType.DATA) {
       if (listenerConfig.on === constants.event.CHANGE) {
-        isMatching = true;
+        isMatching = _isSelectorMatching(listenerConfig, item);
       }
     } else if (item.type === constants.itemType.EVENT) {
       if (listenerConfig.on === constants.event.EVENT ||
         listenerConfig.on === itemConfig.event) {
-        isMatching = true;
+        isMatching = _isSelectorMatching(listenerConfig, item);
       }
       if (itemConfig.data &&
         listenerConfig.on === constants.event.CHANGE) {
-        isMatching = true;
+        isMatching = _isSelectorMatching(listenerConfig, item);
       }
     }
     return isMatching;
@@ -199,6 +202,23 @@ const ListenerManager = function() {
       }
     }
     return false;
+  }
+
+  /**
+   * Checks if the given listenerConfig has a selector that points to an object in the data payload of the itemConfig.
+   *
+   * @param {ListenerOnConfig} listenerConfig Config of the listener to extract the selector from.
+   * @param {DataLayer.Item} item The item.
+   * @returns {Boolean} true if a selector is not provided or if the given selector is matching, false otherwise.
+   * @private
+   */
+  function _isSelectorMatching(listenerConfig, item) {
+    const itemConfig = item.config;
+    if (listenerConfig.selector && itemConfig.data) {
+      return has(itemConfig.data, listenerConfig.selector);
+    } else {
+      return true;
+    }
   }
 
   return that;
