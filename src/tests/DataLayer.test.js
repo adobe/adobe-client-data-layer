@@ -364,7 +364,7 @@ test('listener on: register a handler (with a static function) that has already 
 
 describe('listener with selector', () => {
   const mockCallback = jest.fn();
-  const argOn = {
+  const listenerOn = {
     'on': 'datalayer:change',
     'selector': 'component.image',
     'handler': mockCallback
@@ -394,7 +394,7 @@ describe('listener with selector', () => {
 
 
   test('on change listener with selector for image component data', () => {
-    dataLayer.push(argOn);
+    dataLayer.push(listenerOn);
     dataLayer.push({ data: carouselData });
     expect(mockCallback.mock.calls.length).toBe(0);
     dataLayer.push({ data: imageData });
@@ -402,12 +402,12 @@ describe('listener with selector', () => {
   });
 
   test('custom listener with selector for image component data', () => {
-    let argOn = {
+    let listenerOn = {
       'on': 'viewed',
       'selector': 'component.image',
       'handler': mockCallback
     };
-    dataLayer.push(argOn);
+    dataLayer.push(listenerOn);
     dataLayer.push({
       'event': 'viewed',
       'data': carouselData
@@ -421,7 +421,7 @@ describe('listener with selector', () => {
   });
 
   test('listener on: datalayer:change with selector', () => {
-    dataLayer.push(argOn);
+    dataLayer.push(listenerOn);
     dataLayer.push({
       'event': 'datalayer:change',
       'data': carouselData

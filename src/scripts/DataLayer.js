@@ -15,6 +15,7 @@ governing permissions and limitations under the License.
 
 const merge = require('lodash.merge');
 const isEqual = require('lodash.isequal');
+const has = require('lodash.has');
 
 /**
  * Data Layer.
@@ -341,7 +342,7 @@ DataLayer.Manager.prototype._isMatching = function(listener, item) {
 DataLayer.Manager.prototype._isSelectorMatching = function(listenerConfig, item) {
   const itemConfig = item.config;
   if (listenerConfig.selector && itemConfig.data) {
-    return DataLayer.utils.hasOwnNestedProperty(listenerConfig.selector, itemConfig.data);
+    return has(itemConfig.data, listenerConfig.selector);
   } else {
     return true;
   }
@@ -379,14 +380,13 @@ DataLayer.Manager.prototype._getTriggeredEvents = function(item) {
  */
 DataLayer.Manager.prototype._registerListener = function(listenerOn) {
   const eventName = listenerOn.config.on;
-  const selector = listenerOn.config.selector;
   if (!this._isRegisteredListener(listenerOn)) {
     if (!this._listeners[eventName]) {
       this._listeners[eventName] = [];
     }
     this._listeners[eventName].push(listenerOn);
 
-    console.debug('listener registered on: ', eventName, selector);
+    console.debug('listener registered on: ', eventName);
   }
 };
 
