@@ -22,7 +22,7 @@ const merge = require('lodash.merge');
  */
 const DataLayer = {};
 DataLayer.Item = require('./DataLayerItem').item;
-DataLayer.ListenerManager = require('./DataLayerListenerManager');
+DataLayer.ListenerManagerFactory = require('./DataLayerListenerManagerFactory');
 DataLayer.constants = require('./DataLayerConstants');
 
 /**
@@ -85,21 +85,21 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._dataLayer = that._config.dataLayer;
   that._state = {};
-  that._listenerManager = DataLayer.ListenerManager();
+  that._listenerManager = DataLayer.ListenerManagerFactory();
 
   that._augment();
   that._processItems();
 
   const readyItem = new DataLayer.Item({
-    event: DataLayer.constants.event.READY
+    event: DataLayer.constants.eventType.READY
   });
-  this._listenerManager.triggerListeners(readyItem);
+  that._listenerManager.triggerListeners(readyItem);
 };
 
 /**
  * Updates the state with the item.
  *
- * @param {DataLayer.Item} item The item .
+ * @param {Item} item The item.
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
@@ -180,7 +180,7 @@ DataLayer.Manager.prototype._processItems = function() {
 /**
  * Processes an item pushed to the stack.
  *
- * @param {DataLayer.Item} item The item to process.
+ * @param {Item} item The item to process.
  * @private
  */
 DataLayer.Manager.prototype._processItem = function(item) {
@@ -219,10 +219,11 @@ DataLayer.Manager.prototype._processItem = function(item) {
 /**
  * Processes the item of type: listener on.
  *
- * @param {DataLayer.Item} listener The listener.
+ * @param {Item} listener The listener.
  * @private
  */
 DataLayer.Manager.prototype._processListenerOn = function(listener) {
+  const that = this;
   let scope = listener.config.scope;
   if (!scope) {
     scope = DataLayer.constants.listenerScope.FUTURE;
@@ -234,20 +235,20 @@ DataLayer.Manager.prototype._processListenerOn = function(listener) {
       break;
     case DataLayer.constants.listenerScope.FUTURE:
       // register the listener
-      this._listenerManager.register(listener);
+      that._listenerManager.register(listener);
       break;
     case DataLayer.constants.listenerScope.ALL:
       // trigger the handler for all the previous items
       this._triggerListener(listener);
       // register the listener
-      this._listenerManager.register(listener);
+      that._listenerManager.register(listener);
   }
 };
 
 /**
  * Triggers the listener on all the items that were registered before.
  *
- * @param {DataLayer.Item} listener The listener.
+ * @param {Item} listener The listener.
  * @private
  */
 DataLayer.Manager.prototype._triggerListener = function(listener) {
@@ -273,7 +274,7 @@ new DataLayer.Manager({
 /**
  * Triggered when there is change in the data layer state.
  *
- * @event DataLayerEvents.CHANGE
+ * @event EventType.CHANGE
  * @type {Object}
  * @property {Object} data Data pushed that caused a change in the data layer state.
  */
@@ -281,7 +282,7 @@ new DataLayer.Manager({
 /**
  * Triggered when an event is pushed to the data layer.
  *
- * @event DataLayerEvents.EVENT
+ * @event EventType.EVENT
  * @type {Object}
  * @property {String} name Name of the committed event.
  * @property {Object} info Additional information passed with the committed event.
@@ -301,7 +302,7 @@ new DataLayer.Manager({
 /**
  * Triggered when the data layer has initialized.
  *
- * @event DataLayerEvents.READY
+ * @event EventType.READY
  * @type {Object}
  */
 
