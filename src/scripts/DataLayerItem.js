@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 const DataLayer = {};
 DataLayer.constants = require('./DataLayerConstants');
+
 /**
  * Constraints for each type of the item configuration.
  */
@@ -82,6 +83,7 @@ class Item {
    *
    * @param {ItemConfig} itemConfig The data layer item configuration.
    * @param {Number} index The item index in the array of existing items.
+   * @constructor
    */
   constructor(itemConfig, index) {
     const that = this;

@@ -11,13 +11,13 @@ governing permissions and limitations under the License.
 */
 const constants = {
   /**
-   * @typedef {String} DataLayer.Item.Type
+   * @typedef {String} ItemType
    **/
 
   /**
    * Enumeration of data layer item types.
    *
-   * @enum {DataLayer.Item.Type}
+   * @enum {ItemType}
    * @readonly
    */
   itemType: {
@@ -28,16 +28,16 @@ const constants = {
   },
 
   /**
-   * @typedef {String} DataLayer.Events
+   * @typedef {String} DataLayerEvent
    **/
 
   /**
    * Enumeration of data layer events.
    *
-   * @enum {DataLayer.Events}
+   * @enum {DataLayerEvent}
    * @readonly
    */
-  event: {
+  dataLayerEvent: {
     /** Represents an event triggered for any change in the data layer state */
     CHANGE: 'datalayer:change',
     /** Represents an event triggered for any event push to the data layer */
@@ -47,13 +47,13 @@ const constants = {
   },
 
   /**
-   * @typedef {String} DataLayer.ListenerScope
+   * @typedef {String} ListenerScope
    **/
 
   /**
    * Enumeration of listener scopes.
    *
-   * @enum {DataLayer.ListenerScope}
+   * @enum {ListenerScope}
    * @readonly
    */
   listenerScope: {
