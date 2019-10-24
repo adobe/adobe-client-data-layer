@@ -20,7 +20,6 @@ const ListenerManager = function() {
    * Registers a listener based on a listener on configuration.
    *
    * @param {DataLayer.Item} listenerOn The listener on.
-   * @private
    */
   that.registerListener = function(listenerOn) {
     const eventName = listenerOn.config.on;
@@ -38,7 +37,6 @@ const ListenerManager = function() {
    * Unregisters a listener.
    *
    * @param {DataLayer.Item} listenerOff The listener off.
-   * @private
    */
   that.unregisterListener = function(listenerOff) {
     const indexes = _getListenersMatchingListenerOff(listenerOff);
@@ -56,7 +54,6 @@ const ListenerManager = function() {
    * Triggers all the registered listeners matching the item.
    *
    * @param {DataLayer.Item} item The item.
-   * @private
    */
   that.triggerListeners = function(item) {
     const triggeredEvents = _getTriggeredEvents(item);
@@ -74,7 +71,6 @@ const ListenerManager = function() {
    *
    * @param {DataLayer.Item} listener The listener.
    * @param {DataLayer.Item} item The item.
-   * @private
    */
   that.callListenerHandler = function(listener, item) {
     if (_isMatching(listener, item)) {
