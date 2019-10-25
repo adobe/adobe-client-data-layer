@@ -139,7 +139,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    * Returns the names of the events that are triggered for this item.
    *
    * @param {Item} item The item.
-   * @returns {Array} The names of the events that are triggered for this item.
+   * @returns {Array<String>} The names of the events that are triggered for this item.
    * @private
    */
   function _getTriggeredEvents(item) {

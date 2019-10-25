@@ -192,6 +192,20 @@ DataLayer.Manager.prototype._processItem = function(item) {
     return;
   }
 
+  /**
+   * Returns all items before the provided one.
+   *
+   * @param {Item} item The item.
+   * @returns {Array<Item>} The items before.
+   * @private
+   */
+  function _getBefore(item) {
+    if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
+      return that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
+    }
+    return [];
+  }
+
   const typeProcessors = {
     data: function(item) {
       that._listenerManager.triggerEvents(item);
@@ -207,18 +221,14 @@ DataLayer.Manager.prototype._processItem = function(item) {
       const listener = new DataLayer.Listener(item);
       switch (listener.scope) {
         case DataLayer.constants.listenerScope.PAST:
-          if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
-            const items = that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
-            that._listenerManager.triggerEvents(items, listener);
-          }
+          that._listenerManager.triggerEvents(_getBefore(item), listener);
           break;
         case DataLayer.constants.listenerScope.FUTURE:
           that._listenerManager.register(listener);
           break;
         case DataLayer.constants.listenerScope.ALL:
           if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
-            const items = that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
-            that._listenerManager.triggerEvents(items, listener);
+            that._listenerManager.triggerEvents(_getBefore(item), listener);
           }
           that._listenerManager.register(listener);
       }
