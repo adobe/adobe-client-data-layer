@@ -227,9 +227,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
           that._listenerManager.register(listener);
           break;
         case DataLayer.constants.listenerScope.ALL:
-          if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
-            that._listenerManager.triggerEvents(_getBefore(item), listener);
-          }
+          that._listenerManager.triggerEvents(_getBefore(item), listener);
           that._listenerManager.register(listener);
       }
     },
