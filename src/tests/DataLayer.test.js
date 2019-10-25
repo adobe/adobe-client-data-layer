@@ -64,7 +64,7 @@ test('remove data', () => {
       'carousel': {}
     }
   };
-  expect(dataLayer.getState()).toMatchObject(updatedData);
+  expect(dataLayer.getState()).toEqual(updatedData);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
