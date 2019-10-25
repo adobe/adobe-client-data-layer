@@ -117,9 +117,9 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   /**
    * Calls the listener handler on the item if a match is found.
    *
-   * @function
    * @param {Listener} listener The listener.
    * @param {Item} item The item.
+   * @private
    */
   function _callHandler(listener, item) {
     if (_matches(listener, item)) {
