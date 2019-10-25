@@ -34,7 +34,7 @@ test('add data', () => {
     }
   };
   dataLayer.push({ data: data });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toEqual(data);
 });
 
 test('remove data', () => {
@@ -49,7 +49,7 @@ test('remove data', () => {
     }
   };
   dataLayer.push({ data: data });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toEqual(data);
   dataLayer.push({
     'data': {
       'component': {
@@ -86,7 +86,7 @@ test('add event', () => {
     event: 'carousel clicked',
     data: data
   });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toEqual(data);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -667,7 +667,7 @@ test('invalid data', () => {
     data: data,
     'invalid': 'invalid'
   });
-  expect(dataLayer.getState()).toMatchObject({});
+  expect(dataLayer.getState()).toEqual({});
 });
 
 test('invalid event', () => {
@@ -686,7 +686,7 @@ test('invalid event', () => {
     data: data,
     'invalid': 'invalid'
   });
-  expect(dataLayer.getState()).toMatchObject({});
+  expect(dataLayer.getState()).toEqual({});
 });
 
 test('invalid listener on', () => {
@@ -833,7 +833,7 @@ test.skip('high load', () => {
       'event': 'carousel clicked',
       'data': data
     });
-    expect(dataLayer.getState()).toMatchObject(data);
+    expect(dataLayer.getState()).toEqual(data);
     expect(mockCallback.mock.calls.length).toBe(i + 1);
   }
 
