@@ -103,14 +103,14 @@ ListenerManagerFactory.create = function(dataLayerManager) {
           if (listener.config.selector) {
             const oldValue = get(dataLayerManager._state, listenerConfig.selector);
             const newValue = get(itemConfig.data, listenerConfig.selector);
-            listenerConfig.handler(itemConfigCopy, oldValue, newValue);
+            listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
           } else {
             const oldState = merge({}, dataLayerManager._state);
             const newState = merge({}, oldState, item.config.data);
-            listenerConfig.handler(itemConfigCopy, oldState, newState);
+            listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
           }
         } else {
-          listenerConfig.handler(itemConfigCopy);
+          listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
         }
       }
     }
