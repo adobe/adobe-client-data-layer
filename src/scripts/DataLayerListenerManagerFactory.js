@@ -13,6 +13,7 @@ const constants = require('./DataLayerConstants');
 const has = require('lodash.has');
 const get = require('lodash.get');
 const isEqual = require('lodash.isequal');
+const merge = require('lodash.merge');
 
 /**
  * Factory that creates a listener manager.
@@ -124,13 +125,19 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   function _callHandler(listener, item) {
     if (_matches(listener, item)) {
       const itemConfig = item.config;
-      const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
-      if (listener.selector) {
-        const oldValue = get(dataLayerManager._state, listener.selector);
-        const newValue = get(itemConfig.data, listener.selector);
-        listener.handler(itemConfigCopy, oldValue, newValue);
+      const itemConfigCopy = merge({}, itemConfig);
+      if (item.config.data) {
+        if (listener.selector) {
+          const oldValue = get(dataLayerManager._state, listener.selector);
+          const newValue = get(itemConfig.data, listener.selector);
+          listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
+        } else {
+          const oldState = merge({}, dataLayerManager._state);
+          const newState = merge({}, oldState, item.config.data);
+          listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
+        }
       } else {
-        listener.handler(itemConfigCopy);
+        listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
       }
     }
   }

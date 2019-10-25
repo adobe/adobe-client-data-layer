@@ -147,8 +147,7 @@ DataLayer.Manager.prototype._augment = function() {
    * @returns {Object} The deep copied state object.
    */
   that._dataLayer.getState = function() {
-    // use deep copying technique of JSON stringify and parsing the state.
-    return JSON.parse(JSON.stringify(that._state));
+    return merge({}, that._state);
   };
 };
 

@@ -10,6 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const DataLayer = require('../scripts/DataLayer');
+const isEqual = require('lodash.isequal');
 let dataLayer;
 
 beforeEach(() => {
@@ -492,6 +493,49 @@ describe('listener with selector', () => {
           }
         }
       }
+    });
+    expect(mockCallback.mock.calls.length).toBe(2);
+  });
+
+  test('listener: selector: old/new state', () => {
+    const oldData = {
+      'component': {
+        'carousel': {
+          'carousel1': {
+            'id': 'old',
+            'items': {}
+          }
+        }
+      }
+    };
+    const newData = {
+      'component': {
+        'carousel': {
+          'carousel1': {
+            'id': 'new',
+            'items': {}
+          }
+        }
+      }
+    };
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': oldData
+    });
+    dataLayer.push({
+      'on': 'datalayer:change',
+      'handler': function(event, oldState, newState) {
+        if (isEqual(oldState, oldData)) {
+          mockCallback();
+        }
+        if (isEqual(newState, newData)) {
+          mockCallback();
+        }
+      }
+    });
+    dataLayer.push({
+      'event': 'datalayer:change',
+      'data': newData
     });
     expect(mockCallback.mock.calls.length).toBe(2);
   });
