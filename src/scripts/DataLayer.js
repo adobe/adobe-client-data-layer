@@ -204,7 +204,24 @@ DataLayer.Manager.prototype._processItem = function(item) {
       }
     },
     listenerOn: function(item) {
-      that._processListenerOn(item);
+      const listener = new DataLayer.Listener(item);
+      switch (listener.scope) {
+        case DataLayer.constants.listenerScope.PAST:
+          if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
+            const items = that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
+            that._listenerManager.triggerEvents(items, listener);
+          }
+          break;
+        case DataLayer.constants.listenerScope.FUTURE:
+          that._listenerManager.register(listener);
+          break;
+        case DataLayer.constants.listenerScope.ALL:
+          if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
+            const items = that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
+            that._listenerManager.triggerEvents(items, listener);
+          }
+          that._listenerManager.register(listener);
+      }
     },
     listenerOff: function(item) {
       that._listenerManager.unregister(new DataLayer.Listener(item));
@@ -212,55 +229,6 @@ DataLayer.Manager.prototype._processItem = function(item) {
   };
 
   typeProcessors[item.type](item);
-};
-
-/**
- * Processes the item of type: listener on.
- *
- * @param {Item} listener The listener item.
- * @private
- */
-DataLayer.Manager.prototype._processListenerOn = function(listener) {
-  const that = this;
-  let scope = listener.config.scope;
-  if (!scope) {
-    scope = DataLayer.constants.listenerScope.FUTURE;
-  }
-  switch (scope) {
-    case DataLayer.constants.listenerScope.PAST:
-      // trigger the handler for all the previous items
-      this._triggerListener(listener);
-      break;
-    case DataLayer.constants.listenerScope.FUTURE:
-      that._listenerManager.register(new DataLayer.Listener(listener));
-      break;
-    case DataLayer.constants.listenerScope.ALL:
-      // trigger the handler for all the previous items
-      this._triggerListener(listener);
-      that._listenerManager.register(new DataLayer.Listener(listener));
-  }
-};
-
-/**
- * Triggers the listener on all the items that were registered before.
- *
- * @param {Item} listener The listener item.
- * @private
- */
-DataLayer.Manager.prototype._triggerListener = function(listener) {
-  const that = this;
-  const listenerIdx = listener.index;
-
-  if (listenerIdx === 0 || this._dataLayer.length === 0 || listenerIdx > this._dataLayer.length - 1) {
-    return;
-  }
-
-  const processLength = (!listenerIdx) ? this._dataLayer.length : listenerIdx;
-  for (let i = 0; i < processLength; i++) {
-    const itemConfig = this._dataLayer[i];
-    const item = new DataLayer.Item(itemConfig, i);
-    that._listenerManager.callHandler(new DataLayer.Listener(listener), item);
-  }
 };
 
 new DataLayer.Manager({

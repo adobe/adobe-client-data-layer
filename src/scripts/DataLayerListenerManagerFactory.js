@@ -75,43 +75,65 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       }
     },
     /**
-     * Triggers events related to the passed item.
+     * Triggers events related to the passed items.
      *
      * @function
-     * @param {Item} item The item for which to trigger events.
+     * @param {Item|Array<Item>} items Item or array of items to trigger events for.
+     * @param {Listener} [listener] Specific listener to call for the passed item(s).
      */
-    triggerEvents: function(item) {
-      const that = this;
+    triggerEvents: function(items, listener) {
+      if (Array.isArray(items)) {
+        for (const item of items) {
+          _triggerEvents(item, listener);
+        }
+      } else {
+        _triggerEvents(items, listener);
+      }
+    }
+  };
+
+  /**
+   * Triggers events related to the passed item.
+   *
+   * @param {Item} item Item to trigger events for.
+   * @param {Listener} [listener] Specific listener to call for the passed item.
+   * @private
+   */
+  function _triggerEvents(item, listener) {
+    if (listener) {
+      _callHandler(listener, item);
+    } else {
       const triggeredEvents = _getTriggeredEvents(item);
       triggeredEvents.forEach(function(event) {
         if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
           for (const listener of _listeners[event]) {
-            that.callHandler(listener, item);
+            _callHandler(listener, item);
           }
         }
       });
-    },
-    /**
-     * Calls the listener handler on the item if a match is found.
-     *
-     * @function
-     * @param {Listener} listener The listener.
-     * @param {Item} item The item.
-     */
-    callHandler: function(listener, item) {
-      if (_matches(listener, item)) {
-        const itemConfig = item.config;
-        const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
-        if (listener.selector) {
-          const oldValue = get(dataLayerManager._state, listener.selector);
-          const newValue = get(itemConfig.data, listener.selector);
-          listener.handler(itemConfigCopy, oldValue, newValue);
-        } else {
-          listener.handler(itemConfigCopy);
-        }
+    }
+  }
+
+  /**
+   * Calls the listener handler on the item if a match is found.
+   *
+   * @function
+   * @param {Listener} listener The listener.
+   * @param {Item} item The item.
+   */
+  function _callHandler(listener, item) {
+    if (_matches(listener, item)) {
+      const itemConfig = item.config;
+      const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
+      if (listener.selector) {
+        const oldValue = get(dataLayerManager._state, listener.selector);
+        const newValue = get(itemConfig.data, listener.selector);
+        listener.handler(itemConfigCopy, oldValue, newValue);
+      } else {
+        listener.handler(itemConfigCopy);
       }
     }
-  };
+  }
 
   /**
    * Returns the names of the events that are triggered for this item.
