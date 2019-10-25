@@ -9,6 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+const constants = require('./DataLayerConstants');
+
 /**
  * A data layer listener.
  *
@@ -26,6 +28,9 @@ class Listener {
     this._event = item.config.on ? item.config.on : item.config.off;
     this._handler = (item.config.handler) ? item.config.handler : null;
     this._scope = (item.config.scope) ? item.config.scope : null;
+    if (item.config.on && this._scope === null) {
+      this._scope = constants.listenerScope.FUTURE;
+    }
     this._selector = (item.config.selector) ? item.config.selector : null;
   }
 
