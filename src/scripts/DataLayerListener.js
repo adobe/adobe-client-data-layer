@@ -41,7 +41,7 @@ class Listener {
   /**
    * Returns the listener handler.
    *
-   * @returns {(String|null)} The listener handler.
+   * @returns {(Function|null)} The listener handler.
    */
   get handler() {
     return this._handler;
