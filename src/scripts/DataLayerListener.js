@@ -24,9 +24,9 @@ class Listener {
    */
   constructor(item) {
     this._event = item.config.on ? item.config.on : item.config.off;
-    this._handler = item.config.handler;
-    this._scope = item.config.scope;
-    this._selector = item.config.selector;
+    this._handler = (item.config.handler) ? item.config.handler : null;
+    this._scope = (item.config.scope) ? item.config.scope : null;
+    this._selector = (item.config.selector) ? item.config.selector : null;
   }
 
   /**
@@ -41,7 +41,7 @@ class Listener {
   /**
    * Returns the listener handler.
    *
-   * @returns {Function} The listener handler.
+   * @returns {(String|null)} The listener handler.
    */
   get handler() {
     return this._handler;
@@ -50,7 +50,7 @@ class Listener {
   /**
    * Returns the listener scope.
    *
-   * @returns {String} The listener scope.
+   * @returns {(String|null)} The listener scope.
    */
   get scope() {
     return this._scope;
@@ -59,7 +59,7 @@ class Listener {
   /**
    * Returns the listener selector.
    *
-   * @returns {String} The listener selector.
+   * @returns {(String|null)} The listener selector.
    */
   get selector() {
     return this._selector;
