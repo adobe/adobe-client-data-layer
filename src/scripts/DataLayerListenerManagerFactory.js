@@ -13,6 +13,7 @@ const constants = require('./DataLayerConstants');
 const has = require('lodash.has');
 const get = require('lodash.get');
 const isEqual = require('lodash.isequal');
+const merge = require('lodash.merge');
 
 /**
  * Factory that creates a listener manager.
@@ -97,13 +98,19 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       if (_isMatching(listener, item)) {
         const listenerConfig = listener.config;
         const itemConfig = item.config;
-        const itemConfigCopy = JSON.parse(JSON.stringify(itemConfig));
-        if (listener.config.selector) {
-          const oldValue = get(dataLayerManager._state, listenerConfig.selector);
-          const newValue = get(itemConfig.data, listenerConfig.selector);
-          listenerConfig.handler(itemConfigCopy, oldValue, newValue);
+        const itemConfigCopy = merge({}, itemConfig);
+        if (item.config.data) {
+          if (listener.config.selector) {
+            const oldValue = get(dataLayerManager._state, listenerConfig.selector);
+            const newValue = get(itemConfig.data, listenerConfig.selector);
+            listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
+          } else {
+            const oldState = merge({}, dataLayerManager._state);
+            const newState = merge({}, oldState, item.config.data);
+            listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
+          }
         } else {
-          listenerConfig.handler(itemConfigCopy);
+          listenerConfig.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
         }
       }
     }
