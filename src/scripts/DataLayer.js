@@ -91,7 +91,7 @@ DataLayer.Manager.prototype._initialize = function() {
   const readyItem = new DataLayer.Item({
     event: DataLayer.constants.dataLayerEvent.READY
   });
-  that._listenerManager.triggerEvents(readyItem);
+  that._listenerManager.triggerListeners(readyItem);
 };
 
 /**
@@ -207,11 +207,11 @@ DataLayer.Manager.prototype._processItem = function(item) {
 
   const typeProcessors = {
     data: function(item) {
-      that._listenerManager.triggerEvents(item);
+      that._listenerManager.triggerListeners(item);
       that._updateState(item);
     },
     event: function(item) {
-      that._listenerManager.triggerEvents(item);
+      that._listenerManager.triggerListeners(item);
       if (item.config.data) {
         that._updateState(item);
       }
@@ -220,13 +220,17 @@ DataLayer.Manager.prototype._processItem = function(item) {
       const listener = new DataLayer.Listener(item);
       switch (listener.scope) {
         case DataLayer.constants.listenerScope.PAST:
-          that._listenerManager.triggerEvents(_getBefore(item), listener);
+          for (const registeredItem of _getBefore(item)) {
+            that._listenerManager.triggerListener(listener, registeredItem);
+          }
           break;
         case DataLayer.constants.listenerScope.FUTURE:
           that._listenerManager.register(listener);
           break;
         case DataLayer.constants.listenerScope.ALL:
-          that._listenerManager.triggerEvents(_getBefore(item), listener);
+          for (const registeredItem of _getBefore(item)) {
+            that._listenerManager.triggerListener(listener, registeredItem);
+          }
           that._listenerManager.register(listener);
       }
     },

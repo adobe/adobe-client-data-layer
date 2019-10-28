@@ -9,6 +9,7 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+/* eslint no-console: "off" */
 const constants = require('./DataLayerConstants');
 const has = require('lodash.has');
 const get = require('lodash.get');
@@ -76,34 +77,12 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       }
     },
     /**
-     * Triggers events related to the passed items.
+     * Triggers listeners related to the passed item.
      *
      * @function
-     * @param {Item|Array<Item>} items Item or array of items to trigger events for.
-     * @param {Listener} [listener] Specific listener to call for the passed item(s).
+     * @param {Item} item Item to trigger listener for.
      */
-    triggerEvents: function(items, listener) {
-      if (Array.isArray(items)) {
-        for (const item of items) {
-          _triggerEvents(item, listener);
-        }
-      } else {
-        _triggerEvents(items, listener);
-      }
-    }
-  };
-
-  /**
-   * Triggers events related to the passed item.
-   *
-   * @param {Item} item Item to trigger events for.
-   * @param {Listener} [listener] Specific listener to call for the passed item.
-   * @private
-   */
-  function _triggerEvents(item, listener) {
-    if (listener) {
-      _callHandler(listener, item);
-    } else {
+    triggerListeners: function(item) {
       const triggeredEvents = _getTriggeredEvents(item);
       triggeredEvents.forEach(function(event) {
         if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
@@ -112,8 +91,18 @@ ListenerManagerFactory.create = function(dataLayerManager) {
           }
         }
       });
+    },
+    /**
+     * Triggers a single listener on the passed item.
+     *
+     * @function
+     * @param {Listener} listener Listener to call.
+     * @param {Item} item Item to call the listener with.
+     */
+    triggerListener: function(listener, item) {
+      _callHandler(listener, item);
     }
-  }
+  };
 
   /**
    * Calls the listener handler on the item if a match is found.

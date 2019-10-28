@@ -613,25 +613,25 @@ test('listener off: unregister multiple handlers', () => {
   const mockCallback2 = jest.fn();
 
   dataLayer.push({
-    'on': 'user loaded',
-    'handler': mockCallback1
+    on: 'user loaded',
+    handler: mockCallback1
   });
   dataLayer.push({
-    'on': 'user loaded',
-    'handler': mockCallback2
+    on: 'user loaded',
+    handler: mockCallback2
   });
   dataLayer.push({
-    'event': 'user loaded'
+    event: 'user loaded'
   });
 
   expect(mockCallback1.mock.calls.length).toBe(1);
   expect(mockCallback2.mock.calls.length).toBe(1);
 
   dataLayer.push({
-    'off': 'user loaded'
+    off: 'user loaded'
   });
   dataLayer.push({
-    'event': 'user loaded'
+    event: 'user loaded'
   });
 
   expect(mockCallback1.mock.calls.length).toBe(1);
