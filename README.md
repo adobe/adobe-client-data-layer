@@ -8,6 +8,21 @@ The Adobe Client Data Layer aims to reduce the effort to instrument websites by 
 * [Setup](https://github.com/adobe/adobe-client-data-layer/wiki#setup)
 * [API](https://github.com/adobe/adobe-client-data-layer/wiki#methods)
 
+## Consuming
+
+The best way to consume the Adobe Client Data Layer (currently beta) is to install the distributed npm package in your project build, by running:
+```
+npm install @adobe/adobe-client-data-layer@beta
+```
+
+Locate the `/dist` folder in the installed package, which contains the built and minimized javascript.
+
+This script can then be included in your page head, as follows:
+
+```html
+<script src="adobe-client-data-layer.min.js" async defer></script>
+```
+
 ## Building / Testing
 
 First run the following commands:
