@@ -34,7 +34,7 @@ test('add data', () => {
     }
   };
   dataLayer.push({ data: data });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toStrictEqual(data);
 });
 
 test('remove data', () => {
@@ -44,12 +44,16 @@ test('remove data', () => {
         'carousel1': {
           'id': '/content/mysite/en/home/jcr:content/root/carousel1',
           'items': {}
+        },
+        'carousel2': {
+          'id': '/content/mysite/en/home/jcr:content/root/carousel2',
+          'items': {}
         }
       }
     }
   };
   dataLayer.push({ data: data });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toStrictEqual(data);
   dataLayer.push({
     'data': {
       'component': {
@@ -61,10 +65,16 @@ test('remove data', () => {
   });
   const updatedData = {
     'component': {
-      'carousel': {}
+      'carousel': {
+        'carousel1': undefined,
+        'carousel2': {
+          'id': '/content/mysite/en/home/jcr:content/root/carousel2',
+          'items': {}
+        }
+      }
     }
   };
-  expect(dataLayer.getState()).toEqual(updatedData);
+  expect(dataLayer.getState()).toStrictEqual(updatedData);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -86,7 +96,7 @@ test('add event', () => {
     event: 'carousel clicked',
     data: data
   });
-  expect(dataLayer.getState()).toMatchObject(data);
+  expect(dataLayer.getState()).toStrictEqual(data);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -657,7 +667,7 @@ test('invalid data', () => {
     data: data,
     'invalid': 'invalid'
   });
-  expect(dataLayer.getState()).toMatchObject({});
+  expect(dataLayer.getState()).toStrictEqual({});
 });
 
 test('invalid event', () => {
@@ -676,7 +686,7 @@ test('invalid event', () => {
     data: data,
     'invalid': 'invalid'
   });
-  expect(dataLayer.getState()).toMatchObject({});
+  expect(dataLayer.getState()).toStrictEqual({});
 });
 
 test('invalid listener on', () => {
@@ -790,7 +800,7 @@ test('invalid item is filtered out from array', () => {
   dataLayer.push({
     'off': 'carousel 14 clicked',
   });
-  expect(dataLayer.length).toEqual(0);
+  expect(dataLayer.length).toStrictEqual(0);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -823,7 +833,7 @@ test.skip('high load', () => {
       'event': 'carousel clicked',
       'data': data
     });
-    expect(dataLayer.getState()).toMatchObject(data);
+    expect(dataLayer.getState()).toStrictEqual(data);
     expect(mockCallback.mock.calls.length).toBe(i + 1);
   }
 
