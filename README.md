@@ -15,7 +15,7 @@ The best way to consume the Adobe Client Data Layer (currently beta) is to insta
 npm install @adobe/adobe-client-data-layer@beta
 ```
 
-Locate the `/dist` folder in the installed package, which contains the built and minimized javascript.
+Locate the `/dist` folder in the installed package, which contains the built and minified javascript.
 
 This script can then be included in your page head, as follows:
 
