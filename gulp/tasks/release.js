@@ -177,14 +177,14 @@ module.exports = function(gulp) {
     if (currentVersion.match('-beta')) {
       tag = ' --tag beta';
     }
-    const npmRelease = `npm release --access public${tag}`;
+    const npmPublish = `npm publish --access public${tag}`;
 
     const release = () => {
       spawn(`
         gulp build &&
         gulp push-changes &&
         gulp create-push-release-tag &&
-        ${npmRelease}
+        ${npmPublish}
       `, [], {shell: true, stdio: 'inherit'});
 
       done();
