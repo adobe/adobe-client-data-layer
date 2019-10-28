@@ -14,6 +14,7 @@ module.exports = function(gulp) {
   const browserify = require('browserify');
   const buffer = require('vinyl-buffer');
   const log = require('gulplog');
+  const rename = require('gulp-rename');
   const source = require('vinyl-source-stream');
   const sourcemaps = require('gulp-sourcemaps');
   const uglify = require('gulp-uglify');
@@ -25,13 +26,14 @@ module.exports = function(gulp) {
     });
 
     return b.bundle()
-      .pipe(source('datalayer.js'))
+      .pipe(source('adobe-client-data-layer.js'))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe((babel({
         presets: ['@babel/env']
       })))
       .pipe(uglify())
+      .pipe(rename({suffix: '.min'}))
       .on('error', log.error)
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./dist/'));
