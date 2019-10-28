@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 /* eslint no-console: "off" */
 const merge = require('lodash.merge');
+const mergeWith = require('lodash.mergewith');
 
 /**
  * Data Layer.
@@ -101,7 +102,12 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-  merge(this._state, item.config.data);
+  const customizer = function(objValue, srcValue, key, object) {
+    if (typeof srcValue === 'undefined') {
+      delete object[key];
+    }
+  };
+  mergeWith(this._state, item.config.data, customizer);
 };
 
 /**
