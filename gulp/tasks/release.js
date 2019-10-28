@@ -172,12 +172,12 @@ module.exports = function(gulp) {
   });
 
   gulp.task('perform-release', (done) => {
-    let tag;
+    let tag = '';
     const currentVersion = getPackageJson().version;
     if (currentVersion.match('-beta')) {
-      tag = `--tag beta`;
+      tag = ` --tag beta`;
     }
-    const npmRelease = `npm release --access public ${tag}`;
+    const npmRelease = `npm release --access public${tag}`;
 
     const release = () => {
       spawn(`
