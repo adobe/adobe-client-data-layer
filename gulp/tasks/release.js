@@ -26,7 +26,7 @@ module.exports = function(gulp) {
 
   let releaseVersion;
 
-  gulp.task('perform-version-bump', function(done) {
+  gulp.task('perform-version-bump', (done) => {
     const doBump = () => {
       gulp.src([`${CWD}/package.json`, `${CWD}/package-lock.json`])
         .pipe(bump({version: releaseVersion}))
@@ -142,7 +142,7 @@ module.exports = function(gulp) {
     )
   );
 
-  gulp.task('push-changes', function(done) {
+  gulp.task('push-changes', (done) => {
     git.push('origin', 'master', function(err) {
       if (err) {
         done(new PluginError('release', err.message));
@@ -171,12 +171,20 @@ module.exports = function(gulp) {
     });
   });
 
-  gulp.task('perform-release', function(done) {
+  gulp.task('perform-release', (done) => {
+    let tag;
+    const currentVersion = getPackageJson().version;
+    if (currentVersion.match('-beta')) {
+      tag = `--tag beta`;
+    }
+    const npmRelease = `npm release --access public ${tag}`;
+
     const release = () => {
       spawn(`
         gulp build &&
         gulp push-changes &&
-        gulp create-push-release-tag
+        gulp create-push-release-tag &&
+        ${npmRelease}
       `, [], {shell: true, stdio: 'inherit'});
 
       done();

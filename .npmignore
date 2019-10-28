@@ -1,12 +1,10 @@
 /.github
 /.idea
-/.publish
 
 /.editorconfig
 /.gitignore
 /gulpfile.js
 /jest.config.js
-/index.md
 
 /examples
 /gulp
