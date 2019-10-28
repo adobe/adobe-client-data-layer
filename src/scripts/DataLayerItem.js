@@ -86,9 +86,8 @@ class Item {
    * @constructor
    */
   constructor(itemConfig, index) {
-    const that = this;
-    that._config = itemConfig;
-    that._type = (function(config) {
+    this._config = itemConfig;
+    this._type = (function(config) {
       let type;
       if (utils.itemConfigMatchesConstraints(config, constraints.dataConfig)) {
         type = DataLayer.constants.itemType.DATA;
@@ -101,8 +100,8 @@ class Item {
       }
       return type;
     }(itemConfig));
-    that._index = index;
-    that._valid = !!that._type;
+    this._index = index;
+    this._valid = !!this._type;
   }
 
   /**

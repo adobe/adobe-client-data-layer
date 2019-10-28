@@ -621,39 +621,29 @@ test('listener off: unregister a handler with a static function', () => {
 test('listener off: unregister multiple handlers', () => {
   const mockCallback1 = jest.fn();
   const mockCallback2 = jest.fn();
+
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
-    }
+    on: 'user loaded',
+    handler: mockCallback1
   });
-  const argOn1 = {
-    'on': 'carousel clicked',
-    'scope': 'all',
-    'handler': mockCallback1
-  };
-  dataLayer.push(argOn1);
+  dataLayer.push({
+    on: 'user loaded',
+    handler: mockCallback2
+  });
+  dataLayer.push({
+    event: 'user loaded'
+  });
+
   expect(mockCallback1.mock.calls.length).toBe(1);
-  const argOn2 = {
-    'on': 'carousel clicked',
-    'scope': 'all',
-    'handler': mockCallback2
-  };
-  dataLayer.push(argOn2);
   expect(mockCallback2.mock.calls.length).toBe(1);
 
-  const argOff = {
-    'off': 'carousel clicked',
-    'scope': 'all',
-  };
-  dataLayer.push(argOff);
-
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
-    }
+    off: 'user loaded'
   });
+  dataLayer.push({
+    event: 'user loaded'
+  });
+
   expect(mockCallback1.mock.calls.length).toBe(1);
   expect(mockCallback2.mock.calls.length).toBe(1);
 });
