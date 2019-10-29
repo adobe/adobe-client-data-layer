@@ -8,7 +8,22 @@ The Adobe Client Data Layer aims to reduce the effort to instrument websites by 
 * [Setup](https://github.com/adobe/adobe-client-data-layer/wiki#setup)
 * [API](https://github.com/adobe/adobe-client-data-layer/wiki#methods)
 
-## Building
+## Consuming
+
+The best way to consume the Adobe Client Data Layer (currently beta) is to install the distributed npm package in your project build, by running:
+```
+npm install @adobe/adobe-client-data-layer@beta
+```
+
+Locate the `/dist` folder in the installed package, which contains the built and minified javascript.
+
+This script can then be included in your page head, as follows:
+
+```html
+<script src="adobe-client-data-layer.min.js" async defer></script>
+```
+
+## Building / Testing
 
 First run the following commands:
 ```
@@ -20,6 +35,21 @@ Then choose from the following gulp tasks:
 * `gulp` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
 * `gulp build` - run the tests and generates the build in the `./dist` folder.
 * `gulp test` - run the unit tests
+
+## Releasing
+
+> Please only release this package if you have access to the Adobe npm organization and are a project committer.
+
+First run the following commands:
+```
+git checkout master
+git pull
+rm -rf node_modules && npm install
+```
+
+Then run:
+* `gulp release` - prompts for a new version, with patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
+  Following selection, the task will increase, commit and push the version, create and push the Git release tag, and publish the npm package.
 
 ## Contributing
 

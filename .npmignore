@@ -1,0 +1,12 @@
+/.github
+/.idea
+
+/.editorconfig
+/.gitignore
+/gulpfile.js
+/jest.config.js
+
+/examples
+/gulp
+/src/tests
+/test
