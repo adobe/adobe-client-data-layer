@@ -24,13 +24,13 @@ beforeEach(() => {
 
 test('add data', () => {
   const data = {
-    'page': {
-      'id': '/content/mysite/en/products/crossfit',
-      'siteLanguage': 'en-us',
-      'siteCountry': 'US',
-      'pageType': 'product detail',
-      'pageName': 'pdp - crossfit zoom',
-      'pageCategory': 'womens > shoes > athletic'
+    page: {
+      id: '/content/mysite/en/products/crossfit',
+      siteLanguage: 'en-us',
+      siteCountry: 'US',
+      pageType: 'product detail',
+      pageName: 'pdp - crossfit zoom',
+      pageCategory: 'womens > shoes > athletic'
     }
   };
   dataLayer.push({ data: data });
@@ -39,15 +39,15 @@ test('add data', () => {
 
 test('remove data', () => {
   const data = {
-    'component': {
-      'carousel': {
-        'carousel1': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel1',
-          'items': {}
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          items: {}
         },
-        'carousel2': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel2',
-          'items': {}
+        carousel2: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel2',
+          items: {}
         }
       }
     }
@@ -55,21 +55,21 @@ test('remove data', () => {
   dataLayer.push({ data: data });
   expect(dataLayer.getState()).toStrictEqual(data);
   dataLayer.push({
-    'data': {
-      'component': {
-        'carousel': {
-          'carousel1': undefined
+    data: {
+      component: {
+        carousel: {
+          carousel1: undefined
         }
       }
     }
   });
   const updatedData = {
-    'component': {
-      'carousel': {
-        'carousel1': undefined,
-        'carousel2': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel2',
-          'items': {}
+    component: {
+      carousel: {
+        carousel1: undefined,
+        carousel2: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel2',
+          items: {}
         }
       }
     }
@@ -83,11 +83,11 @@ test('remove data', () => {
 
 test('add event', () => {
   const data = {
-    'component': {
-      'carousel': {
-        'carousel3': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel3',
-          'items': {}
+    component: {
+      carousel: {
+        carousel3: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel3',
+          items: {}
         }
       }
     }
@@ -106,26 +106,26 @@ test('add event', () => {
 test('check dataLayer change event was executed', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'datalayer:change',
-    'handler': mockCallback
+    on: 'datalayer:change',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push({
     data: {
-      'page': {
-        'id': '/content/mysite/en/products/crossfit'
+      page: {
+        id: '/content/mysite/en/products/crossfit'
       }
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
   const argOff = {
-    'off': 'datalayer:change'
+    off: 'datalayer:change'
   };
   dataLayer.push(argOff);
   dataLayer.push({
     data: {
-      'page': {
-        'id': '/content/mysite/en/products/running'
+      page: {
+        id: '/content/mysite/en/products/running'
       }
     }
   });
@@ -135,25 +135,25 @@ test('check dataLayer change event was executed', () => {
 test('listener on: datalayer:event', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'datalayer:event',
-    'handler': mockCallback
+    on: 'datalayer:event',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push({
-    'event': 'clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
   const argOff = {
-    'off': 'datalayer:event'
+    off: 'datalayer:event'
   };
   dataLayer.push(argOff);
   dataLayer.push({
-    'event': 'datalayer:event',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'datalayer:event',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -162,30 +162,30 @@ test('listener on: datalayer:event', () => {
 test('listener on: datalayer:change', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'datalayer:change',
-    'handler': mockCallback
+    on: 'datalayer:change',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push({
-    'event': 'clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     },
     data: {
-      'page': {
-        'id': '/content/mysite/en/products/running'
+      page: {
+        id: '/content/mysite/en/products/running'
       }
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
   const argOff = {
-    'off': 'datalayer:change'
+    off: 'datalayer:change'
   };
   dataLayer.push(argOff);
   dataLayer.push({
-    'event': 'datalayer:change',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'datalayer:change',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -194,25 +194,25 @@ test('listener on: datalayer:change', () => {
 test('listener on: custom event', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
   const argOff = {
-    'off': 'carousel clicked'
+    off: 'carousel clicked'
   };
   dataLayer.push(argOff);
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -221,23 +221,23 @@ test('listener on: custom event', () => {
 test('listener on: scope = past', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'scope': 'past',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    scope: 'past',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   expect(mockCallback.mock.calls.length).toBe(1);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -246,23 +246,23 @@ test('listener on: scope = past', () => {
 test('listener on: scope = future', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'scope': 'future',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    scope: 'future',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   expect(mockCallback.mock.calls.length).toBe(0);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -271,23 +271,23 @@ test('listener on: scope = future', () => {
 test('listener on: scope = all', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'scope': 'all',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    scope: 'all',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   expect(mockCallback.mock.calls.length).toBe(1);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(2);
@@ -296,22 +296,22 @@ test('listener on: scope = all', () => {
 test('listener on: scope = undefined (default to future)', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   expect(mockCallback.mock.calls.length).toBe(0);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -320,14 +320,14 @@ test('listener on: scope = undefined (default to future)', () => {
 test('listener on: register a handler that has already been registered', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push(argOn);
@@ -337,9 +337,9 @@ test('listener on: register a handler that has already been registered', () => {
   expect(mockCallback.mock.calls.length).toBe(0);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -348,14 +348,14 @@ test('listener on: register a handler that has already been registered', () => {
 test('listener on: register a handler (with a static function) that has already been registered', () => {
   const mockCallback = jest.fn();
   const argOn1 = {
-    'on': 'carousel clicked',
-    'handler': function() {
+    on: 'carousel clicked',
+    handler: function() {
       mockCallback();
     }
   };
   const argOn2 = {
-    'on': 'carousel clicked',
-    'handler': function() {
+    on: 'carousel clicked',
+    handler: function() {
       mockCallback();
     }
   };
@@ -365,9 +365,9 @@ test('listener on: register a handler (with a static function) that has already 
   // both listeners are registered
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(2);
@@ -376,24 +376,24 @@ test('listener on: register a handler (with a static function) that has already 
 describe('listener with selector', () => {
   const mockCallback = jest.fn();
   const listenerOn = {
-    'on': 'datalayer:change',
-    'selector': 'component.image',
-    'handler': mockCallback
+    on: 'datalayer:change',
+    selector: 'component.image',
+    handler: mockCallback
   };
   const carouselData = {
-    'component': {
-      'carousel': {
-        'carousel1': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel1',
-          'items': {}
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          items: {}
         }
       }
     }
   };
   const imageData = {
-    'component': {
-      'image': {
-        'src': '/content/image/test.jpg'
+    component: {
+      image: {
+        src: '/content/image/test.jpg'
       }
     }
   };
@@ -412,19 +412,19 @@ describe('listener with selector', () => {
 
   test('custom listener with selector for image component data', () => {
     let listenerOn = {
-      'on': 'viewed',
-      'selector': 'component.image',
-      'handler': mockCallback
+      on: 'viewed',
+      selector: 'component.image',
+      handler: mockCallback
     };
     dataLayer.push(listenerOn);
     dataLayer.push({
-      'event': 'viewed',
-      'data': carouselData
+      event: 'viewed',
+      data: carouselData
     });
     expect(mockCallback.mock.calls.length).toBe(0);
     dataLayer.push({
-      'event': 'viewed',
-      'data': imageData
+      event: 'viewed',
+      data: imageData
     });
     expect(mockCallback.mock.calls.length).toBe(1);
   });
@@ -432,57 +432,57 @@ describe('listener with selector', () => {
   test('listener on: datalayer:change with selector', () => {
     dataLayer.push(listenerOn);
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': carouselData
+      event: 'datalayer:change',
+      data: carouselData
     });
     expect(mockCallback.mock.calls.length).toBe(0);
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': imageData
+      event: 'datalayer:change',
+      data: imageData
     });
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
   test('listener: custom event, selector and scope: all', () => {
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': carouselData
+      event: 'datalayer:change',
+      data: carouselData
     });
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': imageData
+      event: 'datalayer:change',
+      data: imageData
     });
     dataLayer.push({
-      'on': 'datalayer:change',
-      'selector': 'component',
-      'scope': 'all',
-      'handler': mockCallback
+      on: 'datalayer:change',
+      selector: 'component',
+      scope: 'all',
+      handler: mockCallback
     });
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': imageData
+      event: 'datalayer:change',
+      data: imageData
     });
     expect(mockCallback.mock.calls.length).toBe(3);
   });
 
   test('listener: selector: old/new value', () => {
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': {
-        'component': {
-          'carousel': {
-            'carousel1': {
-              'id': 'old',
-              'items': {}
+      event: 'datalayer:change',
+      data: {
+        component: {
+          carousel: {
+            carousel1: {
+              id: 'old',
+              items: {}
             }
           }
         }
       }
     });
     dataLayer.push({
-      'on': 'datalayer:change',
-      'selector': 'component.carousel.carousel1.id',
-      'handler': function(event, oldValue, newValue) {
+      on: 'datalayer:change',
+      selector: 'component.carousel.carousel1.id',
+      handler: function(event, oldValue, newValue) {
         if (oldValue === 'old') {
           mockCallback();
         }
@@ -492,13 +492,13 @@ describe('listener with selector', () => {
       }
     });
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': {
-        'component': {
-          'carousel': {
-            'carousel1': {
-              'id': 'new',
-              'items': {}
+      event: 'datalayer:change',
+      data: {
+        component: {
+          carousel: {
+            carousel1: {
+              id: 'new',
+              items: {}
             }
           }
         }
@@ -509,32 +509,32 @@ describe('listener with selector', () => {
 
   test('listener: selector: old/new state', () => {
     const oldData = {
-      'component': {
-        'carousel': {
-          'carousel1': {
-            'id': 'old',
-            'items': {}
+      component: {
+        carousel: {
+          carousel1: {
+            id: 'old',
+            items: {}
           }
         }
       }
     };
     const newData = {
-      'component': {
-        'carousel': {
-          'carousel1': {
-            'id': 'new',
-            'items': {}
+      component: {
+        carousel: {
+          carousel1: {
+            id: 'new',
+            items: {}
           }
         }
       }
     };
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': oldData
+      event: 'datalayer:change',
+      data: oldData
     });
     dataLayer.push({
-      'on': 'datalayer:change',
-      'handler': function(event, oldState, newState) {
+      on: 'datalayer:change',
+      handler: function(event, oldState, newState) {
         if (isEqual(oldState, oldData)) {
           mockCallback();
         }
@@ -544,8 +544,8 @@ describe('listener with selector', () => {
       }
     });
     dataLayer.push({
-      'event': 'datalayer:change',
-      'data': newData
+      event: 'datalayer:change',
+      data: newData
     });
     expect(mockCallback.mock.calls.length).toBe(2);
   });
@@ -558,30 +558,30 @@ describe('listener with selector', () => {
 test('listener off: unregister one handler', () => {
   const mockCallback = jest.fn();
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   const argOn = {
-    'on': 'carousel clicked',
-    'scope': 'all',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    scope: 'all',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   expect(mockCallback.mock.calls.length).toBe(1);
 
   const argOff = {
-    'off': 'carousel clicked',
-    'scope': 'all',
-    'handler': mockCallback
+    off: 'carousel clicked',
+    scope: 'all',
+    handler: mockCallback
   };
   dataLayer.push(argOff);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -590,18 +590,18 @@ test('listener off: unregister one handler', () => {
 test('listener off: unregister a handler with a static function', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'carousel clicked',
-    'scope': 'all',
-    'handler': function() {
+    on: 'carousel clicked',
+    scope: 'all',
+    handler: function() {
       mockCallback();
     }
   };
   dataLayer.push(argOn);
 
   const argOff = {
-    'off': 'carousel clicked',
-    'scope': 'all',
-    'handler': function() {
+    off: 'carousel clicked',
+    scope: 'all',
+    handler: function() {
       mockCallback();
     }
   };
@@ -610,9 +610,9 @@ test('listener off: unregister a handler with a static function', () => {
   // -> does not unregister the listener
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
@@ -654,37 +654,37 @@ test('listener off: unregister multiple handlers', () => {
 
 test('invalid data', () => {
   const data = {
-    'page': {
-      'id': '/content/mysite/en/products/crossfit',
-      'siteLanguage': 'en-us',
-      'siteCountry': 'US',
-      'pageType': 'product detail',
-      'pageName': 'pdp - crossfit zoom',
-      'pageCategory': 'womens > shoes > athletic'
+    page: {
+      id: '/content/mysite/en/products/crossfit',
+      siteLanguage: 'en-us',
+      siteCountry: 'US',
+      pageType: 'product detail',
+      pageName: 'pdp - crossfit zoom',
+      pageCategory: 'womens > shoes > athletic'
     }
   };
   dataLayer.push({
     data: data,
-    'invalid': 'invalid'
+    invalid: 'invalid'
   });
   expect(dataLayer.getState()).toStrictEqual({});
 });
 
 test('invalid event', () => {
   const data = {
-    'page': {
-      'id': '/content/mysite/en/products/crossfit',
-      'siteLanguage': 'en-us',
-      'siteCountry': 'US',
-      'pageType': 'product detail',
-      'pageName': 'pdp - crossfit zoom',
-      'pageCategory': 'womens > shoes > athletic'
+    page: {
+      id: '/content/mysite/en/products/crossfit',
+      siteLanguage: 'en-us',
+      siteCountry: 'US',
+      pageType: 'product detail',
+      pageName: 'pdp - crossfit zoom',
+      pageCategory: 'womens > shoes > athletic'
     }
   };
   dataLayer.push({
     event: 'clicked',
     data: data,
-    'invalid': 'invalid'
+    invalid: 'invalid'
   });
   expect(dataLayer.getState()).toStrictEqual({});
 });
@@ -692,16 +692,16 @@ test('invalid event', () => {
 test('invalid listener on', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback,
-    'invalid': 'invalid'
+    on: 'carousel clicked',
+    handler: mockCallback,
+    invalid: 'invalid'
   };
   dataLayer.push(argOn);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(0);
@@ -710,16 +710,16 @@ test('invalid listener on', () => {
 test('invalid listener on scope', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback,
-    'scope': 'invalid'
+    on: 'carousel clicked',
+    handler: mockCallback,
+    scope: 'invalid'
   };
   dataLayer.push(argOn);
 
   dataLayer.push({
-    'event': 'carousel clicked',
-    'info': {
-      'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+    event: 'carousel clicked',
+    info: {
+      id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
   expect(mockCallback.mock.calls.length).toBe(0);
@@ -728,27 +728,27 @@ test('invalid listener on scope', () => {
 test('invalid listener off', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'datalayer:change',
-    'handler': mockCallback
+    on: 'datalayer:change',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
   dataLayer.push({
     data: {
-      'page': {
-        'id': '/content/mysite/en/products/crossfit'
+      page: {
+        id: '/content/mysite/en/products/crossfit'
       }
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
   const argOff = {
-    'off': 'datalayer:change',
-    'invalid': 'invalid'
+    off: 'datalayer:change',
+    invalid: 'invalid'
   };
   dataLayer.push(argOff);
   dataLayer.push({
     data: {
-      'page': {
-        'id': '/content/mysite/en/products/running'
+      page: {
+        id: '/content/mysite/en/products/running'
       }
     }
   });
@@ -758,47 +758,47 @@ test('invalid listener off', () => {
 test('invalid item is filtered out from array', () => {
   dataLayer = [
     {
-      'off': 'carousel 15 clicked'
+      off: 'carousel 15 clicked'
     },
     {
-      'on': 'carousel 15 clicked'
+      on: 'carousel 15 clicked'
     },
     {
-      'data': {
-        'invalid': {}
+      data: {
+        invalid: {}
       },
-      'invalid': 'invalid'
+      invalid: 'invalid'
     },
     {
-      'event': 'clicked',
-      'data': {
-        'invalid': {}
+      event: 'clicked',
+      data: {
+        invalid: {}
       },
-      'invalid': 'invalid'
+      invalid: 'invalid'
     }
   ];
   new DataLayer.Manager({ dataLayer: dataLayer });
   dataLayer.push({
-    'data': {
-      'invalid': {}
+    data: {
+      invalid: {}
     },
-    'invalid': 'invalid'
+    invalid: 'invalid'
   });
   dataLayer.push({
-    'event': 'clicked',
-    'data': {
-      'invalid': {}
+    event: 'clicked',
+    data: {
+      invalid: {}
     },
-    'invalid': 'invalid'
+    invalid: 'invalid'
   });
   dataLayer.push({
-    'on': 'carousel 14 clicked',
-    'handler': function(event) {
+    on: 'carousel 14 clicked',
+    handler: function(event) {
       //
     },
   });
   dataLayer.push({
-    'off': 'carousel 14 clicked',
+    off: 'carousel 14 clicked',
   });
   expect(dataLayer.length).toStrictEqual(0);
 });
@@ -811,8 +811,8 @@ test('invalid item is filtered out from array', () => {
 test.skip('high load', () => {
   const mockCallback = jest.fn();
   const argOn = {
-    'on': 'carousel clicked',
-    'handler': mockCallback
+    on: 'carousel clicked',
+    handler: mockCallback
   };
   dataLayer.push(argOn);
 
@@ -821,17 +821,17 @@ test.skip('high load', () => {
     let pageId = '/content/mysite/en/products/crossfit' + i;
     let pageKey = 'page' + i;
     data[pageKey] = {
-      'id': pageId,
-      'siteLanguage': 'en-us',
-      'siteCountry': 'US',
-      'pageType': 'product detail',
-      'pageName': 'pdp - crossfit zoom',
-      'pageCategory': 'womens > shoes > athletic'
+      id: pageId,
+      siteLanguage: 'en-us',
+      siteCountry: 'US',
+      pageType: 'product detail',
+      pageName: 'pdp - crossfit zoom',
+      pageCategory: 'womens > shoes > athletic'
     };
 
     dataLayer.push({
-      'event': 'carousel clicked',
-      'data': data
+      event: 'carousel clicked',
+      data: data
     });
     expect(dataLayer.getState()).toStrictEqual(data);
     expect(mockCallback.mock.calls.length).toBe(i + 1);
