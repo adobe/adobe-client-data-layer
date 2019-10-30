@@ -46,7 +46,7 @@ const constraints = {
       values: ['past', 'future', 'all'],
       optional: true
     },
-    selector: {
+    path: {
       type: 'string',
       optional: true
     }
@@ -64,7 +64,7 @@ const constraints = {
       values: ['past', 'future', 'all'],
       optional: true
     },
-    selector: {
+    path: {
       type: 'string',
       optional: true
     }

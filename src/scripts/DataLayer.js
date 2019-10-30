@@ -27,7 +27,7 @@ DataLayer.constants = require('./DataLayerConstants');
 /**
  * @typedef  {Object} ListenerOnConfig
  * @property {String} on Name of the event to bind to.
- * @property {String} [selector] Object key in the state to bind to.
+ * @property {String} [path] Object key in the state to bind to.
  * @property {ListenerScope} [scope] Scope of the listener.
  * @property {Function} handler Handler to execute when the bound event is triggered.
  */
@@ -35,7 +35,7 @@ DataLayer.constants = require('./DataLayerConstants');
 /**
  * @typedef  {Object} ListenerOffConfig
  * @property {String} off Name of the event to unbind.
- * @property {String} [selector] Object key in the state to bind to.
+ * @property {String} [path] Object key in the state to bind to.
  * @property {ListenerScope} [scope] Scope of the listener.
  * @property {Function} [handler] Handler for a previously attached event to unbind.
  */
