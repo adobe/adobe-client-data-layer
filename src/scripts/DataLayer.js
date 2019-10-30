@@ -10,8 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 /* eslint no-console: "off" */
-const merge = require('lodash.merge');
 const mergeWith = require('lodash.mergewith');
+const cloneDeep = require('lodash.clonedeep');
 
 /**
  * Data Layer.
@@ -102,12 +102,23 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
+  this._customMerge(this._state, item.config.data);
+};
+
+/**
+ * Merges the source into the object and sets objects as 'undefined' if they are 'undefined' in the source object.
+ *
+ * @param {Object} object The object into which to merge.
+ * @param {Object} source The source to merge with.
+ * @private
+ */
+DataLayer.Manager.prototype._customMerge = function(object, source) {
   const customizer = function(objValue, srcValue, key, object) {
     if (typeof srcValue === 'undefined') {
       delete object[key];
     }
   };
-  mergeWith(this._state, item.config.data, customizer);
+  mergeWith(object, source, customizer);
 };
 
 /**
@@ -153,7 +164,7 @@ DataLayer.Manager.prototype._augment = function() {
    * @returns {Object} The deep copied state object.
    */
   that._dataLayer.getState = function() {
-    return merge({}, that._state);
+    return cloneDeep(that._state);
   };
 };
 

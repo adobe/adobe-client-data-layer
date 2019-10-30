@@ -13,7 +13,6 @@ const constants = require('./DataLayerConstants');
 const has = require('lodash.has');
 const get = require('lodash.get');
 const isEqual = require('lodash.isequal');
-const merge = require('lodash.merge');
 const cloneDeep = require('lodash.clonedeep');
 
 /**
@@ -114,15 +113,16 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   function _callHandler(listener, item) {
     if (_matches(listener, item)) {
       const itemConfig = item.config;
-      const itemConfigCopy = merge({}, itemConfig);
+      const itemConfigCopy = cloneDeep(itemConfig);
       if (item.config.data) {
         if (listener.path) {
           const oldValue = cloneDeep(get(dataLayerManager._state, listener.path));
           const newValue = cloneDeep(get(itemConfig.data, listener.path));
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
-          const oldState = merge({}, dataLayerManager._state);
-          const newState = merge({}, oldState, item.config.data);
+          const oldState = cloneDeep(dataLayerManager._state);
+          const newState = cloneDeep(dataLayerManager._state);
+          dataLayerManager._customMerge(newState, item.config.data);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
         }
       } else {
