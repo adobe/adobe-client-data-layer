@@ -14,6 +14,7 @@ const has = require('lodash.has');
 const get = require('lodash.get');
 const isEqual = require('lodash.isequal');
 const merge = require('lodash.merge');
+const cloneDeep = require('lodash.clonedeep');
 
 /**
  * Factory that creates a listener manager.
@@ -116,8 +117,8 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const itemConfigCopy = merge({}, itemConfig);
       if (item.config.data) {
         if (listener.selector) {
-          const oldValue = get(dataLayerManager._state, listener.selector);
-          const newValue = get(itemConfig.data, listener.selector);
+          const oldValue = cloneDeep(get(dataLayerManager._state, listener.selector));
+          const newValue = cloneDeep(get(itemConfig.data, listener.selector));
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           const oldState = merge({}, dataLayerManager._state);
