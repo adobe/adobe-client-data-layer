@@ -373,11 +373,11 @@ test('listener on: register a handler (with a static function) that has already 
   expect(mockCallback.mock.calls.length).toBe(2);
 });
 
-describe('listener with selector', () => {
+describe('listener with path', () => {
   const mockCallback = jest.fn();
   const listenerOn = {
     on: 'datalayer:change',
-    selector: 'component.image',
+    path: 'component.image',
     handler: mockCallback
   };
   const carouselData = {
@@ -402,7 +402,7 @@ describe('listener with selector', () => {
     mockCallback.mockClear();
   });
 
-  test('on change listener with selector for image component data', () => {
+  test('on change listener with path for image component data', () => {
     dataLayer.push(listenerOn);
     dataLayer.push({ data: carouselData });
     expect(mockCallback.mock.calls.length).toBe(0);
@@ -410,10 +410,10 @@ describe('listener with selector', () => {
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
-  test('custom listener with selector for image component data', () => {
+  test('custom listener with path for image component data', () => {
     let listenerOn = {
       on: 'viewed',
-      selector: 'component.image',
+      path: 'component.image',
       handler: mockCallback
     };
     dataLayer.push(listenerOn);
@@ -429,7 +429,7 @@ describe('listener with selector', () => {
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
-  test('listener on: datalayer:change with selector', () => {
+  test('listener on: datalayer:change with path', () => {
     dataLayer.push(listenerOn);
     dataLayer.push({
       event: 'datalayer:change',
@@ -443,7 +443,7 @@ describe('listener with selector', () => {
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
-  test('listener: custom event, selector and scope: all', () => {
+  test('listener: custom event, path and scope: all', () => {
     dataLayer.push({
       event: 'datalayer:change',
       data: carouselData
@@ -454,7 +454,7 @@ describe('listener with selector', () => {
     });
     dataLayer.push({
       on: 'datalayer:change',
-      selector: 'component',
+      path: 'component',
       scope: 'all',
       handler: mockCallback
     });
@@ -465,7 +465,7 @@ describe('listener with selector', () => {
     expect(mockCallback.mock.calls.length).toBe(3);
   });
 
-  test('listener: selector: old/new value', () => {
+  test('listener: path: old/new value', () => {
     dataLayer.push({
       event: 'datalayer:change',
       data: {
@@ -481,7 +481,7 @@ describe('listener with selector', () => {
     });
     dataLayer.push({
       on: 'datalayer:change',
-      selector: 'component.carousel.carousel1.id',
+      path: 'component.carousel.carousel1.id',
       handler: function(event, oldValue, newValue) {
         if (oldValue === 'old') {
           mockCallback();
@@ -507,7 +507,7 @@ describe('listener with selector', () => {
     expect(mockCallback.mock.calls.length).toBe(2);
   });
 
-  test('listener: selector: old/new state', () => {
+  test('listener: path: old/new state', () => {
     const oldData = {
       component: {
         carousel: {

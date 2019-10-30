@@ -25,13 +25,13 @@ class Listener {
    * @constructor
    */
   constructor(item) {
-    this._event = item.config.on ? item.config.on : item.config.off;
+    this._event = (item.config.on) ? item.config.on : item.config.off;
     this._handler = (item.config.handler) ? item.config.handler : null;
     this._scope = (item.config.scope) ? item.config.scope : null;
     if (item.config.on && this._scope === null) {
       this._scope = constants.listenerScope.FUTURE;
     }
-    this._selector = (item.config.selector) ? item.config.selector : null;
+    this._path = (item.config.path) ? item.config.path : null;
   }
 
   /**
@@ -62,12 +62,12 @@ class Listener {
   };
 
   /**
-   * Returns the listener selector.
+   * Returns the listener path.
    *
-   * @returns {(String|null)} The listener selector.
+   * @returns {(String|null)} The listener path.
    */
-  get selector() {
-    return this._selector;
+  get path() {
+    return this._path;
   };
 }
 

@@ -65,7 +65,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const event = listener.event;
 
       if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
-        if (!(listener.handler || listener.scope || listener.selector)) {
+        if (!(listener.handler || listener.scope || listener.path)) {
           _listeners[event] = [];
         } else {
           const index = _indexOf(listener);
@@ -115,9 +115,9 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const itemConfig = item.config;
       const itemConfigCopy = merge({}, itemConfig);
       if (item.config.data) {
-        if (listener.selector) {
-          const oldValue = get(dataLayerManager._state, listener.selector);
-          const newValue = get(itemConfig.data, listener.selector);
+        if (listener.path) {
+          const oldValue = get(dataLayerManager._state, listener.path);
+          const newValue = get(itemConfig.data, listener.path);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           const oldState = merge({}, dataLayerManager._state);
@@ -194,8 +194,8 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   function _selectorMatches(listener, item) {
     const itemConfig = item.config;
 
-    if (listener.selector && itemConfig.data) {
-      return has(itemConfig.data, listener.selector);
+    if (listener.path && itemConfig.data) {
+      return has(itemConfig.data, listener.path);
     }
 
     return true;

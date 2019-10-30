@@ -10,7 +10,9 @@ The Adobe Client Data Layer aims to reduce the effort to instrument websites by 
 
 ## Consuming
 
-The best way to consume the Adobe Client Data Layer (currently beta) is to install the distributed npm package in your project build, by running:
+> **Note** - as this is currently a tech preview, there may be API changes and it therefore shouldn't be used in production.
+
+The best way to consume the Adobe Client Data Layer is to install the distributed npm package in your project build, by running:
 ```
 npm install @adobe/adobe-client-data-layer@beta
 ```
@@ -38,7 +40,7 @@ Then choose from the following gulp tasks:
 
 ## Releasing
 
-> Please only release this package if you have access to the Adobe npm organization and are a project committer.
+> **Note** - only release this package if you have access to the Adobe npm organization and are a project committer.
 
 First run the following commands:
 ```
