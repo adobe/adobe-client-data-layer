@@ -549,6 +549,32 @@ describe('listener with path', () => {
     });
     expect(mockCallback.mock.calls.length).toBe(2);
   });
+
+  test('listener: path: undefined old/new state for past events', () => {
+    dataLayer.push({
+      event: 'datalayer:change',
+      data: {
+        component: {
+          carousel: {
+            carousel1: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel1',
+              items: {}
+            }
+          }
+        }
+      }
+    });
+    dataLayer.push({
+      on: 'datalayer:change',
+      scope: 'past',
+      handler: function(event, oldState, newState) {
+        if (isEqual(oldState, undefined) && isEqual(newState, undefined)) {
+          mockCallback();
+        }
+      }
+    });
+    expect(mockCallback.mock.calls.length).toBe(1);
+  });
 });
 
 // -----------------------------------------------------------------------------------------------------------------
