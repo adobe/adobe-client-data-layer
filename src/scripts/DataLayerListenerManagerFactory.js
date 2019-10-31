@@ -86,7 +86,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       triggeredEvents.forEach(function(event) {
         if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
           for (const listener of _listeners[event]) {
-            _callHandler(listener, item);
+            _callHandler(listener, item, false);
           }
         }
       });
@@ -99,7 +99,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
      * @param {Item} item Item to call the listener with.
      */
     triggerListener: function(listener, item) {
-      _callHandler(listener, item);
+      _callHandler(listener, item, true);
     }
   };
 
@@ -108,9 +108,10 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    *
    * @param {Listener} listener The listener.
    * @param {Item} item The item.
+   * @param {Boolean} isPastItem Flag indicating whether the item was registered before the listener.
    * @private
    */
-  function _callHandler(listener, item) {
+  function _callHandler(listener, item, isPastItem) {
     if (_matches(listener, item)) {
       const itemConfig = item.config;
       const itemConfigCopy = cloneDeep(itemConfig);
@@ -120,10 +121,14 @@ ListenerManagerFactory.create = function(dataLayerManager) {
           const newValue = cloneDeep(get(itemConfig.data, listener.path));
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
-          const oldState = cloneDeep(dataLayerManager._state);
-          const newState = cloneDeep(dataLayerManager._state);
-          dataLayerManager._customMerge(newState, item.config.data);
-          listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
+          if (isPastItem) {
+            listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
+          } else {
+            const oldState = cloneDeep(dataLayerManager._state);
+            const newState = cloneDeep(dataLayerManager._state);
+            dataLayerManager._customMerge(newState, item.config.data);
+            listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
+          }
         }
       } else {
         listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
