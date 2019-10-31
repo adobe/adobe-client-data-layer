@@ -17,20 +17,20 @@ governing permissions and limitations under the License.
   /* eslint no-unused-vars: "off" */
 
   dataLayer.push({
-    'on': 'datalayer:ready',
-    'handler': function(event) {
+    on: 'datalayer:ready',
+    handler: function(event) {
 
       // -----------------------------------------------------------------------------------------------------------------
       // Test case 1: add data
       // -----------------------------------------------------------------------------------------------------------------
 
       dataLayer.push({
-        'data': {
-          'component': {
-            'carousel': {
-              'carousel1': {
-                'id': '/content/mysite/en/home/jcr:content/root/carousel1',
-                'items': {}
+        data: {
+          component: {
+            carousel: {
+              carousel1: {
+                id: '/content/mysite/en/home/jcr:content/root/carousel1',
+                items: {}
               }
             }
           }
@@ -50,10 +50,10 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       dataLayer.push({
-        'data': {
-          'component': {
-            'carousel': {
-              'carousel1': undefined
+        data: {
+          component: {
+            carousel: {
+              carousel1: undefined
             }
           }
         }
@@ -71,13 +71,13 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       dataLayer.push({
-        'event': 'carousel clicked',
-        'data': {
-          'component': {
-            'carousel': {
-              'carousel3': {
-                'id': '/content/mysite/en/home/jcr:content/root/carousel3',
-                'items': {}
+        event: 'carousel clicked',
+        data: {
+          component: {
+            carousel: {
+              carousel3: {
+                id: '/content/mysite/en/home/jcr:content/root/carousel3',
+                items: {}
               }
             }
           }
@@ -99,19 +99,19 @@ governing permissions and limitations under the License.
       let success4 = false;
 
       dataLayer.push({
-        'on': 'datalayer:change',
-        'handler': function(event) {
+        on: 'datalayer:change',
+        handler: function(event) {
           success4 = true;
         }
       });
 
       dataLayer.push({
-        'data': {
-          'component': {
-            'carousel': {
-              'carousel4': {
-                'id': '/content/mysite/en/home/jcr:content/root/carousel4',
-                'items': {}
+        data: {
+          component: {
+            carousel: {
+              carousel4: {
+                id: '/content/mysite/en/home/jcr:content/root/carousel4',
+                items: {}
               }
             }
           }
@@ -132,16 +132,16 @@ governing permissions and limitations under the License.
       let success5 = false;
 
       dataLayer.push({
-        'on': 'datalayer:event',
-        'handler': function(event) {
+        on: 'datalayer:event',
+        handler: function(event) {
           success5 = true;
         }
       });
 
       dataLayer.push({
-        'event': 'datalayer:event',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel5'
+        event: 'datalayer:event',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel5'
         }
       });
 
@@ -159,16 +159,16 @@ governing permissions and limitations under the License.
       let success6 = false;
 
       dataLayer.push({
-        'on': 'carousel clicked',
-        'handler': function(event) {
+        on: 'carousel clicked',
+        handler: function(event) {
           success6 = true;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel6'
+        event: 'carousel clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel6'
         }
       });
 
@@ -186,16 +186,16 @@ governing permissions and limitations under the License.
       let success7a = false;
 
       dataLayer.push({
-        'event': 'carousel 7a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel7a'
+        event: 'carousel 7a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel7a'
         }
       });
 
       dataLayer.push({
-        'on': 'carousel 7a clicked',
-        'scope': 'past',
-        'handler': function(event) {
+        on: 'carousel 7a clicked',
+        scope: 'past',
+        handler: function(event) {
           success7a = true;
         }
       });
@@ -209,17 +209,17 @@ governing permissions and limitations under the License.
       let  success7b = true;
 
       dataLayer.push({
-        'on': 'carousel 7b clicked',
-        'scope': 'past',
-        'handler': function(event) {
+        on: 'carousel 7b clicked',
+        scope: 'past',
+        handler: function(event) {
           success7b = false;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 7b clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel7b'
+        event: 'carousel 7b clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel7b'
         }
       });
 
@@ -237,16 +237,16 @@ governing permissions and limitations under the License.
       let  success8a = true;
 
       dataLayer.push({
-        'event': 'carousel 8a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel8a'
+        event: 'carousel 8a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel8a'
         }
       });
 
       dataLayer.push({
-        'on': 'carousel 8a clicked',
-        'scope': 'future',
-        'handler': function(event) {
+        on: 'carousel 8a clicked',
+        scope: 'future',
+        handler: function(event) {
           success8a = false;
         }
       });
@@ -260,17 +260,17 @@ governing permissions and limitations under the License.
       let  success8b = false;
 
       dataLayer.push({
-        'on': 'carousel 8b clicked',
-        'scope': 'future',
-        'handler': function(event) {
+        on: 'carousel 8b clicked',
+        scope: 'future',
+        handler: function(event) {
           success8b = true;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 8b clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel8b'
+        event: 'carousel 8b clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel8b'
         }
       });
 
@@ -288,16 +288,16 @@ governing permissions and limitations under the License.
       let  success9a = false;
 
       dataLayer.push({
-        'event': 'carousel 9a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel9a'
+        event: 'carousel 9a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel9a'
         }
       });
 
       dataLayer.push({
-        'on': 'carousel 9a clicked',
-        'scope': 'all',
-        'handler': function(event) {
+        on: 'carousel 9a clicked',
+        scope: 'all',
+        handler: function(event) {
           success9a = true;
         }
       });
@@ -311,17 +311,17 @@ governing permissions and limitations under the License.
       let  success9b = false;
 
       dataLayer.push({
-        'on': 'carousel 9b clicked',
-        'scope': 'all',
-        'handler': function(event) {
+        on: 'carousel 9b clicked',
+        scope: 'all',
+        handler: function(event) {
           success9b = true;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 9b clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel9b'
+        event: 'carousel 9b clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel9b'
         }
       });
 
@@ -339,15 +339,15 @@ governing permissions and limitations under the License.
       let  success10a = true;
 
       dataLayer.push({
-        'event': 'carousel 10a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel10a'
+        event: 'carousel 10a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel10a'
         }
       });
 
       dataLayer.push({
-        'on': 'carousel 10a clicked',
-        'handler': function(event) {
+        on: 'carousel 10a clicked',
+        handler: function(event) {
           success10a = false;
         }
       });
@@ -361,16 +361,16 @@ governing permissions and limitations under the License.
       let  success10b = false;
 
       dataLayer.push({
-        'on': 'carousel 10b clicked',
-        'handler': function(event) {
+        on: 'carousel 10b clicked',
+        handler: function(event) {
           success10b = true;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 10b clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel10b'
+        event: 'carousel 10b clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel10b'
         }
       });
 
@@ -388,16 +388,16 @@ governing permissions and limitations under the License.
       let  success11 = true;
 
       dataLayer.push({
-        'on': 'carousel 11a clicked',
-        'handler': function(event) {
+        on: 'carousel 11a clicked',
+        handler: function(event) {
           success11 = false;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 11a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel11a'
+        event: 'carousel 11a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
 
@@ -405,13 +405,13 @@ governing permissions and limitations under the License.
       success11 = true;
 
       dataLayer.push({
-        'off': 'carousel 11a clicked'
+        off: 'carousel 11a clicked'
       });
 
       dataLayer.push({
-        'event': 'carousel 11a clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel11a'
+        event: 'carousel 11a clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
 
@@ -427,10 +427,10 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       dataLayer.push({
-        'data': {
-          'invalid': {}
+        data: {
+          invalid: {}
         },
-        'invalid': 'invalid'
+        invalid: 'invalid'
       });
 
       if (dataLayer.getState().invalid) {
@@ -445,11 +445,11 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       dataLayer.push({
-        'event': 'clicked',
-        'data': {
-          'invalid': {}
+        event: 'clicked',
+        data: {
+          invalid: {}
         },
-        'invalid': 'invalid'
+        invalid: 'invalid'
       });
 
       if (dataLayer.getState().invalid) {
@@ -466,17 +466,17 @@ governing permissions and limitations under the License.
       let  success14 = true;
 
       dataLayer.push({
-        'on': 'carousel 14 clicked',
-        'handler': function(event) {
+        on: 'carousel 14 clicked',
+        handler: function(event) {
           success14 = false;
         },
-        'invalid': 'invalid'
+        invalid: 'invalid'
       });
 
       dataLayer.push({
-        'event': 'carousel 14 clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel14'
+        event: 'carousel 14 clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel14'
         }
       });
 
@@ -494,16 +494,16 @@ governing permissions and limitations under the License.
       let  success15 = false;
 
       dataLayer.push({
-        'on': 'carousel 15 clicked',
-        'handler': function(event) {
+        on: 'carousel 15 clicked',
+        handler: function(event) {
           success15 = true;
         }
       });
 
       dataLayer.push({
-        'event': 'carousel 15 clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel15'
+        event: 'carousel 15 clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel15'
         }
       });
 
@@ -511,17 +511,17 @@ governing permissions and limitations under the License.
       success15 = false;
 
       dataLayer.push({
-        'off': 'carousel 15 clicked',
-        'handler': function(event) {
+        off: 'carousel 15 clicked',
+        handler: function(event) {
           success15 = true;
         },
-        'invalid': 'invalid'
+        invalid: 'invalid'
       });
 
       dataLayer.push({
-        'event': 'carousel 15 clicked',
-        'info': {
-          'id': '/content/mysite/en/home/jcr:content/root/carousel15'
+        event: 'carousel 15 clicked',
+        info: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel15'
         }
       });
 
@@ -533,6 +533,5 @@ governing permissions and limitations under the License.
 
     }
   });
-
 
 })();
