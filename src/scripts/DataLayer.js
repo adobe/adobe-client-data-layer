@@ -84,7 +84,7 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._dataLayer = that._config.dataLayer;
   that._state = {};
-  that._stateCopyBeforeProcessing = {};
+  that._previousStateCopy = {};
   that._listenerManager = DataLayer.ListenerManagerFactory.create(that);
 
   that._augment();
@@ -103,7 +103,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-  this._stateCopyBeforeProcessing = this._dataLayer.getState();
+  this._previousStateCopy = cloneDeep(this._state);
   this._customMerge(this._state, item.config.data);
 };
 
