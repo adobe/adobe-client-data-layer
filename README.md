@@ -14,7 +14,7 @@ The Adobe Client Data Layer aims to reduce the effort to instrument websites by 
 
 The best way to try out the Adobe Client Data Layer is to install the distributed npm package in your project build, by running:
 ```
-npm install @adobe/adobe-client-data-layer@beta
+npm install @adobe/adobe-client-data-layer
 ```
 
 Locate the `/dist` folder in the installed package, which contains the built and minified javascript.
