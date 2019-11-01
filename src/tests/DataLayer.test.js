@@ -550,6 +550,46 @@ describe('listener with path', () => {
     expect(mockCallback.mock.calls.length).toBe(2);
   });
 
+  test('listener: path: calling getState() within a handler should return the state after the event', () => {
+    const oldData = {
+      component: {
+        carousel: {
+          carousel1: {
+            id: 'old',
+            items: {}
+          }
+        }
+      }
+    };
+    const newData = {
+      component: {
+        carousel: {
+          carousel1: {
+            id: 'new',
+            items: {}
+          }
+        }
+      }
+    };
+    dataLayer.push({
+      event: 'datalayer:change',
+      data: oldData
+    });
+    dataLayer.push({
+      on: 'datalayer:change',
+      handler: function(event, oldState, newState) {
+        if (isEqual(this.getState(), newState)) {
+          mockCallback();
+        }
+      }
+    });
+    dataLayer.push({
+      event: 'datalayer:change',
+      data: newData
+    });
+    expect(mockCallback.mock.calls.length).toBe(1);
+  });
+
   test('listener: path: undefined old/new state for past events', () => {
     dataLayer.push({
       event: 'datalayer:change',

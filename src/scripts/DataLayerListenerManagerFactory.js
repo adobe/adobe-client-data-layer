@@ -117,16 +117,15 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const itemConfigCopy = cloneDeep(itemConfig);
       if (item.config.data) {
         if (listener.path) {
-          const oldValue = cloneDeep(get(dataLayerManager._state, listener.path));
-          const newValue = cloneDeep(get(itemConfig.data, listener.path));
+          const oldValue = get(dataLayerManager._stateCopyBeforeProcessing, listener.path);
+          const newValue = get(itemConfigCopy.data, listener.path);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           if (isPastItem) {
             listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
           } else {
-            const oldState = cloneDeep(dataLayerManager._state);
-            const newState = cloneDeep(dataLayerManager._state);
-            dataLayerManager._customMerge(newState, item.config.data);
+            const oldState = dataLayerManager._stateCopyBeforeProcessing;
+            const newState = dataLayerManager._dataLayer.getState();
             listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
           }
         }
