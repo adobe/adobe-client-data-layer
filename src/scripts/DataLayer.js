@@ -84,6 +84,7 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._dataLayer = that._config.dataLayer;
   that._state = {};
+  that._previousStateCopy = {};
   that._listenerManager = DataLayer.ListenerManagerFactory.create(that);
 
   that._augment();
@@ -102,6 +103,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
+  this._previousStateCopy = cloneDeep(this._state);
   this._customMerge(this._state, item.config.data);
 };
 
@@ -224,14 +226,14 @@ DataLayer.Manager.prototype._processItem = function(item) {
 
   const typeProcessors = {
     data: function(item) {
-      that._listenerManager.triggerListeners(item);
       that._updateState(item);
+      that._listenerManager.triggerListeners(item);
     },
     event: function(item) {
-      that._listenerManager.triggerListeners(item);
       if (item.config.data) {
         that._updateState(item);
       }
+      that._listenerManager.triggerListeners(item);
     },
     listenerOn: function(item) {
       const listener = new DataLayer.Listener(item);
