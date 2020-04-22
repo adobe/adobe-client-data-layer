@@ -16,7 +16,7 @@ governing permissions and limitations under the License.
   /* eslint no-console: "off" */
   /* eslint no-unused-vars: "off" */
 
-  dataLayer.push({
+  adobeDataLayer.push({
     on: 'datalayer:ready',
     handler: function(event) {
 
@@ -24,7 +24,7 @@ governing permissions and limitations under the License.
       // Test case 1: add data
       // -----------------------------------------------------------------------------------------------------------------
 
-      dataLayer.push({
+      adobeDataLayer.push({
         data: {
           component: {
             carousel: {
@@ -37,7 +37,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      const id1 = dataLayer.getState().component.carousel.carousel1.id;
+      const id1 = adobeDataLayer.getState().component.carousel.carousel1.id;
       if (id1 !== '/content/mysite/en/home/jcr:content/root/carousel1') {
         console.error('FAILs: test case 1 "add data"');
       } else {
@@ -49,7 +49,7 @@ governing permissions and limitations under the License.
       // Test case 2: remove data
       // -----------------------------------------------------------------------------------------------------------------
 
-      dataLayer.push({
+      adobeDataLayer.push({
         data: {
           component: {
             carousel: {
@@ -59,7 +59,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      if (dataLayer.getState().component.carousel.carousel1) {
+      if (adobeDataLayer.getState().component.carousel.carousel1) {
         console.error('FAILS: test case 2 "remove data"');
       } else {
         console.info('SUCCESS: test case 2 "remove data"');
@@ -70,7 +70,7 @@ governing permissions and limitations under the License.
       // Test case 3: add event with data
       // -----------------------------------------------------------------------------------------------------------------
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel clicked',
         data: {
           component: {
@@ -84,7 +84,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      const  id3 = dataLayer.getState().component.carousel.carousel3.id;
+      const  id3 = adobeDataLayer.getState().component.carousel.carousel3.id;
       if (id3 !== '/content/mysite/en/home/jcr:content/root/carousel3') {
         console.error('FAILS: test case 3 "add event with data"');
       } else {
@@ -98,14 +98,14 @@ governing permissions and limitations under the License.
 
       let success4 = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'datalayer:change',
         handler: function(event) {
           success4 = true;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         data: {
           component: {
             carousel: {
@@ -131,14 +131,14 @@ governing permissions and limitations under the License.
 
       let success5 = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'datalayer:event',
         handler: function(event) {
           success5 = true;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'datalayer:event',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel5'
@@ -158,14 +158,14 @@ governing permissions and limitations under the License.
 
       let success6 = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel clicked',
         handler: function(event) {
           success6 = true;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel6'
@@ -185,14 +185,14 @@ governing permissions and limitations under the License.
 
       let success7a = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 7a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel7a'
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 7a clicked',
         scope: 'past',
         handler: function(event) {
@@ -208,7 +208,7 @@ governing permissions and limitations under the License.
 
       let  success7b = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 7b clicked',
         scope: 'past',
         handler: function(event) {
@@ -216,7 +216,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 7b clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel7b'
@@ -236,14 +236,14 @@ governing permissions and limitations under the License.
 
       let  success8a = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 8a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel8a'
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 8a clicked',
         scope: 'future',
         handler: function(event) {
@@ -259,7 +259,7 @@ governing permissions and limitations under the License.
 
       let  success8b = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 8b clicked',
         scope: 'future',
         handler: function(event) {
@@ -267,7 +267,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 8b clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel8b'
@@ -287,14 +287,14 @@ governing permissions and limitations under the License.
 
       let  success9a = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 9a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel9a'
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 9a clicked',
         scope: 'all',
         handler: function(event) {
@@ -310,7 +310,7 @@ governing permissions and limitations under the License.
 
       let  success9b = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 9b clicked',
         scope: 'all',
         handler: function(event) {
@@ -318,7 +318,7 @@ governing permissions and limitations under the License.
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 9b clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel9b'
@@ -338,14 +338,14 @@ governing permissions and limitations under the License.
 
       let  success10a = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 10a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel10a'
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 10a clicked',
         handler: function(event) {
           success10a = false;
@@ -360,14 +360,14 @@ governing permissions and limitations under the License.
 
       let  success10b = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 10b clicked',
         handler: function(event) {
           success10b = true;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 10b clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel10b'
@@ -387,14 +387,14 @@ governing permissions and limitations under the License.
 
       let  success11 = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 11a clicked',
         handler: function(event) {
           success11 = false;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 11a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel11a'
@@ -404,11 +404,11 @@ governing permissions and limitations under the License.
       // success11 should be: false: we force it to true:
       success11 = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         off: 'carousel 11a clicked'
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 11a clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel11a'
@@ -426,14 +426,14 @@ governing permissions and limitations under the License.
       // test case 12: type validation: data
       // -----------------------------------------------------------------------------------------------------------------
 
-      dataLayer.push({
+      adobeDataLayer.push({
         data: {
           invalid: {}
         },
         invalid: 'invalid'
       });
 
-      if (dataLayer.getState().invalid) {
+      if (adobeDataLayer.getState().invalid) {
         console.error('FAILS: test case 12 "type validation: data"');
       } else {
         console.info('SUCCESS: test case 12 "type validation: data"');
@@ -444,7 +444,7 @@ governing permissions and limitations under the License.
       // test case 13: type validation: event
       // -----------------------------------------------------------------------------------------------------------------
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'clicked',
         data: {
           invalid: {}
@@ -452,7 +452,7 @@ governing permissions and limitations under the License.
         invalid: 'invalid'
       });
 
-      if (dataLayer.getState().invalid) {
+      if (adobeDataLayer.getState().invalid) {
         console.error('FAILS: test case 13 "type validation: event"');
       } else {
         console.info('SUCCESS: test case 13 "type validation: event"');
@@ -465,7 +465,7 @@ governing permissions and limitations under the License.
 
       let  success14 = true;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 14 clicked',
         handler: function(event) {
           success14 = false;
@@ -473,7 +473,7 @@ governing permissions and limitations under the License.
         invalid: 'invalid'
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 14 clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel14'
@@ -493,14 +493,14 @@ governing permissions and limitations under the License.
 
       let  success15 = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         on: 'carousel 15 clicked',
         handler: function(event) {
           success15 = true;
         }
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 15 clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel15'
@@ -510,7 +510,7 @@ governing permissions and limitations under the License.
       // success15 should be: true: we force it to false:
       success15 = false;
 
-      dataLayer.push({
+      adobeDataLayer.push({
         off: 'carousel 15 clicked',
         handler: function(event) {
           success15 = true;
@@ -518,7 +518,7 @@ governing permissions and limitations under the License.
         invalid: 'invalid'
       });
 
-      dataLayer.push({
+      adobeDataLayer.push({
         event: 'carousel 15 clicked',
         info: {
           id: '/content/mysite/en/home/jcr:content/root/carousel15'
