@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 /* eslint no-console: "off" */
 const mergeWith = require('lodash.mergewith');
 const cloneDeep = require('lodash.clonedeep');
+const get = require('lodash.get');
 
 /**
  * Data Layer.
@@ -165,7 +166,10 @@ DataLayer.Manager.prototype._augment = function() {
    *
    * @returns {Object} The deep copied state object.
    */
-  that._dataLayer.getState = function() {
+  that._dataLayer.getState = function(path) {
+    if (path) {
+      return get(cloneDeep(that._state), path);
+    }
     return cloneDeep(that._state);
   };
 };
@@ -262,7 +266,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
 };
 
 new DataLayer.Manager({
-  dataLayer: window.dataLayer
+  dataLayer: window.adobeDataLayer
 });
 
 /**
