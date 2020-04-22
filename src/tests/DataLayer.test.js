@@ -870,6 +870,28 @@ test('invalid item is filtered out from array', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------
+// getState()
+// -----------------------------------------------------------------------------------------------------------------
+
+test('getState()', () => {
+  const carousel1 = {
+    id: '/content/mysite/en/home/jcr:content/root/carousel1',
+    items: {}
+  };
+  const data = {
+    component: {
+      carousel: {
+        carousel1: carousel1
+      }
+    }
+  };
+  dataLayer.push({ data: data });
+  expect(dataLayer.getState()).toStrictEqual(data);
+  expect(dataLayer.getState("component.carousel.carousel1")).toStrictEqual(carousel1);
+  expect(dataLayer.getState("undefined-path")).toStrictEqual(undefined);
+});
+
+// -----------------------------------------------------------------------------------------------------------------
 // Performance
 // -----------------------------------------------------------------------------------------------------------------
 
