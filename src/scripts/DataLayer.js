@@ -49,7 +49,7 @@ DataLayer.constants = require('./DataLayerConstants');
 /**
  * @typedef {Object} EventConfig
  * @property {String} event Name of the event.
- * @property {Object} [info] Additional information to pass to the event handler.
+ * @property {Object} [eventInfo] Additional information to pass to the event handler.
  * @property {DataConfig.data} [data] Data to be updated in the state.
  */
 
@@ -165,7 +165,7 @@ DataLayer.Manager.prototype._augment = function() {
   /**
    * Returns a deep copy of the data layer state or of the object defined by the path.
    *
-   * @param {Array|string} path The path of the property to get.
+   * @param {Array|String} path The path of the property to get.
    * @returns {*} Returns a deep copy of the resolved value if a path is passed, a deep copy of the data layer state otherwise.
    */
   that._dataLayer.getState = function(path) {
@@ -289,7 +289,7 @@ new DataLayer.Manager({
  * @event DataLayerEvent.EVENT
  * @type {Object}
  * @property {String} name Name of the committed event.
- * @property {Object} info Additional information passed with the committed event.
+ * @property {Object} eventInfo Additional information passed with the committed event.
  * @property {Object} data Data that was pushed alongside the event.
  */
 
@@ -299,7 +299,7 @@ new DataLayer.Manager({
  * @event <custom>
  * @type {Object}
  * @property {String} name Name of the committed event.
- * @property {Object} info Additional information passed with the committed event.
+ * @property {Object} eventInfo Additional information passed with the committed event.
  * @property {Object} data Data that was pushed alongside the event.
  */
 
