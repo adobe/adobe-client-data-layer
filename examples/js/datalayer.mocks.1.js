@@ -25,13 +25,11 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel1: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel1',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel1: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel1',
+              items: {}
             }
           }
         }
@@ -50,11 +48,9 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel1: undefined
-            }
+        component: {
+          carousel: {
+            carousel1: undefined
           }
         }
       });
@@ -72,13 +68,11 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel clicked',
-        data: {
-          component: {
-            carousel: {
-              carousel3: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel3',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel3: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel3',
+              items: {}
             }
           }
         }
@@ -106,13 +100,11 @@ governing permissions and limitations under the License.
       });
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel4: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel4',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel4: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel4',
+              items: {}
             }
           }
         }
@@ -140,8 +132,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'datalayer:event',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel5'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel5'
         }
       });
 
@@ -167,8 +159,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel6'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel6'
         }
       });
 
@@ -187,8 +179,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 7a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel7a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel7a'
         }
       });
 
@@ -218,8 +210,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 7b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel7b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel7b'
         }
       });
 
@@ -238,8 +230,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 8a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel8a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel8a'
         }
       });
 
@@ -269,8 +261,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 8b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel8b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel8b'
         }
       });
 
@@ -289,8 +281,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 9a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel9a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel9a'
         }
       });
 
@@ -320,8 +312,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 9b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel9b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel9b'
         }
       });
 
@@ -340,8 +332,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 10a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel10a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel10a'
         }
       });
 
@@ -369,8 +361,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 10b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel10b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel10b'
         }
       });
 
@@ -396,7 +388,7 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 11a clicked',
-        info: {
+        eventInfo: {
           id: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
@@ -410,8 +402,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 11a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel11a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
 
@@ -427,13 +419,12 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
+        valid: {
+          data: true
+        }
       });
 
-      if (adobeDataLayer.getState().invalid) {
+      if (!adobeDataLayer.getState().valid.data) {
         console.error('FAILS: test case 12 "type validation: data"');
       } else {
         console.info('SUCCESS: test case 12 "type validation: data"');
@@ -447,12 +438,11 @@ governing permissions and limitations under the License.
       adobeDataLayer.push({
         event: 'clicked',
         data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
+          valid: true
+        }
       });
 
-      if (adobeDataLayer.getState().invalid) {
+      if (!adobeDataLayer.getState().data.valid) {
         console.error('FAILS: test case 13 "type validation: event"');
       } else {
         console.info('SUCCESS: test case 13 "type validation: event"');
@@ -463,20 +453,19 @@ governing permissions and limitations under the License.
       // test case 14: type validation: listener on
       // -----------------------------------------------------------------------------------------------------------------
 
-      let  success14 = true;
+      let  success14 = false;
 
       adobeDataLayer.push({
         on: 'carousel 14 clicked',
         handler: function(event) {
-          success14 = false;
-        },
-        invalid: 'invalid'
+          success14 = true;
+        }
       });
 
       adobeDataLayer.push({
         event: 'carousel 14 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel14'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel14'
         }
       });
 
@@ -502,8 +491,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 15 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel15'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel15'
         }
       });
 
@@ -520,8 +509,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 15 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel15'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel15'
         }
       });
 

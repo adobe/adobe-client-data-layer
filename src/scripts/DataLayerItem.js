@@ -9,6 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+const isPlainObject = require('lodash.isplainobject');
+const omit = require('lodash.omit');
 const DataLayer = {};
 DataLayer.constants = require('./DataLayerConstants');
 
@@ -16,20 +18,11 @@ DataLayer.constants = require('./DataLayerConstants');
  * Constraints for each type of the item configuration.
  */
 const constraints = {
-  dataConfig: {
-    data: {
-      type: 'object'
-    }
-  },
   eventConfig: {
     event: {
       type: 'string'
     },
-    info: {
-      type: 'object',
-      optional: true
-    },
-    data: {
+    eventInfo: {
       type: 'object',
       optional: true
     }
@@ -68,7 +61,8 @@ const constraints = {
       type: 'string',
       optional: true
     }
-  }
+  },
+  dataConfig: {}
 };
 
 /**
@@ -89,17 +83,22 @@ class Item {
     this._config = itemConfig;
     this._type = (function(config) {
       let type;
-      if (utils.itemConfigMatchesConstraints(config, constraints.dataConfig)) {
-        type = DataLayer.constants.itemType.DATA;
-      } else if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
+      if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOnConfig)) {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
+      } else if (isPlainObject(config)) {
+        type = DataLayer.constants.itemType.DATA;
       }
       return type;
     }(itemConfig));
+
+    this._config.data = (function(config, type) {
+      return omit(config, Object.keys(constraints[type + 'Config']));
+    })(itemConfig, this._type);
+
     this._index = index;
     this._valid = !!this._type;
   }
@@ -160,46 +159,12 @@ const utils = {
       const configValue = itemConfig[key];
       const configValueType = typeof configValue;
       if (mandatory) {
-        if (!configValue || (configValueType !== type) || (supportedValues && !supportedValues.includes(configValue))) {
-          return false;
-        }
-      } else {
-        if (configValue && ((configValueType !== type) || (supportedValues && !supportedValues.includes(configValue)))) {
+        if (!configValue || configValueType !== type || (supportedValues && !supportedValues.includes(configValue))) {
           return false;
         }
       }
     }
-    return !utils.itemConfigHasCustomProperties(itemConfig, itemConstraints);
-  },
-  /**
-   * Determines whether the item configuration has custom properties.
-   *
-   * @param {ItemConfig} itemConfig The item configuration.
-   * @param {Object} itemConstraints The constraints on the item configuration.
-   * @returns {Boolean} true if the item configuration has custom properties, false otherwise.
-   * @static
-   */
-  itemConfigHasCustomProperties: function(itemConfig, itemConstraints) {
-    const itemConfigKeys = Object.keys(itemConfig);
-    const itemConstraintsKeys = Object.keys(itemConstraints);
-    if (itemConfigKeys.length > itemConstraintsKeys.length) {
-      return true;
-    }
-    for (let j = 0; j < itemConfigKeys.length; j++) {
-      const itemConfigKey = itemConfigKeys[j];
-      let itemConfigKeyMatchesConstraintKey = false;
-      for (let k = 0; k < itemConstraintsKeys.length; k++) {
-        const key = itemConstraintsKeys[k];
-        if (itemConfigKey === key) {
-          itemConfigKeyMatchesConstraintKey = true;
-          break;
-        }
-      }
-      if (!itemConfigKeyMatchesConstraintKey) {
-        return true;
-      }
-    }
-    return false;
+    return true;
   }
 };
 
