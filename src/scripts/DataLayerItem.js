@@ -89,6 +89,8 @@ class Item {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
+      } else if (typeof config === 'function') {
+        type = DataLayer.constants.itemType.FCTN;
       } else if (isPlainObject(config)) {
         type = DataLayer.constants.itemType.DATA;
       }
@@ -96,7 +98,10 @@ class Item {
     }(itemConfig));
 
     // assign itemConfig to item data property without the known keys from the corresponding constrain
-    this._config.data = omit(itemConfig, Object.keys(constraints[this._type + 'Config']));
+    if (this._type !== DataLayer.constants.itemType.FCTN) {
+      this._config.data = omit(itemConfig, Object.keys(constraints[this._type + 'Config']));
+    }
+
     this._index = index;
     this._valid = !!this._type;
   }

@@ -151,6 +151,7 @@ DataLayer.Manager.prototype._augment = function() {
       // filter out event listeners and invalid items
       if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
         item.type === DataLayer.constants.itemType.LISTENER_OFF ||
+        item.type === DataLayer.constants.itemType.FCTN ||
         !item.valid) {
         delete filteredArguments[key];
       }
@@ -162,10 +163,10 @@ DataLayer.Manager.prototype._augment = function() {
   };
 
   /**
-   * Returns a deep copy of the data layer state.
+   * Returns a deep copy of the data layer state or of the object defined by the path.
    *
-   * @param {String} path The path inside of the state object to look for.
-   * @returns {Object} The deep copied state object.
+   * @param {Array|String} path The path of the property to get.
+   * @returns {*} Returns a deep copy of the resolved value if a path is passed, a deep copy of the data layer state otherwise.
    */
   that._dataLayer.getState = function(path) {
     if (path) {
@@ -191,6 +192,7 @@ DataLayer.Manager.prototype._processItems = function() {
     // remove event listener or invalid item from the data layer array
     if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
       item.type === DataLayer.constants.itemType.LISTENER_OFF ||
+      item.type === DataLayer.constants.itemType.FCTN ||
       !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
@@ -233,6 +235,9 @@ DataLayer.Manager.prototype._processItem = function(item) {
     data: function(item) {
       that._updateState(item);
       that._listenerManager.triggerListeners(item);
+    },
+    fctn: function(item) {
+      item._config.call(that._dataLayer, that._dataLayer);
     },
     event: function(item) {
       if (item.config.data) {
