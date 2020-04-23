@@ -11,6 +11,8 @@ governing permissions and limitations under the License.
 */
 const DataLayer = require('../scripts/DataLayer');
 const isEqual = require('lodash.isequal');
+const isEmpty = require('lodash.isempty');
+const merge = require('lodash.merge');
 let dataLayer;
 
 beforeEach(() => {
@@ -424,12 +426,12 @@ describe('listener with path', () => {
       handler: mockCallback
     };
     dataLayer.push(listenerOn);
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'viewed',
 
     }, carouselData));
     expect(mockCallback.mock.calls.length).toBe(0);
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'viewed',
     }, imageData));
     expect(mockCallback.mock.calls.length).toBe(1);
@@ -437,21 +439,21 @@ describe('listener with path', () => {
 
   test('listener on: datalayer:change with path', () => {
     dataLayer.push(listenerOn);
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change',
     }, carouselData));
     expect(mockCallback.mock.calls.length).toBe(0);
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change',
     }, imageData));
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
   test('listener: custom event, path and scope: all', () => {
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change'
     }, carouselData));
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change'
     }, imageData));
     dataLayer.push({
@@ -460,7 +462,7 @@ describe('listener with path', () => {
       scope: 'all',
       handler: mockCallback
     });
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change',
     }, imageData));
     expect(mockCallback.mock.calls.length).toBe(3);
@@ -525,7 +527,7 @@ describe('listener with path', () => {
         }
       }
     };
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change'
     }, oldData));
     dataLayer.push({
@@ -539,7 +541,7 @@ describe('listener with path', () => {
         }
       }
     });
-    dataLayer.push(Object.assign({
+    dataLayer.push(merge({
       event: 'datalayer:change',
     }, newData));
     expect(mockCallback.mock.calls.length).toBe(2);
@@ -711,6 +713,23 @@ test('listener off: unregister multiple handlers', () => {
 // Invalid: data, event, listeners
 // -----------------------------------------------------------------------------------------------------------------
 
+test.skip('invalid listener on', () => {
+  const mockCallback = jest.fn();
+  const argOn = {
+    on: 'carousel clicked',
+    handler: mockCallback,
+    invalid: 'invalid'
+  };
+  dataLayer.push(argOn);
+
+  dataLayer.push({
+    event: 'carousel clicked',
+    eventInfo: {
+      reference: '/content/mysite/en/home/jcr:content/root/carousel5'
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(0);
+});
 
 test('invalid listener on scope', () => {
   const mockCallback = jest.fn();
@@ -728,6 +747,29 @@ test('invalid listener on scope', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(0);
+});
+
+
+// -----------------------------------------------------------------------------------------------------------------
+// getState()
+// -----------------------------------------------------------------------------------------------------------------
+
+test('getState()', () => {
+  const carousel1 = {
+    id: '/content/mysite/en/home/jcr:content/root/carousel1',
+    items: {}
+  };
+  const data = {
+    component: {
+      carousel: {
+        carousel1: carousel1
+      }
+    }
+  };
+  dataLayer.push(data);
+  expect(isEqual(dataLayer.getState(), data));
+  expect(isEqual(dataLayer.getState("component.carousel.carousel1"), carousel1));
+  expect(isEmpty(dataLayer.getState("undefined-path")));
 });
 
 // -----------------------------------------------------------------------------------------------------------------

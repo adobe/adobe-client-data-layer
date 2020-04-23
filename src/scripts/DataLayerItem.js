@@ -95,10 +95,7 @@ class Item {
       return type;
     }(itemConfig));
 
-    this._config.data = (function(config, type) {
-      return omit(config, Object.keys(constraints[type + 'Config']));
-    })(itemConfig, this._type);
-
+    this._config.data = omit(itemConfig, Object.keys(constraints[this._type + 'Config']));
     this._index = index;
     this._valid = !!this._type;
   }
