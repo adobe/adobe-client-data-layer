@@ -97,6 +97,8 @@ class Item {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
+      } else if (typeof config === 'function') {
+        type = DataLayer.constants.itemType.FCTN;
       }
       return type;
     }(itemConfig));
