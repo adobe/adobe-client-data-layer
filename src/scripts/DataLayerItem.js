@@ -95,6 +95,7 @@ class Item {
       return type;
     }(itemConfig));
 
+    // assign itemConfig to item data property without the known keys from the corresponding constrain
     this._config.data = omit(itemConfig, Object.keys(constraints[this._type + 'Config']));
     this._index = index;
     this._valid = !!this._type;
