@@ -100,6 +100,48 @@ test('add event', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------
+// Function
+// -----------------------------------------------------------------------------------------------------------------
+
+test('add function: simple', () => {
+  const mockCallback = jest.fn();
+  dataLayer.push(mockCallback);
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
+test('add function: function updates the state', () => {
+  const data1 = {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1-old',
+        }
+      }
+    }
+  };
+  const data2 = {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1-new',
+        }
+      }
+    }
+  };
+  dataLayer.push({
+    data: data1
+  });
+  expect(dataLayer.getState()).toStrictEqual(data1);
+  const testFct = function(adl) {
+    adl.push({
+      data: data2
+    });
+  };
+  dataLayer.push(testFct);
+  expect(dataLayer.getState()).toStrictEqual(data2);
+});
+
+// -----------------------------------------------------------------------------------------------------------------
 // Event listener on
 // -----------------------------------------------------------------------------------------------------------------
 

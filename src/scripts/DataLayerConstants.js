@@ -23,6 +23,8 @@ const constants = {
   itemType: {
     /** Represents an item of type data */
     DATA: 'data',
+    /** Represents an item of type function */
+    FCTN: 'fctn',
     /** Represents an item of type event */
     EVENT: 'event',
     /** Represents an item of type listener on */
