@@ -25,13 +25,11 @@ governing permissions and limitations under the License.
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel1: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel1',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel1: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel1',
+              items: {}
             }
           }
         }
@@ -44,17 +42,14 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 1 "add data"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // Test case 2: remove data
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel1: undefined
-            }
+        component: {
+          carousel: {
+            carousel1: undefined
           }
         }
       });
@@ -65,32 +60,28 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 2 "remove data"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // Test case 3: add event with data
       // -----------------------------------------------------------------------------------------------------------------
 
       adobeDataLayer.push({
         event: 'carousel clicked',
-        data: {
-          component: {
-            carousel: {
-              carousel3: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel3',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel3: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel3',
+              items: {}
             }
           }
         }
       });
 
-      const  id3 = adobeDataLayer.getState().component.carousel.carousel3.id;
+      const id3 = adobeDataLayer.getState().component.carousel.carousel3.id;
       if (id3 !== '/content/mysite/en/home/jcr:content/root/carousel3') {
         console.error('FAILS: test case 3 "add event with data"');
       } else {
         console.info('SUCCESS: test case 3 "add event with data"');
       }
-
 
       // -----------------------------------------------------------------------------------------------------------------
       // test case 4: listener on: datalayer:change
@@ -103,13 +94,11 @@ governing permissions and limitations under the License.
       });
 
       adobeDataLayer.push({
-        data: {
-          component: {
-            carousel: {
-              carousel4: {
-                id: '/content/mysite/en/home/jcr:content/root/carousel4',
-                items: {}
-              }
+        component: {
+          carousel: {
+            carousel4: {
+              id: '/content/mysite/en/home/jcr:content/root/carousel4',
+              items: {}
             }
           }
         }
@@ -120,7 +109,6 @@ governing permissions and limitations under the License.
       } else {
         console.info('SUCCESS: test case 4 "listener on: datalayer:change"');
       }
-
 
       // -----------------------------------------------------------------------------------------------------------------
       // test case 5: listener on: datalayer:event
@@ -134,8 +122,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'datalayer:event',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel5'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel5'
         }
       });
 
@@ -144,7 +132,6 @@ governing permissions and limitations under the License.
       } else {
         console.info('SUCCESS: test case 5 "listener on: datalayer:event"');
       }
-
 
       // -----------------------------------------------------------------------------------------------------------------
       // test case 6: listener on: custom event
@@ -158,8 +145,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel6'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel6'
         }
       });
 
@@ -169,7 +156,6 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 6 "listener on: custom event"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // test case 7: listener on: scope = past
       // -----------------------------------------------------------------------------------------------------------------
@@ -178,18 +164,14 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 7a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel7a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel7a'
         }
       });
 
-      adobeDataLayer.push({
-        on: 'carousel 7a clicked',
-        scope: 'past',
-        handler: function(event) {
-          success7a = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 7a clicked', function(event) {
+        success7a = true;
+      }, {scope: 'past'});
 
       if (!success7a) {
         console.error('FAILS: test case 7a "listener on: scope = past"');
@@ -197,7 +179,7 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 7a "listener on: scope = past"');
       }
 
-      let  success7b = true;
+      let success7b = true;
 
       adobeDataLayer.push({
         on: 'carousel 7b clicked',
@@ -209,8 +191,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 7b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel7b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel7b'
         }
       });
 
@@ -220,17 +202,16 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 7b "listener on: scope = past"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // test case 8: listener on: scope = future
       // -----------------------------------------------------------------------------------------------------------------
 
-      let  success8a = true;
+      let success8a = true;
 
       adobeDataLayer.push({
         event: 'carousel 8a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel8a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel8a'
         }
       });
 
@@ -248,20 +229,16 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 8a "listener on: scope = future"');
       }
 
-      let  success8b = false;
+      let success8b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 8b clicked',
-        scope: 'future',
-        handler: function(event) {
-          success8b = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 8b clicked', function(event) {
+        success8b = true;
+      }, {scope: 'future'});
 
       adobeDataLayer.push({
         event: 'carousel 8b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel8b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel8b'
         }
       });
 
@@ -271,27 +248,22 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 8b "listener on: scope = future"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // test case 9: listener on: scope = all
       // -----------------------------------------------------------------------------------------------------------------
 
-      let  success9a = false;
+      let success9a = false;
 
       adobeDataLayer.push({
         event: 'carousel 9a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel9a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel9a'
         }
       });
 
-      adobeDataLayer.push({
-        on: 'carousel 9a clicked',
-        scope: 'all',
-        handler: function(event) {
-          success9a = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 9a clicked', function(event) {
+        success9a = true;
+      }, {scope: 'all'});
 
       if (!success9a) {
         console.error('FAILS: test case 9a "listener on: scope = all"');
@@ -299,20 +271,16 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 9a "listener on: scope = all"');
       }
 
-      let  success9b = false;
+      let success9b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 9b clicked',
-        scope: 'all',
-        handler: function(event) {
-          success9b = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 9b clicked', function(event) {
+        success9b = true;
+      }, {scope: 'all'});
 
       adobeDataLayer.push({
         event: 'carousel 9b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel9b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel9b'
         }
       });
 
@@ -322,17 +290,16 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 9b "listener on: scope = all"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // test case 10: listener on: scope = undefined (default to 'future')
       // -----------------------------------------------------------------------------------------------------------------
 
-      let  success10a = true;
+      let success10a = true;
 
       adobeDataLayer.push({
         event: 'carousel 10a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel10a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel10a'
         }
       });
 
@@ -349,19 +316,16 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 10a "listener on: scope = undefined"');
       }
 
-      let  success10b = false;
+      let success10b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 10b clicked',
-        handler: function(event) {
-          success10b = true;
-        }
+      adobeDataLayer.addEventListener('carousel 10b clicked', function(event) {
+        success10b = true;
       });
 
       adobeDataLayer.push({
         event: 'carousel 10b clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel10b'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel10b'
         }
       });
 
@@ -371,12 +335,11 @@ governing permissions and limitations under the License.
         console.info('SUCCESS: test case 10b "listener on: scope = undefined"');
       }
 
-
       // -----------------------------------------------------------------------------------------------------------------
       // test case 11: listener off
       // -----------------------------------------------------------------------------------------------------------------
 
-      let  success11 = true;
+      let success11 = true;
 
       adobeDataLayer.push({
         on: 'carousel 11a clicked',
@@ -387,7 +350,7 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 11a clicked',
-        info: {
+        eventInfo: {
           id: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
@@ -401,8 +364,8 @@ governing permissions and limitations under the License.
 
       adobeDataLayer.push({
         event: 'carousel 11a clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel11a'
+        eventInfo: {
+          reference: '/content/mysite/en/home/jcr:content/root/carousel11a'
         }
       });
 
@@ -411,117 +374,6 @@ governing permissions and limitations under the License.
       } else {
         console.log('SUCCESS: test case 11 "listener off"');
       }
-
-
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 12: type validation: data
-      // -----------------------------------------------------------------------------------------------------------------
-
-      adobeDataLayer.push({
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      });
-
-      if (adobeDataLayer.getState().invalid) {
-        console.error('FAILS: test case 12 "type validation: data"');
-      } else {
-        console.info('SUCCESS: test case 12 "type validation: data"');
-      }
-
-
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 13: type validation: event
-      // -----------------------------------------------------------------------------------------------------------------
-
-      adobeDataLayer.push({
-        event: 'clicked',
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      });
-
-      if (adobeDataLayer.getState().invalid) {
-        console.error('FAILS: test case 13 "type validation: event"');
-      } else {
-        console.info('SUCCESS: test case 13 "type validation: event"');
-      }
-
-
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 14: type validation: listener on
-      // -----------------------------------------------------------------------------------------------------------------
-
-      let  success14 = true;
-
-      adobeDataLayer.push({
-        on: 'carousel 14 clicked',
-        handler: function(event) {
-          success14 = false;
-        },
-        invalid: 'invalid'
-      });
-
-      adobeDataLayer.push({
-        event: 'carousel 14 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel14'
-        }
-      });
-
-      if (!success14) {
-        console.error('FAILS: test case 14 "validation: listener on"');
-      } else {
-        console.info('SUCCESS: test case 14 "validation: listener on"');
-      }
-
-
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 15: type validation: listener off
-      // -----------------------------------------------------------------------------------------------------------------
-
-      let  success15 = false;
-
-      adobeDataLayer.push({
-        on: 'carousel 15 clicked',
-        handler: function(event) {
-          success15 = true;
-        }
-      });
-
-      adobeDataLayer.push({
-        event: 'carousel 15 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel15'
-        }
-      });
-
-      // success15 should be: true: we force it to false:
-      success15 = false;
-
-      adobeDataLayer.push({
-        off: 'carousel 15 clicked',
-        handler: function(event) {
-          success15 = true;
-        },
-        invalid: 'invalid'
-      });
-
-      adobeDataLayer.push({
-        event: 'carousel 15 clicked',
-        info: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel15'
-        }
-      });
-
-      if (!success15) {
-        console.error('FAILS: test case 15 "type validation: listener off"');
-      } else {
-        console.info('SUCCESS: test case 15 "type validation: listener off"');
-      }
-
     }
   });
 

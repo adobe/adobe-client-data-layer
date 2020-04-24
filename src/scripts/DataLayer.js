@@ -49,7 +49,7 @@ DataLayer.constants = require('./DataLayerConstants');
 /**
  * @typedef {Object} EventConfig
  * @property {String} event Name of the event.
- * @property {Object} [info] Additional information to pass to the event handler.
+ * @property {Object} [eventInfo] Additional information to pass to the event handler.
  * @property {DataConfig.data} [data] Data to be updated in the state.
  */
 
@@ -151,7 +151,9 @@ DataLayer.Manager.prototype._augment = function() {
         item.type === DataLayer.constants.itemType.LISTENER_OFF ||
         !item.valid) {
         delete filteredArguments[key];
-        return;
+        if (item.type !== DataLayer.constants.itemType.FCTN) {
+          return;
+        }
       }
 
       that._processItem(item);
@@ -163,9 +165,10 @@ DataLayer.Manager.prototype._augment = function() {
   };
 
   /**
-   * Returns a deep copy of the data layer state.
+   * Returns a deep copy of the data layer state or of the object defined by the path.
    *
-   * @returns {Object} The deep copied state object.
+   * @param {Array|String} path The path of the property to get.
+   * @returns {*} Returns a deep copy of the resolved value if a path is passed, a deep copy of the data layer state otherwise.
    */
   that._dataLayer.getState = function(path) {
     if (path) {
@@ -224,6 +227,7 @@ DataLayer.Manager.prototype._processItems = function() {
     // remove event listener or invalid item from the data layer array
     if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
       item.type === DataLayer.constants.itemType.LISTENER_OFF ||
+      item.type === DataLayer.constants.itemType.FCTN ||
       !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
@@ -266,6 +270,9 @@ DataLayer.Manager.prototype._processItem = function(item) {
     data: function(item) {
       that._updateState(item);
       that._listenerManager.triggerListeners(item);
+    },
+    fctn: function(item) {
+      item._config.call(that._dataLayer, that._dataLayer);
     },
     event: function(item) {
       if (item.config.data) {
@@ -317,7 +324,7 @@ new DataLayer.Manager({
  * @event DataLayerEvent.EVENT
  * @type {Object}
  * @property {String} name Name of the committed event.
- * @property {Object} info Additional information passed with the committed event.
+ * @property {Object} eventInfo Additional information passed with the committed event.
  * @property {Object} data Data that was pushed alongside the event.
  */
 
@@ -327,7 +334,7 @@ new DataLayer.Manager({
  * @event <custom>
  * @type {Object}
  * @property {String} name Name of the committed event.
- * @property {Object} info Additional information passed with the committed event.
+ * @property {Object} eventInfo Additional information passed with the committed event.
  * @property {Object} data Data that was pushed alongside the event.
  */
 
