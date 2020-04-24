@@ -313,11 +313,11 @@ test('listener on: register a handler (with a static function) that has already 
 
 describe('listener with path', () => {
   const mockCallback = jest.fn();
-  const listenerOn = {
-    on: 'datalayer:change',
-    path: 'component.image',
-    handler: mockCallback
-  };
+  const listenerOn = [
+    'datalayer:change',
+    mockCallback,
+    { path: 'component.image' }
+  ];
   const carouselData = {
     component: {
       carousel: {
@@ -341,7 +341,7 @@ describe('listener with path', () => {
   });
 
   test('on change listener with path for image component data', () => {
-    dataLayer.push(listenerOn);
+    dataLayer.addEventListener.apply(dataLayer, listenerOn);
     dataLayer.push({ data: carouselData });
     expect(mockCallback.mock.calls.length).toBe(0);
     dataLayer.push({ data: imageData });
@@ -349,12 +349,12 @@ describe('listener with path', () => {
   });
 
   test('custom listener with path for image component data', () => {
-    let listenerOn = {
-      on: 'viewed',
-      path: 'component.image',
-      handler: mockCallback
-    };
-    dataLayer.push(listenerOn);
+    let listenerOn = [
+      'viewed',
+      mockCallback,
+      { path: 'component.image' }
+    ];
+    dataLayer.addEventListener.apply(dataLayer, listenerOn);
     dataLayer.push({
       event: 'viewed',
       data: carouselData
@@ -368,7 +368,7 @@ describe('listener with path', () => {
   });
 
   test('listener on: datalayer:change with path', () => {
-    dataLayer.push(listenerOn);
+    dataLayer.addEventListener.apply(dataLayer, listenerOn);
     dataLayer.push({
       event: 'datalayer:change',
       data: carouselData
@@ -390,11 +390,9 @@ describe('listener with path', () => {
       event: 'datalayer:change',
       data: imageData
     });
-    dataLayer.push({
-      on: 'datalayer:change',
+    dataLayer.addEventListener('datalayer:change', mockCallback, {
       path: 'component',
-      scope: 'all',
-      handler: mockCallback
+      scope: 'all'
     });
     dataLayer.push({
       event: 'datalayer:change',
@@ -417,17 +415,16 @@ describe('listener with path', () => {
         }
       }
     });
-    dataLayer.push({
-      on: 'datalayer:change',
-      path: 'component.carousel.carousel1.id',
-      handler: function(event, oldValue, newValue) {
+    dataLayer.addEventListener('datalayer:change',
+      function(event, oldValue, newValue) {
         if (oldValue === 'old') {
           mockCallback();
         }
         if (newValue === 'new') {
           mockCallback();
         }
-      }
+      }, {
+        path: 'component.carousel.carousel1.id',
     });
     dataLayer.push({
       event: 'datalayer:change',
@@ -470,9 +467,8 @@ describe('listener with path', () => {
       event: 'datalayer:change',
       data: oldData
     });
-    dataLayer.push({
-      on: 'datalayer:change',
-      handler: function(event, oldState, newState) {
+    dataLayer.addEventListener('datalayer:change',
+      function(event, oldState, newState) {
         if (isEqual(oldState, oldData)) {
           mockCallback();
         }
@@ -480,7 +476,7 @@ describe('listener with path', () => {
           mockCallback();
         }
       }
-    });
+    );
     dataLayer.push({
       event: 'datalayer:change',
       data: newData
@@ -513,14 +509,13 @@ describe('listener with path', () => {
       event: 'datalayer:change',
       data: oldData
     });
-    dataLayer.push({
-      on: 'datalayer:change',
-      handler: function(event, oldState, newState) {
+    dataLayer.addEventListener('datalayer:change',
+      function(event, oldState, newState) {
         if (isEqual(this.getState(), newState)) {
           mockCallback();
         }
       }
-    });
+    );
     dataLayer.push({
       event: 'datalayer:change',
       data: newData
@@ -542,15 +537,15 @@ describe('listener with path', () => {
         }
       }
     });
-    dataLayer.push({
-      on: 'datalayer:change',
-      scope: 'past',
-      handler: function(event, oldState, newState) {
+    dataLayer.addEventListener('datalayer:change',
+      function(event, oldState, newState) {
         if (isEqual(oldState, undefined) && isEqual(newState, undefined)) {
           mockCallback();
         }
+      }, {
+        scope: 'past'
       }
-    });
+    );
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 });
@@ -741,11 +736,8 @@ test('invalid item is filtered out from array', () => {
     },
     invalid: 'invalid'
   });
-  dataLayer.push({
-    on: 'carousel 14 clicked',
-    handler: function(event) {
+  dataLayer.addEventListener('carousel 14 clicked', function(event) {
       //
-    },
   });
   dataLayer.push({
     off: 'carousel 14 clicked',
