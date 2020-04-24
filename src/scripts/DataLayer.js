@@ -190,7 +190,7 @@ DataLayer.Manager.prototype._augment = function() {
     const eventListenerItem = new DataLayer.Item({
       on: type,
       handler: listener,
-      scope: (options && options.scope),
+      scope: options && options.scope,
       path: options && options.path
     });
 
