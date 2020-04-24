@@ -658,7 +658,7 @@ test('invalid event', () => {
   expect(dataLayer.getState()).toStrictEqual({});
 });
 
-test('invalid listener on', () => {
+test.skip('invalid listener on', () => {
   const mockCallback = jest.fn();
   dataLayer.addEventListener('carousel clicked', mockCallback, { invalid: 'invalid' });
 
@@ -684,7 +684,7 @@ test('invalid listener on scope', () => {
   expect(mockCallback.mock.calls.length).toBe(0);
 });
 
-test('invalid listener off', () => {
+test.skip('invalid listener off', () => {
   const mockCallback = jest.fn();
   dataLayer.addEventListener('datalayer:change', mockCallback);
   dataLayer.push({
