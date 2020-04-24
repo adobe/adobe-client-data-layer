@@ -98,11 +98,8 @@ governing permissions and limitations under the License.
 
       let success4 = false;
 
-      adobeDataLayer.push({
-        on: 'datalayer:change',
-        handler: function(event) {
-          success4 = true;
-        }
+      adobeDataLayer.addEventListener('datalayer:change', function(event) {
+        success4 = true;
       });
 
       adobeDataLayer.push({
@@ -131,11 +128,8 @@ governing permissions and limitations under the License.
 
       let success5 = false;
 
-      adobeDataLayer.push({
-        on: 'datalayer:event',
-        handler: function(event) {
-          success5 = true;
-        }
+      adobeDataLayer.addEventListener('datalayer:event', function(event) {
+        success5 = true;
       });
 
       adobeDataLayer.push({
@@ -158,11 +152,8 @@ governing permissions and limitations under the License.
 
       let success6 = false;
 
-      adobeDataLayer.push({
-        on: 'carousel clicked',
-        handler: function(event) {
-          success6 = true;
-        }
+      adobeDataLayer.addEventListener('carousel clicked', function(event) {
+        success6 = true;
       });
 
       adobeDataLayer.push({

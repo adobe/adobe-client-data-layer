@@ -105,11 +105,7 @@ test('add event', () => {
 
 test('check dataLayer change event was executed', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'datalayer:change',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('datalayer:change', mockCallback);
   dataLayer.push({
     data: {
       page: {
@@ -118,10 +114,7 @@ test('check dataLayer change event was executed', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  const argOff = {
-    off: 'datalayer:change'
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('datalayer:change');
   dataLayer.push({
     data: {
       page: {
@@ -134,11 +127,7 @@ test('check dataLayer change event was executed', () => {
 
 test('listener on: datalayer:event', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'datalayer:event',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('datalayer:event', mockCallback);
   dataLayer.push({
     event: 'clicked',
     info: {
@@ -146,10 +135,7 @@ test('listener on: datalayer:event', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  const argOff = {
-    off: 'datalayer:event'
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('datalayer:event');
   dataLayer.push({
     event: 'datalayer:event',
     info: {
@@ -161,11 +147,7 @@ test('listener on: datalayer:event', () => {
 
 test('listener on: datalayer:change', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'datalayer:change',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('datalayer:change', mockCallback);
   dataLayer.push({
     event: 'clicked',
     info: {
@@ -178,10 +160,7 @@ test('listener on: datalayer:change', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  const argOff = {
-    off: 'datalayer:change'
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('datalayer:change');
   dataLayer.push({
     event: 'datalayer:change',
     info: {
@@ -193,11 +172,7 @@ test('listener on: datalayer:change', () => {
 
 test('listener on: custom event', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback);
   dataLayer.push({
     event: 'carousel clicked',
     info: {
@@ -205,10 +180,7 @@ test('listener on: custom event', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  const argOff = {
-    off: 'carousel clicked'
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('carousel clicked');
   dataLayer.push({
     event: 'carousel clicked',
     info: {

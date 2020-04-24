@@ -172,6 +172,35 @@ DataLayer.Manager.prototype._augment = function() {
     }
     return cloneDeep(that._state);
   };
+
+  /**
+   * Sets up a function that will be called whenever the specified event is triggered.
+   *
+   * @param {String} type A case-sensitive string representing the event type to listen for.
+   * @param {Function} listener A function that is called when the event of the specified type occurs.
+   * @param {Object} [options] Optional characteristics of the event listener.
+   * @returns {Number} The length of the data layer following push.
+   */
+  that._dataLayer.addEventListener = function(type, listener, options) {
+    return this.push({
+      on: type,
+      handler: listener
+    });
+  };
+
+  /**
+   * Removes an event listener previously registered with addEventListener().
+   *
+   * @param {String} type A case-sensitive string representing the event type to listen for.
+   * @param {Function} [listener] Optional function that is to be removed.
+   * @returns {Number} The length of the data layer following push.
+   */
+  that._dataLayer.removeEventListener = function(type, listener) {
+    return this.push({
+      off: type,
+      handler: listener
+    });
+  };
 };
 
 /**
