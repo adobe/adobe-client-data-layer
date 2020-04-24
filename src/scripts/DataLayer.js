@@ -182,16 +182,14 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {Object} [options] Optional characteristics of the event listener.
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
-    const eventItem = new DataLayer.Item({
+    const eventListenerItem = new DataLayer.Item({
       on: type,
       handler: listener,
       scope: (options && options.scope) || 'future',
       path: options && options.path
     });
 
-    if (!eventItem.valid) return;
-
-    that._processItem(eventItem);
+    that._processItem(eventListenerItem);
   };
 
   /**
@@ -201,14 +199,12 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {Function} [listener] Optional function that is to be removed.
    */
   that._dataLayer.removeEventListener = function(type, listener) {
-    const eventItem = new DataLayer.Item({
+    const eventListenerItem = new DataLayer.Item({
       off: type,
       handler: listener
     });
 
-    if (!eventItem.valid) return;
-
-    that._processItem(eventItem);
+    that._processItem(eventListenerItem);
   };
 };
 
