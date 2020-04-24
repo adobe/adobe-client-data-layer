@@ -89,11 +89,8 @@ governing permissions and limitations under the License.
 
       let success4 = false;
 
-      adobeDataLayer.push({
-        on: 'datalayer:change',
-        handler: function(event) {
-          success4 = true;
-        }
+      adobeDataLayer.addEventListener('datalayer:change', function(event) {
+        success4 = true;
       });
 
       adobeDataLayer.push({
@@ -119,11 +116,8 @@ governing permissions and limitations under the License.
 
       let success5 = false;
 
-      adobeDataLayer.push({
-        on: 'datalayer:event',
-        handler: function(event) {
-          success5 = true;
-        }
+      adobeDataLayer.addEventListener('datalayer:event', function(event) {
+        success5 = true;
       });
 
       adobeDataLayer.push({
@@ -145,11 +139,8 @@ governing permissions and limitations under the License.
 
       let success6 = false;
 
-      adobeDataLayer.push({
-        on: 'carousel clicked',
-        handler: function(event) {
-          success6 = true;
-        }
+      adobeDataLayer.addEventListener('carousel clicked', function(event) {
+        success6 = true;
       });
 
       adobeDataLayer.push({
@@ -178,13 +169,9 @@ governing permissions and limitations under the License.
         }
       });
 
-      adobeDataLayer.push({
-        on: 'carousel 7a clicked',
-        scope: 'past',
-        handler: function(event) {
-          success7a = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 7a clicked', function(event) {
+        success7a = true;
+      }, {scope: 'past'});
 
       if (!success7a) {
         console.error('FAILS: test case 7a "listener on: scope = past"');
@@ -244,13 +231,9 @@ governing permissions and limitations under the License.
 
       let success8b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 8b clicked',
-        scope: 'future',
-        handler: function(event) {
-          success8b = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 8b clicked', function(event) {
+        success8b = true;
+      }, {scope: 'future'});
 
       adobeDataLayer.push({
         event: 'carousel 8b clicked',
@@ -278,13 +261,9 @@ governing permissions and limitations under the License.
         }
       });
 
-      adobeDataLayer.push({
-        on: 'carousel 9a clicked',
-        scope: 'all',
-        handler: function(event) {
-          success9a = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 9a clicked', function(event) {
+        success9a = true;
+      }, {scope: 'all'});
 
       if (!success9a) {
         console.error('FAILS: test case 9a "listener on: scope = all"');
@@ -294,13 +273,9 @@ governing permissions and limitations under the License.
 
       let success9b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 9b clicked',
-        scope: 'all',
-        handler: function(event) {
-          success9b = true;
-        }
-      });
+      adobeDataLayer.addEventListener('carousel 9b clicked', function(event) {
+        success9b = true;
+      }, {scope: 'all'});
 
       adobeDataLayer.push({
         event: 'carousel 9b clicked',
@@ -343,11 +318,8 @@ governing permissions and limitations under the License.
 
       let success10b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 10b clicked',
-        handler: function(event) {
-          success10b = true;
-        }
+      adobeDataLayer.addEventListener('carousel 10b clicked', function(event) {
+        success10b = true;
       });
 
       adobeDataLayer.push({

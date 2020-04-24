@@ -146,15 +146,17 @@ DataLayer.Manager.prototype._augment = function() {
       const itemConfig = pushArguments[key];
       const item = new DataLayer.Item(itemConfig);
 
-      that._processItem(item);
-
-      // filter out event listeners and invalid items
+      // filter out event listeners and invalid items and do not process them
       if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
         item.type === DataLayer.constants.itemType.LISTENER_OFF ||
-        item.type === DataLayer.constants.itemType.FCTN ||
         !item.valid) {
         delete filteredArguments[key];
+        if (item.type !== DataLayer.constants.itemType.FCTN) {
+          return;
+        }
       }
+
+      that._processItem(item);
     });
 
     if (filteredArguments[0]) {
@@ -173,6 +175,39 @@ DataLayer.Manager.prototype._augment = function() {
       return get(cloneDeep(that._state), path);
     }
     return cloneDeep(that._state);
+  };
+
+  /**
+   * Sets up a function that will be called whenever the specified event is triggered.
+   *
+   * @param {String} type A case-sensitive string representing the event type to listen for.
+   * @param {Function} listener A function that is called when the event of the specified type occurs.
+   * @param {Object} [options] Optional characteristics of the event listener.
+   */
+  that._dataLayer.addEventListener = function(type, listener, options) {
+    const eventListenerItem = new DataLayer.Item({
+      on: type,
+      handler: listener,
+      scope: (options && options.scope) || 'future',
+      path: options && options.path
+    });
+
+    that._processItem(eventListenerItem);
+  };
+
+  /**
+   * Removes an event listener previously registered with addEventListener().
+   *
+   * @param {String} type A case-sensitive string representing the event type to listen for.
+   * @param {Function} [listener] Optional function that is to be removed.
+   */
+  that._dataLayer.removeEventListener = function(type, listener) {
+    const eventListenerItem = new DataLayer.Item({
+      off: type,
+      handler: listener
+    });
+
+    that._processItem(eventListenerItem);
   };
 };
 
