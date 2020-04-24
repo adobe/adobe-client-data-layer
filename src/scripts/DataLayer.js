@@ -146,14 +146,15 @@ DataLayer.Manager.prototype._augment = function() {
       const itemConfig = pushArguments[key];
       const item = new DataLayer.Item(itemConfig);
 
-      that._processItem(item);
-
-      // filter out event listeners and invalid items
+      // filter out event listeners and invalid items and do not process them
       if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
         item.type === DataLayer.constants.itemType.LISTENER_OFF ||
         !item.valid) {
         delete filteredArguments[key];
+        return;
       }
+
+      that._processItem(item);
     });
 
     if (filteredArguments[0]) {
@@ -179,13 +180,18 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {String} type A case-sensitive string representing the event type to listen for.
    * @param {Function} listener A function that is called when the event of the specified type occurs.
    * @param {Object} [options] Optional characteristics of the event listener.
-   * @returns {Number} The length of the data layer following push.
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
-    return this.push({
+    const eventItem = new DataLayer.Item({
       on: type,
-      handler: listener
+      handler: listener,
+      scope: (options && options.scope) || 'future',
+      path: options && options.path
     });
+
+    if (!eventItem.valid) return;
+
+    that._processItem(eventItem);
   };
 
   /**
@@ -193,13 +199,16 @@ DataLayer.Manager.prototype._augment = function() {
    *
    * @param {String} type A case-sensitive string representing the event type to listen for.
    * @param {Function} [listener] Optional function that is to be removed.
-   * @returns {Number} The length of the data layer following push.
    */
   that._dataLayer.removeEventListener = function(type, listener) {
-    return this.push({
+    const eventItem = new DataLayer.Item({
       off: type,
       handler: listener
     });
+
+    if (!eventItem.valid) return;
+
+    that._processItem(eventItem);
   };
 };
 

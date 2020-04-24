@@ -198,12 +198,7 @@ test('listener on: scope = past', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    scope: 'past',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'past'});
   expect(mockCallback.mock.calls.length).toBe(1);
 
   dataLayer.push({
@@ -223,14 +218,8 @@ test('listener on: scope = future', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    scope: 'future',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'future'});
   expect(mockCallback.mock.calls.length).toBe(0);
-
   dataLayer.push({
     event: 'carousel clicked',
     info: {
@@ -248,14 +237,8 @@ test('listener on: scope = all', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    scope: 'all',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'all'});
   expect(mockCallback.mock.calls.length).toBe(1);
-
   dataLayer.push({
     event: 'carousel clicked',
     info: {
@@ -273,13 +256,8 @@ test('listener on: scope = undefined (default to future)', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback);
   expect(mockCallback.mock.calls.length).toBe(0);
-
   dataLayer.push({
     event: 'carousel clicked',
     info: {
@@ -297,12 +275,8 @@ test('listener on: register a handler that has already been registered', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback);
+  dataLayer.addEventListener('carousel clicked', mockCallback);
 
   // -> only one listener is registered
 
@@ -319,20 +293,12 @@ test('listener on: register a handler that has already been registered', () => {
 
 test('listener on: register a handler (with a static function) that has already been registered', () => {
   const mockCallback = jest.fn();
-  const argOn1 = {
-    on: 'carousel clicked',
-    handler: function() {
-      mockCallback();
-    }
-  };
-  const argOn2 = {
-    on: 'carousel clicked',
-    handler: function() {
-      mockCallback();
-    }
-  };
-  dataLayer.push(argOn1);
-  dataLayer.push(argOn2);
+  dataLayer.addEventListener('carousel clicked', function() {
+    mockCallback();
+  });
+  dataLayer.addEventListener('carousel clicked', function() {
+    mockCallback();
+  });
 
   // both listeners are registered
 
@@ -601,20 +567,9 @@ test('listener off: unregister one handler', () => {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
-  const argOn = {
-    on: 'carousel clicked',
-    scope: 'all',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'all' });
   expect(mockCallback.mock.calls.length).toBe(1);
-
-  const argOff = {
-    off: 'carousel clicked',
-    scope: 'all',
-    handler: mockCallback
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('carousel clicked', mockCallback);
 
   dataLayer.push({
     event: 'carousel clicked',
@@ -627,23 +582,12 @@ test('listener off: unregister one handler', () => {
 
 test('listener off: unregister a handler with a static function', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'carousel clicked',
-    scope: 'all',
-    handler: function() {
-      mockCallback();
-    }
-  };
-  dataLayer.push(argOn);
-
-  const argOff = {
-    off: 'carousel clicked',
-    scope: 'all',
-    handler: function() {
-      mockCallback();
-    }
-  };
-  dataLayer.push(argOff);
+  dataLayer.addEventListener('carousel clicked', function() {
+    mockCallback();
+  });
+  dataLayer.removeEventListener('carousel clicked', function() {
+    mockCallback();
+  });
 
   // -> does not unregister the listener
 
@@ -660,14 +604,8 @@ test('listener off: unregister multiple handlers', () => {
   const mockCallback1 = jest.fn();
   const mockCallback2 = jest.fn();
 
-  dataLayer.push({
-    on: 'user loaded',
-    handler: mockCallback1
-  });
-  dataLayer.push({
-    on: 'user loaded',
-    handler: mockCallback2
-  });
+  dataLayer.addEventListener('user loaded', mockCallback1);
+  dataLayer.addEventListener('user loaded', mockCallback2);
   dataLayer.push({
     event: 'user loaded'
   });
@@ -675,9 +613,7 @@ test('listener off: unregister multiple handlers', () => {
   expect(mockCallback1.mock.calls.length).toBe(1);
   expect(mockCallback2.mock.calls.length).toBe(1);
 
-  dataLayer.push({
-    off: 'user loaded'
-  });
+  dataLayer.removeEventListener('user loaded');
   dataLayer.push({
     event: 'user loaded'
   });
@@ -729,12 +665,7 @@ test('invalid event', () => {
 
 test('invalid listener on', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback,
-    invalid: 'invalid'
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { invalid: 'invalid' });
 
   dataLayer.push({
     event: 'carousel clicked',
@@ -747,12 +678,7 @@ test('invalid listener on', () => {
 
 test('invalid listener on scope', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback,
-    scope: 'invalid'
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'invalid' });
 
   dataLayer.push({
     event: 'carousel clicked',
@@ -765,11 +691,7 @@ test('invalid listener on scope', () => {
 
 test('invalid listener off', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'datalayer:change',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('datalayer:change', mockCallback);
   dataLayer.push({
     data: {
       page: {
@@ -778,11 +700,7 @@ test('invalid listener off', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  const argOff = {
-    off: 'datalayer:change',
-    invalid: 'invalid'
-  };
-  dataLayer.push(argOff);
+  dataLayer.removeEventListener('datalayer:change', mockCallback, { invalid: 'invalid' });
   dataLayer.push({
     data: {
       page: {
@@ -795,12 +713,6 @@ test('invalid listener off', () => {
 
 test('invalid item is filtered out from array', () => {
   dataLayer = [
-    {
-      off: 'carousel 15 clicked'
-    },
-    {
-      on: 'carousel 15 clicked'
-    },
     {
       data: {
         invalid: {}
@@ -870,11 +782,7 @@ test('getState()', () => {
 // high load benchmark: runs alone in 10.139s with commit: df0fef59c86635d3c29e6f698352491dcf39003c (15/oct/2019)
 test.skip('high load', () => {
   const mockCallback = jest.fn();
-  const argOn = {
-    on: 'carousel clicked',
-    handler: mockCallback
-  };
-  dataLayer.push(argOn);
+  dataLayer.addEventListener('carousel clicked', mockCallback);
 
   const data = {};
   for (let i= 0; i < 1000; i++) {
