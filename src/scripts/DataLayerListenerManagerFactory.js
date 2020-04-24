@@ -43,6 +43,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
      *
      * @function
      * @param {Listener} listener The listener to register.
+     * @returns {Boolean} true if the listener was registered, false otherwise.
      */
     register: function(listener) {
       const event = listener.event;
@@ -50,10 +51,13 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
         if (_indexOf(listener) === -1) {
           _listeners[listener.event].push(listener);
+          return true;
         }
       } else {
         _listeners[listener.event] = [listener];
+        return true;
       }
+      return false;
     },
     /**
      * Unregisters a listener.

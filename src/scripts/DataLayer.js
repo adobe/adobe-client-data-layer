@@ -182,13 +182,15 @@ DataLayer.Manager.prototype._augment = function() {
    *
    * @param {String} type A case-sensitive string representing the event type to listen for.
    * @param {Function} listener A function that is called when the event of the specified type occurs.
-   * @param {Object} [options] Optional characteristics of the event listener.
+   * @param {Object} [options] Optional characteristics of the event listener. Available options:
+   * - {String} path The path of the object to listen to
+   * - {String} scope The listener scope. Possible values: 'past' (past events), 'future' (future events), 'all' (past and future events, default value)
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
     const eventListenerItem = new DataLayer.Item({
       on: type,
       handler: listener,
-      scope: (options && options.scope) || 'future',
+      scope: (options && options.scope),
       path: options && options.path
     });
 
@@ -283,19 +285,24 @@ DataLayer.Manager.prototype._processItem = function(item) {
     listenerOn: function(item) {
       const listener = new DataLayer.Listener(item);
       switch (listener.scope) {
-        case DataLayer.constants.listenerScope.PAST:
+        case DataLayer.constants.listenerScope.PAST: {
           for (const registeredItem of _getBefore(item)) {
             that._listenerManager.triggerListener(listener, registeredItem);
           }
           break;
-        case DataLayer.constants.listenerScope.FUTURE:
+        }
+        case DataLayer.constants.listenerScope.FUTURE: {
           that._listenerManager.register(listener);
           break;
-        case DataLayer.constants.listenerScope.ALL:
-          for (const registeredItem of _getBefore(item)) {
-            that._listenerManager.triggerListener(listener, registeredItem);
+        }
+        case DataLayer.constants.listenerScope.ALL: {
+          const registered = that._listenerManager.register(listener);
+          if (registered) {
+            for (const registeredItem of _getBefore(item)) {
+              that._listenerManager.triggerListener(listener, registeredItem);
+            }
           }
-          that._listenerManager.register(listener);
+        }
       }
     },
     listenerOff: function(item) {

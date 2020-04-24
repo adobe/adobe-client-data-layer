@@ -63,7 +63,7 @@ dataLayer.getState().component.carousel;
 // -----------------------------------------------------------------------------------------------------------------
 
 dataLayer.push({
-  on: 'datalayer:change',
+  on: 'adobeDatalayer:change',
   scope: 'past',
   handler: function(event) {
     console.log('scope = past', event);
@@ -84,7 +84,7 @@ dataLayer.push({
 });
 
 dataLayer.push({
-  on: 'datalayer:change',
+  on: 'adobeDatalayer:change',
   scope: 'future',
   handler: function(event, oldState, newState) {
     console.log('scope = future', this, event, oldState, newState);
@@ -107,7 +107,7 @@ dataLayer.push({
 // invalid scope
 
 dataLayer.push({
-  on: 'datalayer:change',
+  on: 'adobeDatalayer:change',
   scope: 'invalid',
   handler: function(event) {
     console.log('scope = invalid', event);
@@ -119,7 +119,7 @@ dataLayer.push({
 // -----------------------------------------------------------------------------------------------------------------
 
 dataLayer.push({
-  on: 'datalayer:change',
+  on: 'adobeDatalayer:change',
   selector: 'component.carousel.carousel5',
   handler: function(event, oldValue, newValue) {
     console.log('selector', this, event, oldValue, newValue);
@@ -140,7 +140,7 @@ dataLayer.push({
 });
 
 dataLayer.push({
-  off: 'datalayer:change'
+  off: 'adobeDatalayer:change'
 });
 
 dataLayer.push({
