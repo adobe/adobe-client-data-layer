@@ -29,7 +29,7 @@ class Listener {
     this._handler = (item.config.handler) ? item.config.handler : null;
     this._scope = (item.config.scope) ? item.config.scope : null;
     if (item.config.on && this._scope === null) {
-      this._scope = constants.listenerScope.FUTURE;
+      this._scope = constants.listenerScope.ALL;
     }
     this._path = (item.config.path) ? item.config.path : null;
   }

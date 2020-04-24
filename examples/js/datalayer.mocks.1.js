@@ -17,7 +17,7 @@ governing permissions and limitations under the License.
   /* eslint no-unused-vars: "off" */
 
   adobeDataLayer.push({
-    on: 'datalayer:ready',
+    on: 'adobeDatalayer:ready',
     handler: function(event) {
 
       // -----------------------------------------------------------------------------------------------------------------
@@ -84,12 +84,12 @@ governing permissions and limitations under the License.
       }
 
       // -----------------------------------------------------------------------------------------------------------------
-      // test case 4: listener on: datalayer:change
+      // test case 4: listener on: adobeDatalayer:change
       // -----------------------------------------------------------------------------------------------------------------
 
       let success4 = false;
 
-      adobeDataLayer.addEventListener('datalayer:change', function(event) {
+      adobeDataLayer.addEventListener('adobeDatalayer:change', function(event) {
         success4 = true;
       });
 
@@ -105,32 +105,32 @@ governing permissions and limitations under the License.
       });
 
       if (!success4) {
-        console.error('FAILS: test case 4 "listener on: datalayer:change"');
+        console.error('FAILS: test case 4 "listener on: adobeDatalayer:change"');
       } else {
-        console.info('SUCCESS: test case 4 "listener on: datalayer:change"');
+        console.info('SUCCESS: test case 4 "listener on: adobeDatalayer:change"');
       }
 
       // -----------------------------------------------------------------------------------------------------------------
-      // test case 5: listener on: datalayer:event
+      // test case 5: listener on: adobeDatalayer:event
       // -----------------------------------------------------------------------------------------------------------------
 
       let success5 = false;
 
-      adobeDataLayer.addEventListener('datalayer:event', function(event) {
+      adobeDataLayer.addEventListener('adobeDatalayer:event', function(event) {
         success5 = true;
       });
 
       adobeDataLayer.push({
-        event: 'datalayer:event',
+        event: 'adobeDatalayer:event',
         eventInfo: {
           reference: '/content/mysite/en/home/jcr:content/root/carousel5'
         }
       });
 
       if (!success5) {
-        console.error('FAILS: test case 5 "listener on: datalayer:event"');
+        console.error('FAILS: test case 5 "listener on: adobeDatalayer:event"');
       } else {
-        console.info('SUCCESS: test case 5 "listener on: datalayer:event"');
+        console.info('SUCCESS: test case 5 "listener on: adobeDatalayer:event"');
       }
 
       // -----------------------------------------------------------------------------------------------------------------
