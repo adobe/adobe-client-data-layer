@@ -218,7 +218,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
 
     if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
       for (const [index, registeredListener] of _listeners[event].entries()) {
-        if (isEqual(registeredListener, listener)) {
+        if (isEqual(registeredListener.handler, listener.handler)) {
           return index;
         }
       }
