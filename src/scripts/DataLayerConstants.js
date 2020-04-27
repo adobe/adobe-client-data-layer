@@ -45,11 +45,11 @@ const constants = {
    */
   dataLayerEvent: {
     /** Represents an event triggered for any change in the data layer state */
-    CHANGE: 'adobeDatalayer:change',
+    CHANGE: 'adobeDataLayer:change',
     /** Represents an event triggered for any event push to the data layer */
-    EVENT: 'adobeDatalayer:event',
+    EVENT: 'adobeDataLayer:event',
     /** Represents an event triggered when the data layer has initialized */
-    READY: 'adobeDatalayer:ready'
+    READY: 'adobeDataLayer:ready'
   },
 
   /**

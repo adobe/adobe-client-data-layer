@@ -116,6 +116,26 @@ test('add function: simple', () => {
   expect(mockCallback.mock.calls.length).toBe(1);
 });
 
+test('add function: add listener with adobeDataLayer:change event', () => {
+  const mockCallback = jest.fn();
+
+  dataLayer.push(function(dl) {
+    dl.addEventListener("adobeDataLayer:change", mockCallback);
+  });
+
+  dataLayer.push({
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          items: {}
+        }
+      }
+    }
+  });
+  expect(mockCallback.mock.calls.length).toBe(1);
+});
+
 test('add function: function updates the state', () => {
   const data1 = {
     component: {
@@ -150,7 +170,7 @@ test('add function: function updates the state', () => {
 
 test('check dataLayer change event was executed', () => {
   const mockCallback = jest.fn();
-  dataLayer.addEventListener('adobeDatalayer:change', mockCallback);
+  dataLayer.addEventListener('adobeDataLayer:change', mockCallback);
   dataLayer.push({
     data: {
       page: {
@@ -159,7 +179,7 @@ test('check dataLayer change event was executed', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  dataLayer.removeEventListener('adobeDatalayer:change');
+  dataLayer.removeEventListener('adobeDataLayer:change');
   dataLayer.push({
     data: {
       page: {
@@ -170,9 +190,9 @@ test('check dataLayer change event was executed', () => {
   expect(mockCallback.mock.calls.length).toBe(1);
 });
 
-test('listener on: adobeDatalayer:event', () => {
+test('listener on: adobeDataLayer:event', () => {
   const mockCallback = jest.fn();
-  dataLayer.addEventListener('adobeDatalayer:event', mockCallback);
+  dataLayer.addEventListener('adobeDataLayer:event', mockCallback);
   dataLayer.push({
     event: 'clicked',
     info: {
@@ -180,9 +200,9 @@ test('listener on: adobeDatalayer:event', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  dataLayer.removeEventListener('adobeDatalayer:event');
+  dataLayer.removeEventListener('adobeDataLayer:event');
   dataLayer.push({
-    event: 'adobeDatalayer:event',
+    event: 'adobeDataLayer:event',
     info: {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
@@ -190,9 +210,9 @@ test('listener on: adobeDatalayer:event', () => {
   expect(mockCallback.mock.calls.length).toBe(1);
 });
 
-test('listener on: adobeDatalayer:change', () => {
+test('listener on: adobeDataLayer:change', () => {
   const mockCallback = jest.fn();
-  dataLayer.addEventListener('adobeDatalayer:change', mockCallback);
+  dataLayer.addEventListener('adobeDataLayer:change', mockCallback);
   dataLayer.push({
     event: 'clicked',
     info: {
@@ -205,9 +225,9 @@ test('listener on: adobeDatalayer:change', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  dataLayer.removeEventListener('adobeDatalayer:change');
+  dataLayer.removeEventListener('adobeDataLayer:change');
   dataLayer.push({
-    event: 'adobeDatalayer:change',
+    event: 'adobeDataLayer:change',
     info: {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
@@ -359,7 +379,7 @@ test('listener on: register a handler (with a static function) that has already 
 describe('listener with path', () => {
   const mockCallback = jest.fn();
   const listenerOn = [
-    'adobeDatalayer:change',
+    'adobeDataLayer:change',
     mockCallback,
     { path: 'component.image' }
   ];
@@ -411,38 +431,38 @@ describe('listener with path', () => {
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
-  test('listener on: adobeDatalayer:change with path', () => {
+  test('listener on: adobeDataLayer:change with path', () => {
     dataLayer.addEventListener.apply(dataLayer, listenerOn);
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
     }, carouselData));
     expect(mockCallback.mock.calls.length).toBe(0);
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
     }, imageData));
     expect(mockCallback.mock.calls.length).toBe(1);
   });
 
   test('listener: custom event, path and scope: all', () => {
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change'
+      event: 'adobeDataLayer:change'
     }, carouselData));
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change'
+      event: 'adobeDataLayer:change'
     }, imageData));
-    dataLayer.addEventListener('adobeDatalayer:change', mockCallback, {
+    dataLayer.addEventListener('adobeDataLayer:change', mockCallback, {
       path: 'component',
       scope: 'all'
     });
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
     }, imageData));
     expect(mockCallback.mock.calls.length).toBe(3);
   });
 
   test('listener: path: old/new value', () => {
     dataLayer.push({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
       component: {
         carousel: {
           carousel1: {
@@ -452,7 +472,7 @@ describe('listener with path', () => {
         }
       }
     });
-    dataLayer.addEventListener('adobeDatalayer:change',
+    dataLayer.addEventListener('adobeDataLayer:change',
       function(event, oldValue, newValue) {
         if (oldValue === 'old') {
           mockCallback();
@@ -464,7 +484,7 @@ describe('listener with path', () => {
         path: 'component.carousel.carousel1.id',
     });
     dataLayer.push({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
       component: {
         carousel: {
           carousel1: {
@@ -499,9 +519,9 @@ describe('listener with path', () => {
       }
     };
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change'
+      event: 'adobeDataLayer:change'
     }, oldData));
-    dataLayer.addEventListener('adobeDatalayer:change',
+    dataLayer.addEventListener('adobeDataLayer:change',
       function(event, oldState, newState) {
         if (isEqual(oldState, oldData)) {
           mockCallback();
@@ -512,7 +532,7 @@ describe('listener with path', () => {
       }
     );
     dataLayer.push(merge({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
     }, newData));
     expect(mockCallback.mock.calls.length).toBe(2);
   });
@@ -539,10 +559,10 @@ describe('listener with path', () => {
       }
     };
     dataLayer.push({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
       oldData
     });
-    dataLayer.addEventListener('adobeDatalayer:change',
+    dataLayer.addEventListener('adobeDataLayer:change',
       function(event, oldState, newState) {
         if (isEqual(this.getState(), newState)) {
           mockCallback();
@@ -550,7 +570,7 @@ describe('listener with path', () => {
       }
     );
     dataLayer.push({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
       newData
     });
     expect(mockCallback.mock.calls.length).toBe(1);
@@ -558,7 +578,7 @@ describe('listener with path', () => {
 
   test('listener: path: undefined old/new state for past events', () => {
     dataLayer.push({
-      event: 'adobeDatalayer:change',
+      event: 'adobeDataLayer:change',
       component: {
         carousel: {
           carousel1: {
@@ -568,7 +588,7 @@ describe('listener with path', () => {
         }
       }
     });
-    dataLayer.addEventListener('adobeDatalayer:change',
+    dataLayer.addEventListener('adobeDataLayer:change',
       function(event, oldState, newState) {
         if (isEqual(oldState, undefined) && isEqual(newState, undefined)) {
           mockCallback();
@@ -680,7 +700,7 @@ test('invalid listener on scope', () => {
 
 test.skip('invalid listener off', () => {
   const mockCallback = jest.fn();
-  dataLayer.addEventListener('adobeDatalayer:change', mockCallback);
+  dataLayer.addEventListener('adobeDataLayer:change', mockCallback);
   dataLayer.push({
     data: {
       page: {
@@ -689,7 +709,7 @@ test.skip('invalid listener off', () => {
     }
   });
   expect(mockCallback.mock.calls.length).toBe(1);
-  dataLayer.removeEventListener('adobeDatalayer:change', mockCallback, { invalid: 'invalid' });
+  dataLayer.removeEventListener('adobeDataLayer:change', mockCallback, { invalid: 'invalid' });
   dataLayer.push({
     data: {
       page: {
