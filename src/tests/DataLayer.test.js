@@ -156,12 +156,12 @@ test('add function: function updates the state', () => {
     }
   };
   adobeDataLayer.push(data1);
-  expect(isEqual(adobeDataLayer.getState(), data1));
+  expect(adobeDataLayer.getState()).toEqual(data1);
   const testFct = function(adl) {
     adl.push(data2);
   };
   adobeDataLayer.push(testFct);
-  expect(isEqual(adobeDataLayer.getState(), data2));
+  expect(adobeDataLayer.getState()).toEqual(data2);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -776,8 +776,8 @@ test('getState()', () => {
     }
   };
   adobeDataLayer.push(data);
-  expect(isEqual(adobeDataLayer.getState(), data));
-  expect(isEqual(adobeDataLayer.getState("component.carousel.carousel1"), carousel1));
+  expect(adobeDataLayer.getState()).toEqual(data);
+  expect(adobeDataLayer.getState("component.carousel.carousel1")).toEqual(carousel1);
   expect(isEmpty(adobeDataLayer.getState("undefined-path")));
 });
 
