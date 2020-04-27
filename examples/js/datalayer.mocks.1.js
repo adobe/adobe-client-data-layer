@@ -16,364 +16,345 @@ governing permissions and limitations under the License.
   /* eslint no-console: "off" */
   /* eslint no-unused-vars: "off" */
 
-  adobeDataLayer.push({
-    on: 'adobeDatalayer:ready',
-    handler: function(event) {
+  adobeDataLayer.push(function(adobeDataLayer) {
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // Test case 1: add data
-      // -----------------------------------------------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------------------------------------------
+    // Test case 1: add data
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.push({
-        component: {
-          carousel: {
-            carousel1: {
-              id: '/content/mysite/en/home/jcr:content/root/carousel1',
-              items: {}
-            }
+    adobeDataLayer.push({
+      component: {
+        carousel: {
+          carousel1: {
+            id: '/content/mysite/en/home/jcr:content/root/carousel1',
+            items: {}
           }
         }
-      });
-
-      const id1 = adobeDataLayer.getState().component.carousel.carousel1.id;
-      if (id1 !== '/content/mysite/en/home/jcr:content/root/carousel1') {
-        console.error('FAILs: test case 1 "add data"');
-      } else {
-        console.info('SUCCESS: test case 1 "add data"');
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // Test case 2: remove data
-      // -----------------------------------------------------------------------------------------------------------------
+    const id1 = adobeDataLayer.getState().component.carousel.carousel1.id;
+    if (id1 !== '/content/mysite/en/home/jcr:content/root/carousel1') {
+      console.error('FAILs: test case 1 "add data"');
+    } else {
+      console.info('SUCCESS: test case 1 "add data"');
+    }
 
-      adobeDataLayer.push({
-        component: {
-          carousel: {
-            carousel1: undefined
+    // -----------------------------------------------------------------------------------------------------------------
+    // Test case 2: remove data
+    // -----------------------------------------------------------------------------------------------------------------
+
+    adobeDataLayer.push({
+      component: {
+        carousel: {
+          carousel1: undefined
+        }
+      }
+    });
+
+    if (adobeDataLayer.getState().component.carousel.carousel1) {
+      console.error('FAILS: test case 2 "remove data"');
+    } else {
+      console.info('SUCCESS: test case 2 "remove data"');
+    }
+
+    // -----------------------------------------------------------------------------------------------------------------
+    // Test case 3: add event with data
+    // -----------------------------------------------------------------------------------------------------------------
+
+    adobeDataLayer.push({
+      event: 'carousel clicked',
+      component: {
+        carousel: {
+          carousel3: {
+            id: '/content/mysite/en/home/jcr:content/root/carousel3',
+            items: {}
           }
         }
-      });
-
-      if (adobeDataLayer.getState().component.carousel.carousel1) {
-        console.error('FAILS: test case 2 "remove data"');
-      } else {
-        console.info('SUCCESS: test case 2 "remove data"');
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // Test case 3: add event with data
-      // -----------------------------------------------------------------------------------------------------------------
+    const id3 = adobeDataLayer.getState().component.carousel.carousel3.id;
+    if (id3 !== '/content/mysite/en/home/jcr:content/root/carousel3') {
+      console.error('FAILS: test case 3 "add event with data"');
+    } else {
+      console.info('SUCCESS: test case 3 "add event with data"');
+    }
 
-      adobeDataLayer.push({
-        event: 'carousel clicked',
-        component: {
-          carousel: {
-            carousel3: {
-              id: '/content/mysite/en/home/jcr:content/root/carousel3',
-              items: {}
-            }
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 4: listener on: adobeDatalayer:change
+    // -----------------------------------------------------------------------------------------------------------------
+
+    let success4 = false;
+
+    adobeDataLayer.addEventListener('adobeDatalayer:change', function(event) {
+      success4 = true;
+    });
+
+    adobeDataLayer.push({
+      component: {
+        carousel: {
+          carousel4: {
+            id: '/content/mysite/en/home/jcr:content/root/carousel4',
+            items: {}
           }
         }
-      });
-
-      const id3 = adobeDataLayer.getState().component.carousel.carousel3.id;
-      if (id3 !== '/content/mysite/en/home/jcr:content/root/carousel3') {
-        console.error('FAILS: test case 3 "add event with data"');
-      } else {
-        console.info('SUCCESS: test case 3 "add event with data"');
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 4: listener on: adobeDatalayer:change
-      // -----------------------------------------------------------------------------------------------------------------
+    if (!success4) {
+      console.error('FAILS: test case 4 "listener on: adobeDatalayer:change"');
+    } else {
+      console.info('SUCCESS: test case 4 "listener on: adobeDatalayer:change"');
+    }
 
-      let success4 = false;
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 5: listener on: adobeDatalayer:event
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.addEventListener('adobeDatalayer:change', function(event) {
-        success4 = true;
-      });
+    let success5 = false;
 
-      adobeDataLayer.push({
-        component: {
-          carousel: {
-            carousel4: {
-              id: '/content/mysite/en/home/jcr:content/root/carousel4',
-              items: {}
-            }
-          }
-        }
-      });
+    adobeDataLayer.addEventListener('adobeDatalayer:event', function(event) {
+      success5 = true;
+    });
 
-      if (!success4) {
-        console.error('FAILS: test case 4 "listener on: adobeDatalayer:change"');
-      } else {
-        console.info('SUCCESS: test case 4 "listener on: adobeDatalayer:change"');
+    adobeDataLayer.push({
+      event: 'adobeDatalayer:event',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel5'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 5: listener on: adobeDatalayer:event
-      // -----------------------------------------------------------------------------------------------------------------
+    if (!success5) {
+      console.error('FAILS: test case 5 "listener on: adobeDatalayer:event"');
+    } else {
+      console.info('SUCCESS: test case 5 "listener on: adobeDatalayer:event"');
+    }
 
-      let success5 = false;
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 6: listener on: custom event
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.addEventListener('adobeDatalayer:event', function(event) {
-        success5 = true;
-      });
+    let success6 = false;
 
-      adobeDataLayer.push({
-        event: 'adobeDatalayer:event',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel5'
-        }
-      });
+    adobeDataLayer.addEventListener('carousel clicked', function(event) {
+      success6 = true;
+    });
 
-      if (!success5) {
-        console.error('FAILS: test case 5 "listener on: adobeDatalayer:event"');
-      } else {
-        console.info('SUCCESS: test case 5 "listener on: adobeDatalayer:event"');
+    adobeDataLayer.push({
+      event: 'carousel clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel6'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 6: listener on: custom event
-      // -----------------------------------------------------------------------------------------------------------------
+    if (!success6) {
+      console.error('FAILS: test case 6 "listener on: custom event"');
+    } else {
+      console.info('SUCCESS: test case 6 "listener on: custom event"');
+    }
 
-      let success6 = false;
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 7: listener on: scope = past
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.addEventListener('carousel clicked', function(event) {
-        success6 = true;
-      });
+    let success7a = false;
 
-      adobeDataLayer.push({
-        event: 'carousel clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel6'
-        }
-      });
-
-      if (!success6) {
-        console.error('FAILS: test case 6 "listener on: custom event"');
-      } else {
-        console.info('SUCCESS: test case 6 "listener on: custom event"');
+    adobeDataLayer.push({
+      event: 'carousel 7a clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel7a'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 7: listener on: scope = past
-      // -----------------------------------------------------------------------------------------------------------------
+    adobeDataLayer.addEventListener('carousel 7a clicked', function(event) {
+      success7a = true;
+    }, {scope: 'past'});
 
-      let success7a = false;
+    if (!success7a) {
+      console.error('FAILS: test case 7a "listener on: scope = past"');
+    } else {
+      console.info('SUCCESS: test case 7a "listener on: scope = past"');
+    }
 
-      adobeDataLayer.push({
-        event: 'carousel 7a clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel7a'
-        }
-      });
+    let success7b = true;
 
-      adobeDataLayer.addEventListener('carousel 7a clicked', function(event) {
-        success7a = true;
-      }, {scope: 'past'});
+    adobeDataLayer.addEventListener('carousel 7b clicked', function(event) {
+      success7b = false;
+    }, {scope: 'past'});
 
-      if (!success7a) {
-        console.error('FAILS: test case 7a "listener on: scope = past"');
-      } else {
-        console.info('SUCCESS: test case 7a "listener on: scope = past"');
+    adobeDataLayer.push({
+      event: 'carousel 7b clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel7b'
       }
+    });
 
-      let success7b = true;
+    if (!success7b) {
+      console.error('FAILS: test case 7b "listener on: scope = past"');
+    } else {
+      console.info('SUCCESS: test case 7b "listener on: scope = past"');
+    }
 
-      adobeDataLayer.push({
-        on: 'carousel 7b clicked',
-        scope: 'past',
-        handler: function(event) {
-          success7b = false;
-        }
-      });
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 8: listener on: scope = future
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.push({
-        event: 'carousel 7b clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel7b'
-        }
-      });
+    let success8a = true;
 
-      if (!success7b) {
-        console.error('FAILS: test case 7b "listener on: scope = past"');
-      } else {
-        console.info('SUCCESS: test case 7b "listener on: scope = past"');
+    adobeDataLayer.push({
+      event: 'carousel 8a clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel8a'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 8: listener on: scope = future
-      // -----------------------------------------------------------------------------------------------------------------
+    adobeDataLayer.addEventListener('carousel 8a clicked', function(event) {
+      success8a = false;
+    }, {scope: 'future'});
 
-      let success8a = true;
+    if (!success8a) {
+      console.error('FAILS: test case 8a "listener on: scope = future"');
+    } else {
+      console.info('SUCCESS: test case 8a "listener on: scope = future"');
+    }
 
-      adobeDataLayer.push({
-        event: 'carousel 8a clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel8a'
-        }
-      });
+    let success8b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 8a clicked',
-        scope: 'future',
-        handler: function(event) {
-          success8a = false;
-        }
-      });
+    adobeDataLayer.addEventListener('carousel 8b clicked', function(event) {
+      success8b = true;
+    }, {scope: 'future'});
 
-      if (!success8a) {
-        console.error('FAILS: test case 8a "listener on: scope = future"');
-      } else {
-        console.info('SUCCESS: test case 8a "listener on: scope = future"');
+    adobeDataLayer.push({
+      event: 'carousel 8b clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel8b'
       }
+    });
 
-      let success8b = false;
+    if (!success8b) {
+      console.error('FAILS: test case 8b "listener on: scope = future"');
+    } else {
+      console.info('SUCCESS: test case 8b "listener on: scope = future"');
+    }
 
-      adobeDataLayer.addEventListener('carousel 8b clicked', function(event) {
-        success8b = true;
-      }, {scope: 'future'});
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 9: listener on: scope = all
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.push({
-        event: 'carousel 8b clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel8b'
-        }
-      });
+    let success9a = false;
 
-      if (!success8b) {
-        console.error('FAILS: test case 8b "listener on: scope = future"');
-      } else {
-        console.info('SUCCESS: test case 8b "listener on: scope = future"');
+    adobeDataLayer.push({
+      event: 'carousel 9a clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel9a'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 9: listener on: scope = all
-      // -----------------------------------------------------------------------------------------------------------------
+    adobeDataLayer.addEventListener('carousel 9a clicked', function(event) {
+      success9a = true;
+    }, {scope: 'all'});
 
-      let success9a = false;
+    if (!success9a) {
+      console.error('FAILS: test case 9a "listener on: scope = all"');
+    } else {
+      console.info('SUCCESS: test case 9a "listener on: scope = all"');
+    }
 
-      adobeDataLayer.push({
-        event: 'carousel 9a clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel9a'
-        }
-      });
+    let success9b = false;
 
-      adobeDataLayer.addEventListener('carousel 9a clicked', function(event) {
-        success9a = true;
-      }, {scope: 'all'});
+    adobeDataLayer.addEventListener('carousel 9b clicked', function(event) {
+      success9b = true;
+    }, {scope: 'all'});
 
-      if (!success9a) {
-        console.error('FAILS: test case 9a "listener on: scope = all"');
-      } else {
-        console.info('SUCCESS: test case 9a "listener on: scope = all"');
+    adobeDataLayer.push({
+      event: 'carousel 9b clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel9b'
       }
+    });
 
-      let success9b = false;
+    if (!success9b) {
+      console.error('FAILS: test case 9b "listener on: scope = all"');
+    } else {
+      console.info('SUCCESS: test case 9b "listener on: scope = all"');
+    }
 
-      adobeDataLayer.addEventListener('carousel 9b clicked', function(event) {
-        success9b = true;
-      }, {scope: 'all'});
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 10: listener on: scope = undefined (default to 'future')
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.push({
-        event: 'carousel 9b clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel9b'
-        }
-      });
+    let success10a = true;
 
-      if (!success9b) {
-        console.error('FAILS: test case 9b "listener on: scope = all"');
-      } else {
-        console.info('SUCCESS: test case 9b "listener on: scope = all"');
+    adobeDataLayer.push({
+      event: 'carousel 10a clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel10a'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 10: listener on: scope = undefined (default to 'future')
-      // -----------------------------------------------------------------------------------------------------------------
+    adobeDataLayer.addEventListener('carousel 10a clicked', function(event) {
+      success10a = false;
+    }, {scope: 'future'});
 
-      let success10a = true;
+    if (!success10a) {
+      console.error('FAILS: test case 10a "listener on: scope = undefined"');
+    } else {
+      console.info('SUCCESS: test case 10a "listener on: scope = undefined"');
+    }
 
-      adobeDataLayer.push({
-        event: 'carousel 10a clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel10a'
-        }
-      });
+    let success10b = false;
 
-      adobeDataLayer.push({
-        on: 'carousel 10a clicked',
-        handler: function(event) {
-          success10a = false;
-        }
-      });
+    adobeDataLayer.addEventListener('carousel 10b clicked', function(event) {
+      success10b = true;
+    });
 
-      if (!success10a) {
-        console.error('FAILS: test case 10a "listener on: scope = undefined"');
-      } else {
-        console.info('SUCCESS: test case 10a "listener on: scope = undefined"');
+    adobeDataLayer.push({
+      event: 'carousel 10b clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel10b'
       }
+    });
 
-      let success10b = false;
+    if (!success10b) {
+      console.error('FAILS: test case 10b "listener on: scope = undefined"');
+    } else {
+      console.info('SUCCESS: test case 10b "listener on: scope = undefined"');
+    }
 
-      adobeDataLayer.addEventListener('carousel 10b clicked', function(event) {
-        success10b = true;
-      });
+    // -----------------------------------------------------------------------------------------------------------------
+    // test case 11: listener off
+    // -----------------------------------------------------------------------------------------------------------------
 
-      adobeDataLayer.push({
-        event: 'carousel 10b clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel10b'
-        }
-      });
+    let success11 = true;
 
-      if (!success10b) {
-        console.error('FAILS: test case 10b "listener on: scope = undefined"');
-      } else {
-        console.info('SUCCESS: test case 10b "listener on: scope = undefined"');
+    adobeDataLayer.addEventListener('carousel 11a clicked', function(event) {
+      success11 = false;
+    }, {scope: 'future'});
+
+    adobeDataLayer.push({
+      event: 'carousel 11a clicked',
+      eventInfo: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel11a'
       }
+    });
 
-      // -----------------------------------------------------------------------------------------------------------------
-      // test case 11: listener off
-      // -----------------------------------------------------------------------------------------------------------------
+    // success11 should be: false: we force it to true:
+    success11 = true;
 
-      let success11 = true;
+    adobeDataLayer.removeEventListener('carousel 11a clicked');
 
-      adobeDataLayer.push({
-        on: 'carousel 11a clicked',
-        handler: function(event) {
-          success11 = false;
-        }
-      });
-
-      adobeDataLayer.push({
-        event: 'carousel 11a clicked',
-        eventInfo: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel11a'
-        }
-      });
-
-      // success11 should be: false: we force it to true:
-      success11 = true;
-
-      adobeDataLayer.push({
-        off: 'carousel 11a clicked'
-      });
-
-      adobeDataLayer.push({
-        event: 'carousel 11a clicked',
-        eventInfo: {
-          reference: '/content/mysite/en/home/jcr:content/root/carousel11a'
-        }
-      });
-
-      if (!success11) {
-        console.error('FAILS: test case 11 "listener off"');
-      } else {
-        console.log('SUCCESS: test case 11 "listener off"');
+    adobeDataLayer.push({
+      event: 'carousel 11a clicked',
+      eventInfo: {
+        reference: '/content/mysite/en/home/jcr:content/root/carousel11a'
       }
+    });
+
+    if (!success11) {
+      console.error('FAILS: test case 11 "listener off"');
+    } else {
+      console.log('SUCCESS: test case 11 "listener off"');
     }
   });
 
