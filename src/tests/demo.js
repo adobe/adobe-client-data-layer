@@ -1,156 +1,173 @@
 // -----------------------------------------------------------------------------------------------------------------
-// validation
+// Pushing data
 // -----------------------------------------------------------------------------------------------------------------
 
-dataLayer;
-dataLayer.getState();
+window.adobeDataLayer = window.adobeDataLayer || [];
 
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel1: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel1',
-          items: {}
-        },
-        carousel2: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel2',
-          items: {}
-        },
-        carousel3: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel3',
-          items: {}
-        }
+window.adobeDataLayer.getState();
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel1: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel1',
+        shownItems: [
+          'item1', 'item2'
+        ]
+      },
+      carousel2: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel2',
+        items: {}
+      },
+      carousel3: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel3',
+        items: {}
       }
     }
   }
 });
-
-dataLayer.getState();
 
 // remove item
 
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel1: undefined
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel3: null
+    }
+  }
+});
+
+window.adobeDataLayer.getState().component.carousel;
+
+// getState() returns a copy of the state
+
+window.adobeDataLayer.getState().component.carousel.carousel2.id = 'new id';
+
+window.adobeDataLayer.getState().component.carousel.carousel2
+
+// update an object
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel1: {
+        shownItems: [
+          'item1', 'item2-new'
+        ]
       }
     }
   }
 });
 
-dataLayer.getState().component.carousel;
-
-dataLayer.push({
-  invalidKey: 'should be rejected',
-  data: {
-    component: {
-      carousel: {
-        carousel0: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel0',
-          items: {}
-        }
-      }
-    }
-  }
-});
-
-dataLayer.getState().component.carousel;
+window.adobeDataLayer.getState().component.carousel.carousel1;
 
 // -----------------------------------------------------------------------------------------------------------------
-// scope
+// Pushing a function
 // -----------------------------------------------------------------------------------------------------------------
 
-dataLayer.push({
-  on: 'adobeDatalayer:change',
-  scope: 'past',
-  handler: function(event) {
-    console.log('scope = past', event);
-  }
+adobeDataLayer.push(function(dl) {
+  console.log('Pushing a function:')
+  console.log(dl.getState());
 });
 
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel4: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel4',
-          items: {}
-        }
+// -----------------------------------------------------------------------------------------------------------------
+// Pushing an event
+// -----------------------------------------------------------------------------------------------------------------
+
+adobeDataLayer.push({
+  event: "clicked",
+  eventInfo: {
+    reference: "component.carousel.carousel1"
+  },
+  component: {
+    carousel: {
+      carousel1: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel1-new',
       }
     }
-  }
-});
-
-dataLayer.push({
-  on: 'adobeDatalayer:change',
-  scope: 'future',
-  handler: function(event, oldState, newState) {
-    console.log('scope = future', this, event, oldState, newState);
-  }
-});
-
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel5: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel5',
-          items: {}
-        }
-      }
-    }
-  }
-});
-
-// invalid scope
-
-dataLayer.push({
-  on: 'adobeDatalayer:change',
-  scope: 'invalid',
-  handler: function(event) {
-    console.log('scope = invalid', event);
   }
 });
 
 // -----------------------------------------------------------------------------------------------------------------
-// selector
+// Adding an event listener: scope
 // -----------------------------------------------------------------------------------------------------------------
 
-dataLayer.push({
-  on: 'adobeDatalayer:change',
-  selector: 'component.carousel.carousel5',
-  handler: function(event, oldValue, newValue) {
-    console.log('selector', this, event, oldValue, newValue);
-  }
-});
+const fct1 = function(event) {
+  console.log('fct1');
+  console.log(event);
+};
 
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel5: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel5-new',
-          items: {}
-        }
+window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct1);
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel4: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel4',
+        items: {}
       }
     }
   }
 });
 
-dataLayer.push({
-  off: 'adobeDatalayer:change'
+const fct2 = function(event, oldState, newState) {
+  console.log('fct2');
+  console.log('this', this);
+  console.log('event', event);
+  console.log('oldState',oldState);
+  console.log('newState', newState);
+};
+
+window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct2, {scope: 'future'});
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel5: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel5',
+        items: {}
+      }
+    }
+  }
 });
 
-dataLayer.push({
-  data: {
-    component: {
-      carousel: {
-        carousel6: {
-          id: '/content/mysite/en/home/jcr:content/root/carousel6',
-          items: {}
-        }
+// -----------------------------------------------------------------------------------------------------------------
+// Adding an event listener: path
+// -----------------------------------------------------------------------------------------------------------------
+
+const fct3 = function(event, oldValue, newValue) {
+  console.log('fct3');
+  console.log('this', this);
+  console.log('event', event);
+  console.log('oldValue',oldValue);
+  console.log('newValue', newValue);
+};
+
+window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct3, {path: 'component.carousel.carousel5'});
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel5: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel5-new',
+        items: {}
+      }
+    }
+  }
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Removing an event listener
+// -----------------------------------------------------------------------------------------------------------------
+
+window.adobeDataLayer.removeEventListener('adobeDatalayer:change');
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: {
+      carousel6: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel6',
+        items: {}
       }
     }
   }

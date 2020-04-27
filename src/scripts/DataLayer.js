@@ -146,17 +146,25 @@ DataLayer.Manager.prototype._augment = function() {
       const itemConfig = pushArguments[key];
       const item = new DataLayer.Item(itemConfig);
 
-      // filter out event listeners and invalid items and do not process them
-      if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
-        item.type === DataLayer.constants.itemType.LISTENER_OFF ||
-        !item.valid) {
+      if (!item.valid) {
         delete filteredArguments[key];
-        if (item.type !== DataLayer.constants.itemType.FCTN) {
-          return;
+      }
+      switch (item.type) {
+        case DataLayer.constants.itemType.DATA:
+        case DataLayer.constants.itemType.EVENT: {
+          that._processItem(item);
+          break;
+        }
+        case DataLayer.constants.itemType.FCTN: {
+          delete filteredArguments[key];
+          that._processItem(item);
+          break;
+        }
+        case DataLayer.constants.itemType.LISTENER_ON:
+        case DataLayer.constants.itemType.LISTENER_OFF: {
+          delete filteredArguments[key];
         }
       }
-
-      that._processItem(item);
     });
 
     if (filteredArguments[0]) {
