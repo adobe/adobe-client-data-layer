@@ -121,8 +121,9 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       const itemConfigCopy = cloneDeep(itemConfig);
       if (item.data) {
         if (listener.path) {
+          const itemDataCopy = cloneDeep(item.data);
           const oldValue = get(dataLayerManager._previousStateCopy, listener.path);
-          const newValue = get(item.data, listener.path);
+          const newValue = get(itemDataCopy, listener.path);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           if (isPastItem) {
