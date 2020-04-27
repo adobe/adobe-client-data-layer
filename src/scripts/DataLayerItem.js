@@ -81,10 +81,12 @@ class Item {
    */
   constructor(itemConfig, index) {
     this._config = itemConfig;
-    this._type = (function(config) {
+    Object.assign(this, (function(config) {
       let type;
+      let data;
       if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
+        data = omit(config, Object.keys(constraints.eventConfig));
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOnConfig)) {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
@@ -93,14 +95,13 @@ class Item {
         type = DataLayer.constants.itemType.FCTN;
       } else if (isPlainObject(config)) {
         type = DataLayer.constants.itemType.DATA;
+        data = config;
       }
-      return type;
-    }(itemConfig));
-
-    // assign itemConfig to item data property without the known keys from the corresponding constrain
-    if (this._type !== DataLayer.constants.itemType.FCTN) {
-      this._config.data = omit(itemConfig, Object.keys(constraints[this._type + 'Config']));
-    }
+      return {
+        _type: type,
+        _data: data
+      };
+    }(itemConfig)));
 
     this._index = index;
     this._valid = !!this._type;
@@ -123,6 +124,15 @@ class Item {
   get type() {
     return this._type;
   };
+
+  /**
+   * Returns the item data.
+   *
+   * @returns {DataConfig} The item data.
+   */
+  get data() {
+    return this._data;
+  }
 
   /**
    * Indicates whether the item is valid.
