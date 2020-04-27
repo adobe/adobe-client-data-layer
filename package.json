@@ -5,6 +5,12 @@
   "license": "Apache-2.0",
   "private": false,
   "homepage": "https://github.com/adobe/adobe-client-data-layer#readme",
+  "scripts": {
+    "build": "gulp build",
+    "dev": "gulp",
+    "release": "gulp release",
+    "test": "gulp test"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/adobe/adobe-client-data-layer"
