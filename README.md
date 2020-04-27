@@ -27,14 +27,13 @@ This script can then be included in your page head, as follows:
 
 First run the following commands:
 ```
-npm install -g gulp-cli
 npm install
 ```   
  
-Then choose from the following gulp tasks:
-* `gulp` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
-* `gulp build` - run the tests and generates the build in the `./dist` folder.
-* `gulp test` - run the unit tests
+Then choose from the following npm scripts:
+* `npm run dev` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
+* `npm run build` - run the tests and generates the build in the `./dist` folder.
+* `npm run test` - run the unit tests
 
 ## Releasing
 
@@ -48,7 +47,7 @@ rm -rf node_modules && npm install
 ```
 
 Then run:
-* `gulp release` - prompts for a new version, with patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
+* `npm run release` - prompts for a new version, with patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
   Following selection, the task will increase, commit and push the version, create and push the Git release tag, and publish the npm package.
 
 ## Contributing
