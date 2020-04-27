@@ -82,12 +82,12 @@ governing permissions and limitations under the License.
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // test case 4: listener on: adobeDatalayer:change
+    // test case 4: listener on: adobeDataLayer:change
     // -----------------------------------------------------------------------------------------------------------------
 
     let success4 = false;
 
-    adobeDataLayer.addEventListener('adobeDatalayer:change', function(event) {
+    adobeDataLayer.addEventListener('adobeDataLayer:change', function(event) {
       success4 = true;
     });
 
@@ -103,32 +103,32 @@ governing permissions and limitations under the License.
     });
 
     if (!success4) {
-      console.error('FAILS: test case 4 "listener on: adobeDatalayer:change"');
+      console.error('FAILS: test case 4 "listener on: adobeDataLayer:change"');
     } else {
-      console.info('SUCCESS: test case 4 "listener on: adobeDatalayer:change"');
+      console.info('SUCCESS: test case 4 "listener on: adobeDataLayer:change"');
     }
 
     // -----------------------------------------------------------------------------------------------------------------
-    // test case 5: listener on: adobeDatalayer:event
+    // test case 5: listener on: adobeDataLayer:event
     // -----------------------------------------------------------------------------------------------------------------
 
     let success5 = false;
 
-    adobeDataLayer.addEventListener('adobeDatalayer:event', function(event) {
+    adobeDataLayer.addEventListener('adobeDataLayer:event', function(event) {
       success5 = true;
     });
 
     adobeDataLayer.push({
-      event: 'adobeDatalayer:event',
+      event: 'adobeDataLayer:event',
       eventInfo: {
         reference: '/content/mysite/en/home/jcr:content/root/carousel5'
       }
     });
 
     if (!success5) {
-      console.error('FAILS: test case 5 "listener on: adobeDatalayer:event"');
+      console.error('FAILS: test case 5 "listener on: adobeDataLayer:event"');
     } else {
-      console.info('SUCCESS: test case 5 "listener on: adobeDatalayer:event"');
+      console.info('SUCCESS: test case 5 "listener on: adobeDataLayer:event"');
     }
 
     // -----------------------------------------------------------------------------------------------------------------

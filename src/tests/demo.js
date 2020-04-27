@@ -97,7 +97,7 @@ const fct1 = function(event) {
   console.log(event);
 };
 
-window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct1);
+window.adobeDataLayer.addEventListener('adobeDataLayer:change', fct1);
 
 window.adobeDataLayer.push({
   component: {
@@ -118,7 +118,7 @@ const fct2 = function(event, oldState, newState) {
   console.log('newState', newState);
 };
 
-window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct2, {scope: 'future'});
+window.adobeDataLayer.addEventListener('adobeDataLayer:change', fct2, {scope: 'future'});
 
 window.adobeDataLayer.push({
   component: {
@@ -143,7 +143,7 @@ const fct3 = function(event, oldValue, newValue) {
   console.log('newValue', newValue);
 };
 
-window.adobeDataLayer.addEventListener('adobeDatalayer:change', fct3, {path: 'component.carousel.carousel5'});
+window.adobeDataLayer.addEventListener('adobeDataLayer:change', fct3, {path: 'component.carousel.carousel5'});
 
 window.adobeDataLayer.push({
   component: {
@@ -160,7 +160,7 @@ window.adobeDataLayer.push({
 // Removing an event listener
 // -----------------------------------------------------------------------------------------------------------------
 
-window.adobeDataLayer.removeEventListener('adobeDatalayer:change');
+window.adobeDataLayer.removeEventListener('adobeDataLayer:change');
 
 window.adobeDataLayer.push({
   component: {
