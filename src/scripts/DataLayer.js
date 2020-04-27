@@ -105,7 +105,7 @@ DataLayer.Manager.prototype._initialize = function() {
  */
 DataLayer.Manager.prototype._updateState = function(item) {
   this._previousStateCopy = cloneDeep(this._state);
-  this._customMerge(this._state, item.config.data);
+  this._customMerge(this._state, item.data);
 };
 
 /**
@@ -285,7 +285,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       item._config.call(that._dataLayer, that._dataLayer);
     },
     event: function(item) {
-      if (item.config.data) {
+      if (item.data) {
         that._updateState(item);
       }
       that._listenerManager.triggerListeners(item);

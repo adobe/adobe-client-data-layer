@@ -119,10 +119,11 @@ ListenerManagerFactory.create = function(dataLayerManager) {
     if (_matches(listener, item)) {
       const itemConfig = item.config;
       const itemConfigCopy = cloneDeep(itemConfig);
-      if (item.config.data) {
+      if (item.data) {
         if (listener.path) {
+          const itemDataCopy = cloneDeep(item.data);
           const oldValue = get(dataLayerManager._previousStateCopy, listener.path);
-          const newValue = get(itemConfigCopy.data, listener.path);
+          const newValue = get(itemDataCopy, listener.path);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           if (isPastItem) {
@@ -156,7 +157,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
         triggeredEvents.push(itemConfig.event);
       }
       triggeredEvents.push(constants.dataLayerEvent.EVENT);
-      if (itemConfig.data) {
+      if (item.data) {
         triggeredEvents.push(constants.dataLayerEvent.CHANGE);
       }
     }
@@ -184,7 +185,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
       if (event === constants.dataLayerEvent.EVENT || event === itemConfig.event) {
         matches = _selectorMatches(listener, item);
       }
-      if (itemConfig.data && event === constants.dataLayerEvent.CHANGE) {
+      if (item.data && event === constants.dataLayerEvent.CHANGE) {
         matches = _selectorMatches(listener, item);
       }
     }
@@ -201,10 +202,8 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    * @private
    */
   function _selectorMatches(listener, item) {
-    const itemConfig = item.config;
-
-    if (listener.path && itemConfig.data) {
-      return has(itemConfig.data, listener.path);
+    if (listener.path && item.data) {
+      return has(item.data, listener.path);
     }
 
     return true;
