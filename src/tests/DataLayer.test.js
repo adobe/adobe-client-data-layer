@@ -36,7 +36,7 @@ test('add data', () => {
     }
   };
   dataLayer.push(data);
-  expect(isEqual(dataLayer.getState(), data));
+  expect(dataLayer.getState()).toStrictEqual(data);
 });
 
 test('remove data', () => {
@@ -55,13 +55,11 @@ test('remove data', () => {
     }
   };
   dataLayer.push(data);
-  expect(isEqual(dataLayer.getState(), data));
+  expect(dataLayer.getState()).toStrictEqual(data);
   dataLayer.push({
-    data: {
-      component: {
-        carousel: {
-          carousel1: undefined
-        }
+    component: {
+      carousel: {
+        carousel1: undefined
       }
     }
   });
@@ -76,7 +74,7 @@ test('remove data', () => {
       }
     }
   };
-  expect(isEqual(dataLayer.getState(), updatedData));
+  expect(dataLayer.getState()).toStrictEqual(updatedData);
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -351,7 +349,7 @@ test('listener on: register a handler (with a static function) that has already 
 
   dataLayer.push({
     event: 'carousel clicked',
-    info: {
+    eventInfo: {
       id: '/content/mysite/en/home/jcr:content/root/carousel5'
     }
   });
