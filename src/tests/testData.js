@@ -32,7 +32,10 @@ const image1 = {
 };
 
 const testData = {
-  page: {
+
+  // Pages
+
+  page1: {
     page: {
       id: '/content/mysite/en/products/crossfit',
       siteLanguage: 'en-us',
@@ -40,6 +43,16 @@ const testData = {
       pageType: 'product detail',
       pageName: 'pdp - crossfit zoom',
       pageCategory: 'womens > shoes > athletic'
+    }
+  },
+  page2: {
+    page: {
+      id: '/content/mysite/en/products/running',
+      siteLanguage: 'en-us',
+      siteCountry: 'US',
+      pageType: 'product detail',
+      pageName: 'pdp - running zoom',
+      pageCategory: 'womens > shoes > running'
     }
   },
 
