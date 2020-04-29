@@ -1,6 +1,9 @@
 ## Adobe Client Data Layer
 
-[![BundlePhobia](https://badgen.net/bundlephobia/minzip/@adobe/adobe-client-data-layer)](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer) [![LGTM](https://badgen.net/lgtm/grade/g/adobe/adobe-client-data-layer)](https://lgtm.com/projects/g/adobe/adobe-client-data-layer) [![CircleCI](https://badgen.net/circleci/github/adobe/adobe-client-data-layer)](https://app.circleci.com/pipelines/github/adobe/adobe-client-data-layer) [![Codecov](https://badgen.net/codecov/c/github/adobe/adobe-client-data-layer)](https://codecov.io/gh/adobe/adobe-client-data-layer)
+[![BundlePhobia](https://badgen.net/bundlephobia/minzip/@adobe/adobe-client-data-layer)](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer)
+[![LGTM](https://badgen.net/lgtm/grade/g/adobe/adobe-client-data-layer)](https://lgtm.com/projects/g/adobe/adobe-client-data-layer)
+[![CircleCI](https://badgen.net/circleci/github/adobe/adobe-client-data-layer)](https://app.circleci.com/pipelines/github/adobe/adobe-client-data-layer)
+[![Codecov](https://badgen.net/codecov/c/github/adobe/adobe-client-data-layer)](https://codecov.io/gh/adobe/adobe-client-data-layer)
 
 The Adobe Client Data Layer aims to reduce the effort to instrument websites by providing a standardized method to expose and access any kind of data for any script.
 
