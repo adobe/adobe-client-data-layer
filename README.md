@@ -35,6 +35,9 @@ Then choose from the following npm scripts:
 * `npm run build` - run the tests and generates the build in the `./dist` folder.
 * `npm run test` - run the unit tests
 
+Note: you can get some stats (bundle size, download time) about the released version. E.g.:
+https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer@1.0.0-beta.3
+
 ## Releasing
 
 > **Note** - only release this package if you have access to the Adobe npm organization and are a project committer.
