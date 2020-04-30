@@ -12,9 +12,9 @@ governing permissions and limitations under the License.
 const DataLayer = require('../scripts/DataLayer');
 
 const testData = require('./testData');
-const isEqual = require('lodash/isequal');
-const isEmpty = require('lodash/isempty');
-const merge = require('lodash/merge');
+const isEqual = require('lodash/isequal.js');
+const isEmpty = require('lodash/isempty.js');
+const merge = require('lodash/merge.js');
 let adobeDataLayer;
 
 beforeEach(() => {
