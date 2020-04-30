@@ -10,9 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 /* eslint no-console: "off" */
-const mergeWith = require('lodash/mergewith.js');
-const cloneDeep = require('lodash/clonedeep.js');
-const get = require('lodash/get.js');
+const mergeWith = require('lodash/mergeWith');
+const cloneDeep = require('lodash/cloneDeep');
+const get = require('lodash/get');
 
 /**
  * Data Layer.
