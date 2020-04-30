@@ -9,10 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-/* eslint no-console: "off" */
-const mergeWith = require('lodash/mergeWith');
-const cloneDeep = require('lodash/cloneDeep');
-const get = require('lodash/get');
+
+const _ = require('lodash');
 
 /**
  * Data Layer.
@@ -104,7 +102,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-  this._previousStateCopy = cloneDeep(this._state);
+  this._previousStateCopy = _.cloneDeep(this._state);
   this._customMerge(this._state, item.data);
 };
 
@@ -116,12 +114,39 @@ DataLayer.Manager.prototype._updateState = function(item) {
  * @private
  */
 DataLayer.Manager.prototype._customMerge = function(object, source) {
+  const omitDeep = function(value, predicate = (val) => !val) {
+    return _.cloneDeepWith(value, makeOmittingCloneDeepCustomizer(predicate));
+  };
+
+  const makeOmittingCloneDeepCustomizer = function(predicate) {
+    return function omittingCloneDeepCustomizer(value, key, object, stack) {
+      if (_.isObject(value)) {
+        if (_.isArray(value)) {
+          return _.reject(value, predicate).map(item => _.cloneDeepWith(item, omittingCloneDeepCustomizer));
+        }
+
+        const clone = {};
+        for (const subKey of Object.keys(value)) {
+          if (!predicate(value[subKey])) {
+            clone[subKey] = _.cloneDeepWith(value[subKey], omittingCloneDeepCustomizer);
+          }
+        }
+        return clone;
+      }
+      return undefined;
+    };
+  };
+
   const customizer = function(objValue, srcValue, key, object) {
-    if (typeof srcValue === 'undefined') {
-      delete object[key];
+    if (typeof srcValue === 'undefined' || srcValue === null) {
+      return null;
     }
   };
-  mergeWith(object, source, customizer);
+
+  _.mergeWith(object, source, customizer);
+
+  // Remove null or undefined objects
+  _.assign(object, omitDeep(object, _.isNull));
 };
 
 /**
@@ -180,9 +205,9 @@ DataLayer.Manager.prototype._augment = function() {
    */
   that._dataLayer.getState = function(path) {
     if (path) {
-      return get(cloneDeep(that._state), path);
+      return _.get(_.cloneDeep(that._state), path);
     }
-    return cloneDeep(that._state);
+    return _.cloneDeep(that._state);
   };
 
   /**
@@ -191,8 +216,11 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {String} type A case-sensitive string representing the event type to listen for.
    * @param {Function} listener A function that is called when the event of the specified type occurs.
    * @param {Object} [options] Optional characteristics of the event listener. Available options:
-   * - {String} path The path of the object to listen to
-   * - {String} scope The listener scope. Possible values: 'past' (past events), 'future' (future events), 'all' (past and future events, default value)
+   *   - {String} path The path of the object to listen to.
+   *   - {String} scope The listener scope. Possible values:
+   *      - {String} past The listener is triggered for past events.
+   *      - {String} future The listener is triggered for future events.
+   *      - {String} all The listener is triggered for past and future events (default value).
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
     const eventListenerItem = new DataLayer.Item({

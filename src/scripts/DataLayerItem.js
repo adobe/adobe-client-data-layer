@@ -9,8 +9,9 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const isPlainObject = require('lodash/isPlainObject');
-const omit = require('lodash/omit');
+
+const _ = require('lodash');
+
 const DataLayer = {};
 DataLayer.constants = require('./DataLayerConstants');
 
@@ -86,14 +87,14 @@ class Item {
       let data;
       if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
-        data = omit(config, Object.keys(constraints.eventConfig));
+        data = _.omit(config, Object.keys(constraints.eventConfig));
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOnConfig)) {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
       } else if (typeof config === 'function') {
         type = DataLayer.constants.itemType.FCTN;
-      } else if (isPlainObject(config)) {
+      } else if (_.isPlainObject(config)) {
         type = DataLayer.constants.itemType.DATA;
         data = config;
       }

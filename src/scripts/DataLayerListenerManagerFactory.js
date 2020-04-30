@@ -9,11 +9,8 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
+const _ = require('lodash');
 const constants = require('./DataLayerConstants');
-const has = require('lodash/has');
-const get = require('lodash/get');
-const isEqual = require('lodash/isEqual');
-const cloneDeep = require('lodash/cloneDeep');
 
 /**
  * Factory that creates a listener manager.
@@ -118,19 +115,19 @@ ListenerManagerFactory.create = function(dataLayerManager) {
   function _callHandler(listener, item, isPastItem) {
     if (_matches(listener, item)) {
       const itemConfig = item.config;
-      const itemConfigCopy = cloneDeep(itemConfig);
+      const itemConfigCopy = _.cloneDeep(itemConfig);
       if (item.data) {
         if (listener.path) {
-          const itemDataCopy = cloneDeep(item.data);
-          const oldValue = get(dataLayerManager._previousStateCopy, listener.path);
-          const newValue = get(itemDataCopy, listener.path);
+          const itemDataCopy = _.cloneDeep(item.data);
+          const oldValue = _.get(dataLayerManager._previousStateCopy, listener.path);
+          const newValue = _.get(itemDataCopy, listener.path);
           listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldValue, newValue);
         } else {
           if (isPastItem) {
             listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy);
           } else {
             const oldState = dataLayerManager._previousStateCopy;
-            const newState = cloneDeep(dataLayerManager._state);
+            const newState = _.cloneDeep(dataLayerManager._state);
             listener.handler.call(dataLayerManager._dataLayer, itemConfigCopy, oldState, newState);
           }
         }
@@ -203,7 +200,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    */
   function _selectorMatches(listener, item) {
     if (listener.path && item.data) {
-      return has(item.data, listener.path);
+      return _.has(item.data, listener.path);
     }
 
     return true;
@@ -221,7 +218,7 @@ ListenerManagerFactory.create = function(dataLayerManager) {
 
     if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
       for (const [index, registeredListener] of _listeners[event].entries()) {
-        if (isEqual(registeredListener.handler, listener.handler)) {
+        if (_.isEqual(registeredListener.handler, listener.handler)) {
           return index;
         }
       }

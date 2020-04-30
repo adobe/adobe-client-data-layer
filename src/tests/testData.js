@@ -10,13 +10,16 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const merge = require('lodash/merge');
+const _ = require('lodash');
 
 const carousel1 = {
   component: {
     carousel: {
       carousel1: {
         id: '/content/mysite/en/home/jcr:content/root/carousel1',
+        shownItems: [
+          'item1', 'item2', 'item3', 'item4', 'item5'
+        ],
         items: {}
       }
     }
@@ -59,14 +62,53 @@ const testData = {
   // Carousel 1
 
   carousel1: carousel1,
-  carousel1empty: merge({}, carousel1, {
+  carousel1withUndefined: {
     component: {
       carousel: {
         carousel1: undefined
       }
     }
-  }),
-  carousel1new: merge({}, carousel1, {
+  },
+  carousel1withNull: {
+    component: {
+      carousel: {
+        carousel1: null
+      }
+    }
+  },
+  carousel1withNullAndUndefinedArrayItems: {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          shownItems: [
+            'item1', null, 'item3', undefined, 'item5'
+          ],
+          items: {}
+        }
+      }
+    }
+  },
+  carousel1withRemovedArrayItems: {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          shownItems: [
+            'item1', 'item3', 'item5'
+          ],
+          items: {}
+        }
+      }
+    }
+  },
+  carousel1empty: {
+    component: {
+      carousel: {
+      }
+    }
+  },
+  carousel1new: _.merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -75,16 +117,16 @@ const testData = {
       }
     }
   }),
-  carousel1click: merge({}, carousel1, {
+  carousel1click: _.merge({}, carousel1, {
     event: 'carousel clicked'
   }),
-  carousel1change: merge({}, carousel1, {
+  carousel1change: _.merge({}, carousel1, {
     event: 'adobeDataLayer:change'
   }),
-  carousel1viewed: merge({}, carousel1, {
+  carousel1viewed: _.merge({}, carousel1, {
     event: 'viewed'
   }),
-  carousel1oldId: merge({}, carousel1, {
+  carousel1oldId: _.merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -93,7 +135,7 @@ const testData = {
       }
     }
   }),
-  carousel1newId: merge({}, carousel1, {
+  carousel1newId: _.merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -115,10 +157,16 @@ const testData = {
       }
     }
   },
-  carousel2empty: {
+  carousel2withUndefined: {
     component: {
       carousel: {
         carousel2: undefined
+      }
+    }
+  },
+  carousel2empty: {
+    component: {
+      carousel: {
       }
     }
   },
@@ -126,10 +174,10 @@ const testData = {
   // Image 1
 
   image1: image1,
-  image1change: merge({}, image1, {
+  image1change: _.merge({}, image1, {
     event: 'adobeDataLayer:change'
   }),
-  image1viewed: merge({}, image1, {
+  image1viewed: _.merge({}, image1, {
     event: 'viewed'
   })
 }
