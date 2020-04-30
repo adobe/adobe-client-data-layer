@@ -10,10 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const constants = require('./DataLayerConstants');
-const has = require('lodash.has');
-const get = require('lodash.get');
-const isEqual = require('lodash.isequal');
-const cloneDeep = require('lodash.clonedeep');
+const has = require('lodash/has');
+const get = require('lodash/get');
+const isEqual = require('lodash/isequal');
+const cloneDeep = require('lodash/clonedeep');
 
 /**
  * Factory that creates a listener manager.

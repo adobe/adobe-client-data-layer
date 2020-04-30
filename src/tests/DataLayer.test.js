@@ -10,10 +10,11 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 const DataLayer = require('../scripts/DataLayer');
+
 const testData = require('./testData');
-const isEqual = require('lodash.isequal');
-const isEmpty = require('lodash.isempty');
-const merge = require('lodash.merge');
+const isEqual = require('lodash/isequal');
+const isEmpty = require('lodash/isempty');
+const merge = require('lodash/merge');
 let adobeDataLayer;
 
 beforeEach(() => {

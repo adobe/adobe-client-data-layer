@@ -1,5 +1,7 @@
 ## Adobe Client Data Layer
 
+[![BundlePhobia](https://badgen.net/bundlephobia/minzip/@adobe/adobe-client-data-layer)](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer) [![LGTM](https://badgen.net/lgtm/grade/g/adobe/adobe-client-data-layer)](https://lgtm.com/projects/g/adobe/adobe-client-data-layer)
+
 The Adobe Client Data Layer aims to reduce the effort to instrument websites by providing a standardized method to expose and access any kind of data for any script.
 
 > **Tech Preview** - this is currently a tech preview, there may be API changes and it therefore shouldn't be used in production. If you have any feedback please comment on the [AEM Core Components Developer Google Group](https://groups.google.com/forum/#!forum/aem-core-components-dev).
@@ -34,6 +36,8 @@ Then choose from the following npm scripts:
 * `npm run dev` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
 * `npm run build` - run the tests and generates the build in the `./dist` folder.
 * `npm run test` - run the unit tests
+
+Note: you can [get some stats](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer@1.0.0-beta.3) (bundle size, download time) about the released version.
 
 ## Releasing
 
