@@ -13,6 +13,5 @@ module.exports = {
   collectCoverage: true,
   coverageDirectory: '<rootDir>/test/unit-test-coverage',
   testMatch: ['<rootDir>/src/tests/**/*.test.js'],
-  moduleDirectories: ["node_modules", "src"],
   setupFilesAfterEnv: ["jest-expect-message"]
 };
