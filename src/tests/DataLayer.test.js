@@ -43,7 +43,6 @@ describe('State', () => {
     expect(adobeDataLayer.getState()).toEqual(data);
     expect(adobeDataLayer.getState("component.carousel.carousel1")).toEqual(carousel1);
     expect(isEmpty(adobeDataLayer.getState("undefined-path")));
-    expect(true).toEqual(false);
   });
 });
 
