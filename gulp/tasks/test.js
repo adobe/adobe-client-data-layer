@@ -17,7 +17,13 @@ module.exports = function(gulp) {
   };
 
   gulp.task('test', (done) => {
-    jestcli.runCLI(configs.jest,['.']);
-    done();
+    jestcli.runCLI(configs.jest,['.'])
+        .then((ret) => {
+          if (ret.results.success) {
+            done();
+          } else {
+            done(new Error("Tests failed!"));
+          }
+        });
   });
 };

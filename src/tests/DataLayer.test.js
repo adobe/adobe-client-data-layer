@@ -12,8 +12,8 @@ governing permissions and limitations under the License.
 const DataLayer = require('../scripts/DataLayer');
 
 const testData = require('./testData');
-const isEqual = require('lodash/isequal');
-const isEmpty = require('lodash/isempty');
+const isEqual = require('lodash/isEqual');
+const isEmpty = require('lodash/isEmpty');
 const merge = require('lodash/merge');
 let adobeDataLayer;
 

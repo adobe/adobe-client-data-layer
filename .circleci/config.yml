@@ -1,0 +1,16 @@
+version: 2.1
+orbs:
+  node: circleci/node@2.0.3
+jobs:
+  test:
+    executor:
+      name: node/default
+    steps:
+      - checkout
+      - node/install-packages
+      - run: npm test
+      - run: bash <(curl -s https://codecov.io/bash)
+workflows:
+    test:
+      jobs:
+        - test
