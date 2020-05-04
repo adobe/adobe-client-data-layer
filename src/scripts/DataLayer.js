@@ -96,11 +96,6 @@ DataLayer.Manager.prototype._initialize = function() {
 
   that._augment();
   that._processItems();
-
-  const readyItem = new DataLayer.Item({
-    event: DataLayer.constants.dataLayerEvent.READY
-  });
-  that._listenerManager.triggerListeners(readyItem);
 };
 
 /**
