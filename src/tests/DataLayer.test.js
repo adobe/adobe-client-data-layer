@@ -9,12 +9,12 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const DataLayer = require('../scripts/DataLayer');
-
-const testData = require('./testData');
 const isEqual = require('lodash/isEqual');
 const isEmpty = require('lodash/isEmpty');
 const merge = require('lodash/merge');
+
+const testData = require('./testData');
+const DataLayer = require('../scripts/DataLayer');
 let adobeDataLayer;
 
 beforeEach(() => {
@@ -62,13 +62,23 @@ describe('Data', () => {
     const carousel2empty = merge({}, testData.carousel1, testData.carousel2empty);
     const twoCarouselsEmpty = merge({}, testData.carousel1empty, testData.carousel2empty);
 
+    adobeDataLayer.push(testData.carousel1);
+    adobeDataLayer.push(testData.carousel1withNullAndUndefinedArrayItems);
+    expect(adobeDataLayer.getState(), 'carousel 1 with removed items').toStrictEqual(testData.carousel1withRemovedArrayItems);
+
     adobeDataLayer.push(twoCarousels);
     expect(adobeDataLayer.getState(), 'carousel 1 with data, carousel 2 with data').toStrictEqual(twoCarousels);
 
-    adobeDataLayer.push(testData.carousel1empty);
+    adobeDataLayer.push(testData.carousel1withUndefined);
     expect(adobeDataLayer.getState(), 'carousel 1 empty, carousel 2 with data').toStrictEqual(carousel1empty);
 
-    adobeDataLayer.push(testData.carousel2empty);
+    adobeDataLayer.push(testData.carousel2withUndefined);
+    expect(adobeDataLayer.getState(), 'carousel 1 empty, carousel 2 empty').toStrictEqual(twoCarouselsEmpty);
+
+    adobeDataLayer.push(testData.carousel1);
+    expect(adobeDataLayer.getState(), 'carousel 1 with data, carousel 2 empty').toStrictEqual(carousel2empty);
+
+    adobeDataLayer.push(testData.carousel1withNull);
     expect(adobeDataLayer.getState(), 'carousel 1 empty, carousel 2 empty').toStrictEqual(twoCarouselsEmpty);
 
     adobeDataLayer.push(testData.carousel1);
@@ -91,7 +101,7 @@ describe('Events', () => {
 // Functions
 // -----------------------------------------------------------------------------------------------------------------
 
-describe('Funcions', () => {
+describe('Functions', () => {
   test('push simple function', () => {
     const mockCallback = jest.fn();
     adobeDataLayer.push(mockCallback);

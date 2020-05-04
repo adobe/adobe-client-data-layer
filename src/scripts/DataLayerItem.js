@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 const isPlainObject = require('lodash/isPlainObject');
 const isEmpty = require('lodash/isEmpty');
 const omit = require('lodash/omit');
+
 const DataLayer = {};
 DataLayer.constants = require('./DataLayerConstants');
 

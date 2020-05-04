@@ -9,11 +9,13 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const constants = require('./DataLayerConstants');
-const has = require('lodash/has');
-const get = require('lodash/get');
-const isEqual = require('lodash/isEqual');
+
 const cloneDeep = require('lodash/cloneDeep');
+const get = require('lodash/get');
+const has = require('lodash/has');
+const isEqual = require('lodash/isEqual');
+
+const constants = require('./DataLayerConstants');
 
 /**
  * Factory that creates a listener manager.

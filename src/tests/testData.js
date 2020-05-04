@@ -17,6 +17,9 @@ const carousel1 = {
     carousel: {
       carousel1: {
         id: '/content/mysite/en/home/jcr:content/root/carousel1',
+        shownItems: [
+          'item1', 'item2', 'item3', 'item4', 'item5'
+        ],
         items: {}
       }
     }
@@ -59,13 +62,52 @@ const testData = {
   // Carousel 1
 
   carousel1: carousel1,
-  carousel1empty: merge({}, carousel1, {
+  carousel1withUndefined: {
     component: {
       carousel: {
         carousel1: undefined
       }
     }
-  }),
+  },
+  carousel1withNull: {
+    component: {
+      carousel: {
+        carousel1: null
+      }
+    }
+  },
+  carousel1withNullAndUndefinedArrayItems: {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          shownItems: [
+            'item1', null, 'item3', undefined, 'item5'
+          ],
+          items: {}
+        }
+      }
+    }
+  },
+  carousel1withRemovedArrayItems: {
+    component: {
+      carousel: {
+        carousel1: {
+          id: '/content/mysite/en/home/jcr:content/root/carousel1',
+          shownItems: [
+            'item1', 'item3', 'item5'
+          ],
+          items: {}
+        }
+      }
+    }
+  },
+  carousel1empty: {
+    component: {
+      carousel: {
+      }
+    }
+  },
   carousel1new: merge({}, carousel1, {
     component: {
       carousel: {
@@ -115,10 +157,16 @@ const testData = {
       }
     }
   },
-  carousel2empty: {
+  carousel2withUndefined: {
     component: {
       carousel: {
         carousel2: undefined
+      }
+    }
+  },
+  carousel2empty: {
+    component: {
+      carousel: {
       }
     }
   },
