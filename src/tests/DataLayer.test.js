@@ -164,6 +164,18 @@ describe('Event listeners', () => {
       adobeDataLayer.removeEventListener('adobeDataLayer:event');
       adobeDataLayer.push(testData.carousel1click);
       expect(mockCallback.mock.calls.length, 'callback not triggered second time').toBe(1);
+    })
+
+    test('adobeDataLayer:change not triggered by event push', () => {
+      const mockCallback = jest.fn();
+
+      adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback);
+      adobeDataLayer.push({
+        "event": "page loaded"
+      });
+      expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
+      adobeDataLayer.push(testData.carousel1click);
+      expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
     });
 
     test('custom event triggered by event push', () => {
