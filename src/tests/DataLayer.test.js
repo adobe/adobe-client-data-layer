@@ -350,9 +350,9 @@ describe('Event listeners', () => {
     });
 
     test('old / new value', () => {
-      const compareOldNewValueFunction = function(event, oldState, newState) {
-        if (oldState === 'old') mockCallback();
-        if (newState === 'new') mockCallback();
+      const compareOldNewValueFunction = function(event, oldValue, newValue) {
+        if (oldValue === 'old') mockCallback();
+        if (newValue === 'new') mockCallback();
       };
 
       adobeDataLayer.push(testData.carousel1oldId);
