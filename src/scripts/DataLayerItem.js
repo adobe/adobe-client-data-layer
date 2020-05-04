@@ -87,7 +87,7 @@ class Item {
       let data;
       if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
-        let eventData = omit(config, Object.keys(constraints.eventConfig));
+        const eventData = omit(config, Object.keys(constraints.eventConfig));
         if (!isEmpty(eventData)) {
           data = eventData;
         }
