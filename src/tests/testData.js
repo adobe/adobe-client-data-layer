@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('lodash');
+const merge = require('lodash/merge');
 
 const carousel1 = {
   component: {
@@ -108,7 +108,7 @@ const testData = {
       }
     }
   },
-  carousel1new: _.merge({}, carousel1, {
+  carousel1new: merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -117,16 +117,16 @@ const testData = {
       }
     }
   }),
-  carousel1click: _.merge({}, carousel1, {
+  carousel1click: merge({}, carousel1, {
     event: 'carousel clicked'
   }),
-  carousel1change: _.merge({}, carousel1, {
+  carousel1change: merge({}, carousel1, {
     event: 'adobeDataLayer:change'
   }),
-  carousel1viewed: _.merge({}, carousel1, {
+  carousel1viewed: merge({}, carousel1, {
     event: 'viewed'
   }),
-  carousel1oldId: _.merge({}, carousel1, {
+  carousel1oldId: merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -135,7 +135,7 @@ const testData = {
       }
     }
   }),
-  carousel1newId: _.merge({}, carousel1, {
+  carousel1newId: merge({}, carousel1, {
     component: {
       carousel: {
         carousel1: {
@@ -174,10 +174,10 @@ const testData = {
   // Image 1
 
   image1: image1,
-  image1change: _.merge({}, image1, {
+  image1change: merge({}, image1, {
     event: 'adobeDataLayer:change'
   }),
-  image1viewed: _.merge({}, image1, {
+  image1viewed: merge({}, image1, {
     event: 'viewed'
   })
 }

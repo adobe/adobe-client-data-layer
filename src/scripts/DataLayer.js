@@ -10,7 +10,15 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('lodash');
+const cloneDeep = require('lodash/cloneDeep');
+const cloneDeepWith = require('lodash/cloneDeepWith');
+const isObject = require('lodash/isObject');
+const isArray = require('lodash/isArray');
+const reject = require('lodash/reject');
+const mergeWith = require('lodash/mergeWith');
+const assign = require('lodash/assign');
+const isNull = require('lodash/isNull');
+const get = require('lodash/get');
 
 /**
  * Data Layer.
@@ -102,7 +110,7 @@ DataLayer.Manager.prototype._initialize = function() {
  * @private
  */
 DataLayer.Manager.prototype._updateState = function(item) {
-  this._previousStateCopy = _.cloneDeep(this._state);
+  this._previousStateCopy = cloneDeep(this._state);
   this._customMerge(this._state, item.data);
 };
 
@@ -115,20 +123,20 @@ DataLayer.Manager.prototype._updateState = function(item) {
  */
 DataLayer.Manager.prototype._customMerge = function(object, source) {
   const omitDeep = function(value, predicate = (val) => !val) {
-    return _.cloneDeepWith(value, makeOmittingCloneDeepCustomizer(predicate));
+    return cloneDeepWith(value, makeOmittingCloneDeepCustomizer(predicate));
   };
 
   const makeOmittingCloneDeepCustomizer = function(predicate) {
     return function omittingCloneDeepCustomizer(value, key, object, stack) {
-      if (_.isObject(value)) {
-        if (_.isArray(value)) {
-          return _.reject(value, predicate).map(item => _.cloneDeepWith(item, omittingCloneDeepCustomizer));
+      if (isObject(value)) {
+        if (isArray(value)) {
+          return reject(value, predicate).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
         }
 
         const clone = {};
         for (const subKey of Object.keys(value)) {
           if (!predicate(value[subKey])) {
-            clone[subKey] = _.cloneDeepWith(value[subKey], omittingCloneDeepCustomizer);
+            clone[subKey] = cloneDeepWith(value[subKey], omittingCloneDeepCustomizer);
           }
         }
         return clone;
@@ -143,10 +151,10 @@ DataLayer.Manager.prototype._customMerge = function(object, source) {
     }
   };
 
-  _.mergeWith(object, source, customizer);
+  mergeWith(object, source, customizer);
 
   // Remove null or undefined objects
-  _.assign(object, omitDeep(object, _.isNull));
+  assign(object, omitDeep(object, isNull));
 };
 
 /**
@@ -205,9 +213,9 @@ DataLayer.Manager.prototype._augment = function() {
    */
   that._dataLayer.getState = function(path) {
     if (path) {
-      return _.get(_.cloneDeep(that._state), path);
+      return get(cloneDeep(that._state), path);
     }
-    return _.cloneDeep(that._state);
+    return cloneDeep(that._state);
   };
 
   /**

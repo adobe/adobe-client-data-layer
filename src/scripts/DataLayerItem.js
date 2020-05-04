@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('lodash');
+const omit = require('lodash/omit');
+const isPlainObject = require('lodash/isPlainObject');
 
 const DataLayer = {};
 DataLayer.constants = require('./DataLayerConstants');
@@ -87,14 +88,14 @@ class Item {
       let data;
       if (utils.itemConfigMatchesConstraints(config, constraints.eventConfig)) {
         type = DataLayer.constants.itemType.EVENT;
-        data = _.omit(config, Object.keys(constraints.eventConfig));
+        data = omit(config, Object.keys(constraints.eventConfig));
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOnConfig)) {
         type = DataLayer.constants.itemType.LISTENER_ON;
       } else if (utils.itemConfigMatchesConstraints(config, constraints.listenerOffConfig)) {
         type = DataLayer.constants.itemType.LISTENER_OFF;
       } else if (typeof config === 'function') {
         type = DataLayer.constants.itemType.FCTN;
-      } else if (_.isPlainObject(config)) {
+      } else if (isPlainObject(config)) {
         type = DataLayer.constants.itemType.DATA;
         data = config;
       }
