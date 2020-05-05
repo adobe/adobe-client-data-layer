@@ -84,6 +84,49 @@ describe('Data', () => {
     adobeDataLayer.push(testData.carousel1);
     expect(adobeDataLayer.getState(), 'carousel 1 with data, carousel 2 empty').toStrictEqual(carousel2empty);
   });
+
+  test('push invalid data type - string', () => {
+    adobeDataLayer.push('test');
+
+    expect(adobeDataLayer.getState(), 'string is invalid data type and is not part of the state').toStrictEqual({});
+  });
+
+  test('push invalid data type - array of strings', () => {
+    adobeDataLayer.push(['test1', 'test2']);
+
+    expect(adobeDataLayer.getState(), 'string is invalid data type and is not part of the state').toStrictEqual({});
+  });
+
+  test('push initial data provided before data layer initialization', () => {
+    adobeDataLayer = [ testData.carousel1, testData.carousel2 ];
+    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+    expect(adobeDataLayer.getState(), 'all items are pushed to data layer state').toStrictEqual(merge({}, testData.carousel1, testData.carousel2));
+  });
+
+  test('invalid initial data triggers error', () => {
+    // Catches console.error function which should be triggered by data layer during this test
+    var consoleSpy = jest.spyOn(console, "error").mockImplementation();
+    adobeDataLayer = ['test'];
+    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+    expect(adobeDataLayer.getState(), 'initialization').toStrictEqual({});
+    expect(consoleSpy).toHaveBeenCalled();
+    // Restores console.error to default behaviour
+    consoleSpy.mockRestore();
+  });
+
+  test('push on / off listeners is not allowed', () => {
+    adobeDataLayer.push({
+      on: 'click' ,
+      handler: jest.fn()
+    });
+    adobeDataLayer.push({
+      off: 'click',
+      handler: jest.fn()
+    });
+    expect(adobeDataLayer.getState()).toStrictEqual({});
+  });
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -245,6 +288,13 @@ describe('Event listeners', () => {
       adobeDataLayer.push(testData.carousel1click);
       expect(mockCallback.mock.calls.length, 'callback triggered second time').toBe(2);
     });
+
+    test('invalid', () => {
+      const mockCallback = jest.fn();
+      adobeDataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'invalid' });
+      adobeDataLayer.push(testData.carousel1click);
+      expect(mockCallback.mock.calls.length).toBe(0);
+    });
   });
 
   describe('duplications', () => {
@@ -322,9 +372,9 @@ describe('Event listeners', () => {
     });
 
     test('old / new value', () => {
-      const compareOldNewValueFunction = function(event, oldState, newState) {
-        if (oldState === 'old') mockCallback();
-        if (newState === 'new') mockCallback();
+      const compareOldNewValueFunction = function(event, oldValue, newValue) {
+        if (oldValue === 'old') mockCallback();
+        if (newValue === 'new') mockCallback();
       };
 
       adobeDataLayer.push(testData.carousel1oldId);
@@ -416,58 +466,6 @@ describe('Event listeners', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------
-// Invalid: data, event, listeners
-// -----------------------------------------------------------------------------------------------------------------
-
-describe('Invalid', () => {
-  test.skip('invalid listener on', () => {
-    const mockCallback = jest.fn();
-    adobeDataLayer.addEventListener('carousel clicked', mockCallback, { invalid: 'invalid' });
-    adobeDataLayer.push(testData.carousel1click);
-    expect(mockCallback.mock.calls.length).toBe(0);
-  });
-
-  test('invalid listener on scope', () => {
-    const mockCallback = jest.fn();
-    adobeDataLayer.addEventListener('carousel clicked', mockCallback, { scope: 'invalid' });
-    adobeDataLayer.push(testData.carousel1click);
-    expect(mockCallback.mock.calls.length).toBe(0);
-  });
-
-  test.skip('invalid listener off', () => {
-    const mockCallback = jest.fn();
-
-    adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback);
-    adobeDataLayer.push(testData.page1);
-    expect(mockCallback.mock.calls.length).toBe(1);
-
-    adobeDataLayer.removeEventListener('adobeDataLayer:change', mockCallback, { invalid: 'invalid' });
-    adobeDataLayer.push(testData.page2);
-    expect(mockCallback.mock.calls.length).toBe(2);
-  });
-
-  test.skip('invalid item is filtered out from array', () => {
-    dataLayer = [
-      {
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      },
-      {
-        event: 'clicked',
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      }
-    ];
-
-    // ... to be finished
-  });
-});
-
-// -----------------------------------------------------------------------------------------------------------------
 // Performance
 // -----------------------------------------------------------------------------------------------------------------
 
@@ -479,7 +477,7 @@ describe('Performance', () => {
 
     adobeDataLayer.addEventListener('carousel clicked', mockCallback);
 
-    for (let i= 0; i < 1000; i++) {
+    for (let i = 0; i < 1000; i++) {
       let pageId = '/content/mysite/en/products/crossfit' + i;
       let pageKey = 'page' + i;
       data[pageKey] = {
@@ -498,6 +496,5 @@ describe('Performance', () => {
       expect(adobeDataLayer.getState()).toStrictEqual(data);
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
-
   });
 });
