@@ -26,8 +26,8 @@ const get = require('lodash/get');
  * @type {Object}
  */
 const DataLayer = {};
-DataLayer.Item = require('./DataLayerItem').item;
-DataLayer.Listener = require('./DataLayerListener');
+DataLayer.Item = require('./Item');
+DataLayer.Listener = require('./Listener');
 DataLayer.ListenerManagerFactory = require('./DataLayerListenerManagerFactory');
 DataLayer.constants = require('./DataLayerConstants');
 
@@ -172,7 +172,7 @@ DataLayer.Manager.prototype._augment = function() {
 
     Object.keys(pushArguments).forEach(function(key) {
       const itemConfig = pushArguments[key];
-      const item = new DataLayer.Item(itemConfig);
+      const item = DataLayer.Item(itemConfig);
 
       if (!item.valid) {
         delete filteredArguments[key];
@@ -226,7 +226,7 @@ DataLayer.Manager.prototype._augment = function() {
    *      - {String} all The listener is triggered for past and future events (default value).
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
-    const eventListenerItem = new DataLayer.Item({
+    const eventListenerItem = DataLayer.Item({
       on: type,
       handler: listener,
       scope: options && options.scope,
@@ -243,7 +243,7 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {Function} [listener] Optional function that is to be removed.
    */
   that._dataLayer.removeEventListener = function(type, listener) {
-    const eventListenerItem = new DataLayer.Item({
+    const eventListenerItem = DataLayer.Item({
       off: type,
       handler: listener
     });
@@ -261,7 +261,7 @@ DataLayer.Manager.prototype._processItems = function() {
   const that = this;
 
   for (let i = 0; i < that._dataLayer.length; i++) {
-    const item = new DataLayer.Item(that._dataLayer[i], i);
+    const item = DataLayer.Item(that._dataLayer[i], i);
 
     that._processItem(item);
 
@@ -302,7 +302,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
    */
   function _getBefore(item) {
     if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
-      return that._dataLayer.slice(0, item.index).map(itemConfig => new DataLayer.Item(itemConfig));
+      return that._dataLayer.slice(0, item.index).map(itemConfig => DataLayer.Item(itemConfig));
     }
     return [];
   }
@@ -313,7 +313,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       that._listenerManager.triggerListeners(item);
     },
     fctn: function(item) {
-      item._config.call(that._dataLayer, that._dataLayer);
+      item.config.call(that._dataLayer, that._dataLayer);
     },
     event: function(item) {
       if (item.data) {
@@ -322,7 +322,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       that._listenerManager.triggerListeners(item);
     },
     listenerOn: function(item) {
-      const listener = new DataLayer.Listener(item);
+      const listener = DataLayer.Listener(item);
       switch (listener.scope) {
         case DataLayer.constants.listenerScope.PAST: {
           for (const registeredItem of _getBefore(item)) {
@@ -345,7 +345,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       }
     },
     listenerOff: function(item) {
-      that._listenerManager.unregister(new DataLayer.Listener(item));
+      that._listenerManager.unregister(DataLayer.Listener(item));
     }
   };
 
