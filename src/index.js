@@ -28,7 +28,7 @@ const get = require('lodash/get');
 const DataLayer = {};
 DataLayer.Item = require('./Item');
 DataLayer.Listener = require('./Listener');
-DataLayer.ListenerManagerFactory = require('./ListenerManagerFactory');
+DataLayer.ListenerManager = require('./ListenerManager');
 DataLayer.constants = require('./constants');
 
 /**
@@ -92,7 +92,7 @@ DataLayer.Manager.prototype._initialize = function() {
   that._dataLayer = that._config.dataLayer;
   that._state = {};
   that._previousStateCopy = {};
-  that._listenerManager = DataLayer.ListenerManagerFactory.create(that);
+  that._listenerManager = DataLayer.ListenerManager(that);
 
   that._augment();
   that._processItems();
