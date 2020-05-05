@@ -180,6 +180,6 @@ const testData = {
   image1viewed: merge({}, image1, {
     event: 'viewed'
   })
-}
+};
 
 module.exports = testData;

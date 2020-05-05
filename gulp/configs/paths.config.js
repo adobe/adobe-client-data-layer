@@ -18,7 +18,7 @@ module.exports = {
   },
   src: {
     base: 'src/',
-    scripts: 'src/scripts/**/*.js'
+    scripts: 'src/**/*.js'
   },
   serve: {
     base: './',

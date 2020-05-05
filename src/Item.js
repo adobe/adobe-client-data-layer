@@ -16,7 +16,7 @@ const omit = require('lodash/omit');
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./ItemConstraints');
-const CONSTANS = require('./DataLayerConstants');
+const CONSTANS = require('./constants');
 
 /**
  * Constructs a data layer item.

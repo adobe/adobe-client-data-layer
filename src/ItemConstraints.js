@@ -14,7 +14,7 @@ governing permissions and limitations under the License.
  * Constraints for each type of the item configuration.
  */
 
-const constraints = {
+const itemConstraints = {
   event: {
     event: {
       type: 'string'
@@ -61,4 +61,4 @@ const constraints = {
   }
 };
 
-module.exports = constraints;
+module.exports = itemConstraints;

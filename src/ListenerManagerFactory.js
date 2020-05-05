@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -15,7 +15,7 @@ const get = require('lodash/get');
 const has = require('lodash/has');
 const isEqual = require('lodash/isEqual');
 
-const constants = require('./DataLayerConstants');
+const constants = require('./constants');
 
 /**
  * Factory that creates a listener manager.

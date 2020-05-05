@@ -14,7 +14,7 @@ const isEmpty = require('lodash/isEmpty');
 const merge = require('lodash/merge');
 
 const testData = require('./testData');
-const DataLayer = require('../scripts/DataLayer');
+const DataLayer = require('../');
 let adobeDataLayer;
 
 beforeEach(() => {
@@ -41,8 +41,8 @@ describe('State', () => {
     };
     adobeDataLayer.push(data);
     expect(adobeDataLayer.getState()).toEqual(data);
-    expect(adobeDataLayer.getState("component.carousel.carousel1")).toEqual(carousel1);
-    expect(isEmpty(adobeDataLayer.getState("undefined-path")));
+    expect(adobeDataLayer.getState('component.carousel.carousel1')).toEqual(carousel1);
+    expect(isEmpty(adobeDataLayer.getState('undefined-path')));
   });
 });
 
@@ -111,7 +111,7 @@ describe('Functions', () => {
   test('function adds event listener for adobeDataLayer:change', () => {
     const mockCallback = jest.fn();
     const addEventListener = function(adl) {
-        adl.addEventListener('adobeDataLayer:change', mockCallback);
+      adl.addEventListener('adobeDataLayer:change', mockCallback);
     };
 
     adobeDataLayer.push(testData.carousel1);
@@ -174,14 +174,14 @@ describe('Event listeners', () => {
       adobeDataLayer.removeEventListener('adobeDataLayer:event');
       adobeDataLayer.push(testData.carousel1click);
       expect(mockCallback.mock.calls.length, 'callback not triggered second time').toBe(1);
-    })
+    });
 
     test('adobeDataLayer:change not triggered by event push', () => {
       const mockCallback = jest.fn();
 
       adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback);
       adobeDataLayer.push({
-        "event": "page loaded"
+        event: 'page loaded'
       });
       expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
       adobeDataLayer.push(testData.carousel1click);
@@ -329,7 +329,7 @@ describe('Event listeners', () => {
 
       adobeDataLayer.push(testData.carousel1oldId);
       adobeDataLayer.addEventListener('adobeDataLayer:change', compareOldNewValueFunction, {
-          path: 'component.carousel.carousel1.id',
+        path: 'component.carousel.carousel1.id'
       });
       adobeDataLayer.push(testData.carousel1newId);
       expect(mockCallback.mock.calls.length).toBe(2);
@@ -352,9 +352,9 @@ describe('Event listeners', () => {
         if (isEqual(this.getState(), newState)) mockCallback();
       };
 
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId ));
+      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
       adobeDataLayer.addEventListener('adobeDataLayer:change', compareGetStateWithNewStateFunction);
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId ));
+      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
       expect(mockCallback.mock.calls.length).toBe(1);
     });
 
@@ -445,26 +445,6 @@ describe('Invalid', () => {
     adobeDataLayer.push(testData.page2);
     expect(mockCallback.mock.calls.length).toBe(2);
   });
-
-  test.skip('invalid item is filtered out from array', () => {
-    dataLayer = [
-      {
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      },
-      {
-        event: 'clicked',
-        data: {
-          invalid: {}
-        },
-        invalid: 'invalid'
-      }
-    ];
-
-    // ... to be finished
-  });
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -479,9 +459,9 @@ describe('Performance', () => {
 
     adobeDataLayer.addEventListener('carousel clicked', mockCallback);
 
-    for (let i= 0; i < 1000; i++) {
-      let pageId = '/content/mysite/en/products/crossfit' + i;
-      let pageKey = 'page' + i;
+    for (let i = 0; i < 1000; i++) {
+      const pageId = '/content/mysite/en/products/crossfit' + i;
+      const pageKey = 'page' + i;
       data[pageKey] = {
         id: pageId,
         siteLanguage: 'en-us',
@@ -498,6 +478,5 @@ describe('Performance', () => {
       expect(adobeDataLayer.getState()).toStrictEqual(data);
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
-
   });
 });

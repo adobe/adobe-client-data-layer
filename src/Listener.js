@@ -10,13 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const constants = require('./DataLayerConstants');
+const constants = require('./constants');
 
 /**
  * Constructs a data layer listener.
  *
  * @param {Item} item The item from which to construct the listener.
  */
+
 module.exports = function(item) {
   const _event = item.config.on || item.config.off;
   const _handler = item.config.handler || null;
@@ -24,9 +25,32 @@ module.exports = function(item) {
   const _path = item.config.path || null;
 
   return {
+    /**
+     * Returns the listener event name.
+     *
+     * @returns {String} The listener event name.
+     */
     event: _event,
+
+    /**
+     * Returns the listener handler.
+     *
+     * @returns {(Function|null)} The listener handler.
+     */
     handler: _handler,
+
+    /**
+     * Returns the listener scope.
+     *
+     * @returns {(String|null)} The listener scope.
+     */
     scope: _scope,
+
+    /**
+     * Returns the listener path.
+     *
+     * @returns {(String|null)} The listener path.
+     */
     path: _path
   };
 };

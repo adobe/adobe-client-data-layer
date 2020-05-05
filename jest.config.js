@@ -12,6 +12,6 @@ governing permissions and limitations under the License.
 module.exports = {
   collectCoverage: true,
   coverageDirectory: '<rootDir>/test/unit-test-coverage',
-  testMatch: ['<rootDir>/src/tests/**/*.test.js'],
+  testMatch: ['<rootDir>/src/__tests__/**/*.test.js'],
   setupFilesAfterEnv: ["jest-expect-message"]
 };
