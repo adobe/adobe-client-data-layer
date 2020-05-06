@@ -10,9 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const isPlainObject = require('lodash/isPlainObject');
-const isEmpty = require('lodash/isEmpty');
-const omit = require('lodash/omit');
+const _ = require('../custom-lodash');
+const isPlainObject = _.isPlainObject;
+const isEmpty = _.isEmpty;
+const omit = _.omit;
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./ItemConstraints');

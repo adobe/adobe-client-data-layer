@@ -10,9 +10,10 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const constants = require('../constants');
+const _ = require('../../custom-lodash');
+const has = _.has;
 
-const has = require('lodash/has');
+const constants = require('../constants');
 
 /**
  * Checks if the listener matches the item.

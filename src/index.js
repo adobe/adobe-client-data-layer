@@ -10,15 +10,16 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const cloneDeep = require('lodash/cloneDeep');
-const cloneDeepWith = require('lodash/cloneDeepWith');
-const isObject = require('lodash/isObject');
-const isArray = require('lodash/isArray');
-const reject = require('lodash/reject');
-const mergeWith = require('lodash/mergeWith');
-const assign = require('lodash/assign');
-const isNull = require('lodash/isNull');
-const get = require('lodash/get');
+const _ = require('../custom-lodash');
+const cloneDeep = _.cloneDeep;
+const cloneDeepWith = _.cloneDeepWith;
+const isObject = _.isObject;
+const isArray = _.isArray;
+const reject = _.reject;
+const mergeWith = _.mergeWith;
+const assign = _.assign;
+const isNull = _.isNull;
+const get = _.get;
 
 /**
  * Data Layer.

@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const isEqual = require('lodash/isEqual');
+const _ = require('../../custom-lodash');
+const isEqual = _.isEqual;
 
 module.exports = function(listeners, listener) {
   const event = listener.event;
@@ -23,4 +24,4 @@ module.exports = function(listeners, listener) {
     }
   }
   return -1;
-}
+};
