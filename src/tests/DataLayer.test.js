@@ -354,6 +354,25 @@ describe('Event listeners', () => {
       expect(mockCallback.mock.calls.length).toBe(1);
     });
 
+    test('event triggers when the ancestor is removed with null', () => {
+      adobeDataLayer.addEventListener.apply(adobeDataLayer, changeEventArguments);
+      adobeDataLayer.push(testData.componentNull);
+      expect(mockCallback.mock.calls.length).toBe(1);
+    });
+
+    test('event triggers when the ancestor is removed with undefined', () => {
+      adobeDataLayer.addEventListener.apply(adobeDataLayer, changeEventArguments);
+      adobeDataLayer.push(testData.componentUndefined);
+      expect(mockCallback.mock.calls.length).toBe(1);
+    });
+
+    test('event does not trigger when the ancestor does not exist', () => {
+      const changeEventArguments1 = ['adobeDataLayer:change', mockCallback, { path: 'component1.image' }];
+      adobeDataLayer.addEventListener.apply(adobeDataLayer, changeEventArguments1);
+      adobeDataLayer.push(testData.componentUndefined);
+      expect(mockCallback.mock.calls.length).toBe(0);
+    });
+
     test('viewed event triggers on component.image', () => {
       adobeDataLayer.addEventListener('viewed', mockCallback, { path: 'component.image' });
       adobeDataLayer.push(testData.carousel1viewed);
@@ -361,6 +380,12 @@ describe('Event listeners', () => {
 
       adobeDataLayer.push(testData.image1viewed);
       expect(mockCallback.mock.calls.length).toBe(1);
+    });
+
+    test('viewed event does not trigger on a non existing object', () => {
+      adobeDataLayer.addEventListener('viewed', mockCallback, { path: 'component.image.undefined' });
+      adobeDataLayer.push(testData.image1viewed);
+      expect(mockCallback.mock.calls.length).toBe(0);
     });
 
     test('custom event triggers on all components', () => {
@@ -409,6 +434,7 @@ describe('Event listeners', () => {
     });
 
     test('undefined old / new state for past events', () => {
+      // this behaviour is explained at: https://github.com/adobe/adobe-client-data-layer/issues/33
       const isOldNewStateUndefinedFunction = function(event, oldState, newState) {
         if (isEqual(oldState, undefined) && isEqual(newState, undefined)) mockCallback();
       };
@@ -432,13 +458,13 @@ describe('Event listeners', () => {
       expect(mockCallback.mock.calls.length).toBe(1);
     });
 
-    test('handler with a static function', () => {
+    test('handler with an anonymous function', () => {
       const mockCallback = jest.fn();
 
       adobeDataLayer.addEventListener('carousel clicked', function() { mockCallback(); });
       adobeDataLayer.removeEventListener('carousel clicked', function() { mockCallback(); });
 
-      // does not unregister the listener
+      // an anonymous handler cannot be unregistered (similar to EventTarget.addEventListener())
 
       adobeDataLayer.push(testData.carousel1click);
       expect(mockCallback.mock.calls.length).toBe(1);
