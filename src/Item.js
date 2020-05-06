@@ -17,7 +17,7 @@ const omit = _.omit;
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./ItemConstraints');
-const CONSTANS = require('./constants');
+const CONSTANTS = require('./constants');
 
 /**
  * Constructs a data layer item.
@@ -35,15 +35,15 @@ module.exports = function(itemConfig, index) {
 
   function getType() {
     return Object.keys(ITEM_CONSTRAINTS).find(key => dataMatchesContraints(_config, ITEM_CONSTRAINTS[key])) ||
-      (typeof _config === 'function' && CONSTANS.itemType.FCTN) ||
-      (isPlainObject(_config) && CONSTANS.itemType.DATA);
+      (typeof _config === 'function' && CONSTANTS.itemType.FCTN) ||
+      (isPlainObject(_config) && CONSTANTS.itemType.DATA);
   }
 
   function getData() {
     switch (_type) {
-      case CONSTANS.itemType.DATA:
+      case CONSTANTS.itemType.DATA:
         return _config;
-      case CONSTANS.itemType.EVENT: {
+      case CONSTANTS.itemType.EVENT: {
         const eventData = omit(_config, Object.keys(ITEM_CONSTRAINTS.event));
         if (!isEmpty(eventData)) {
           return eventData;

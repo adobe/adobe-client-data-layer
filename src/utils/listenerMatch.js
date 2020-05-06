@@ -13,7 +13,7 @@ governing permissions and limitations under the License.
 const _ = require('../../custom-lodash');
 const has = _.has;
 
-const constants = require('../constants');
+const CONSTANTS = require('../constants');
 
 /**
  * Checks if the listener matches the item.
@@ -28,15 +28,15 @@ function listenerMatch(listener, item) {
   const itemConfig = item.config;
   let matches = false;
 
-  if (item.type === constants.itemType.DATA) {
-    if (event === constants.dataLayerEvent.CHANGE) {
+  if (item.type === CONSTANTS.itemType.DATA) {
+    if (event === CONSTANTS.dataLayerEvent.CHANGE) {
       matches = selectorMatches(listener, item);
     }
-  } else if (item.type === constants.itemType.EVENT) {
-    if (event === constants.dataLayerEvent.EVENT || event === itemConfig.event) {
+  } else if (item.type === CONSTANTS.itemType.EVENT) {
+    if (event === CONSTANTS.dataLayerEvent.EVENT || event === itemConfig.event) {
       matches = selectorMatches(listener, item);
     }
-    if (item.data && event === constants.dataLayerEvent.CHANGE) {
+    if (item.data && event === CONSTANTS.dataLayerEvent.CHANGE) {
       matches = selectorMatches(listener, item);
     }
   }
