@@ -204,11 +204,34 @@ ListenerManagerFactory.create = function(dataLayerManager) {
    * @private
    */
   function _selectorMatches(listener, item) {
-    if (listener.path && item.data) {
-      return has(item.data, listener.path);
+    if (item.data && listener.path) {
+      return (has(item.data, listener.path) || _ancestorRemoved(item.data, listener.path));
     }
 
     return true;
+  }
+
+  /**
+   * Checks if the object contains an ancestor that is set to null or undefined.
+   *
+   * @param {Object} object The object to check.
+   * @param {String} path The path to check.
+   * @returns {Boolean} true if the object contains an ancestor that is set to null or undefined, false otherwise.
+   * @private
+   */
+  function _ancestorRemoved(object, path) {
+    let ancestorPath = path.substring(0, path.lastIndexOf('.'));
+    while (ancestorPath) {
+      if (has(object, ancestorPath)) {
+        const ancestorValue = get(object, ancestorPath);
+        if (ancestorValue === null || ancestorValue === undefined) {
+          return true;
+        }
+      }
+      ancestorPath = ancestorPath.substring(0, ancestorPath.lastIndexOf('.'));
+    }
+
+    return false;
   }
 
   /**
