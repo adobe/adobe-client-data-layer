@@ -27,10 +27,10 @@ const get = _.get;
  * @type {Object}
  */
 const DataLayer = {};
-DataLayer.Item = require('./Item');
-DataLayer.Listener = require('./Listener');
-DataLayer.ListenerManager = require('./ListenerManager');
-DataLayer.constants = require('./constants');
+const Item = require('./item');
+const Listener = require('./listener');
+const ListenerManager = require('./listenerManager');
+const CONSTANTS = require('./constants');
 
 /**
  * @typedef  {Object} ListenerOnConfig
@@ -93,7 +93,7 @@ DataLayer.Manager.prototype._initialize = function() {
   that._dataLayer = that._config.dataLayer;
   that._state = {};
   that._previousStateCopy = {};
-  that._listenerManager = DataLayer.ListenerManager(that);
+  that._listenerManager = ListenerManager(that);
 
   that._augment();
   that._processItems();
@@ -173,24 +173,24 @@ DataLayer.Manager.prototype._augment = function() {
 
     Object.keys(pushArguments).forEach(function(key) {
       const itemConfig = pushArguments[key];
-      const item = DataLayer.Item(itemConfig);
+      const item = Item(itemConfig);
 
       if (!item.valid) {
         delete filteredArguments[key];
       }
       switch (item.type) {
-        case DataLayer.constants.itemType.DATA:
-        case DataLayer.constants.itemType.EVENT: {
+        case CONSTANTS.itemType.DATA:
+        case CONSTANTS.itemType.EVENT: {
           that._processItem(item);
           break;
         }
-        case DataLayer.constants.itemType.FCTN: {
+        case CONSTANTS.itemType.FCTN: {
           delete filteredArguments[key];
           that._processItem(item);
           break;
         }
-        case DataLayer.constants.itemType.LISTENER_ON:
-        case DataLayer.constants.itemType.LISTENER_OFF: {
+        case CONSTANTS.itemType.LISTENER_ON:
+        case CONSTANTS.itemType.LISTENER_OFF: {
           delete filteredArguments[key];
         }
       }
@@ -227,7 +227,7 @@ DataLayer.Manager.prototype._augment = function() {
    *      - {String} all The listener is triggered for past and future events (default value).
    */
   that._dataLayer.addEventListener = function(type, listener, options) {
-    const eventListenerItem = DataLayer.Item({
+    const eventListenerItem = Item({
       on: type,
       handler: listener,
       scope: options && options.scope,
@@ -244,7 +244,7 @@ DataLayer.Manager.prototype._augment = function() {
    * @param {Function} [listener] Optional function that is to be removed.
    */
   that._dataLayer.removeEventListener = function(type, listener) {
-    const eventListenerItem = DataLayer.Item({
+    const eventListenerItem = Item({
       off: type,
       handler: listener
     });
@@ -262,14 +262,14 @@ DataLayer.Manager.prototype._processItems = function() {
   const that = this;
 
   for (let i = 0; i < that._dataLayer.length; i++) {
-    const item = DataLayer.Item(that._dataLayer[i], i);
+    const item = Item(that._dataLayer[i], i);
 
     that._processItem(item);
 
     // remove event listener or invalid item from the data layer array
-    if (item.type === DataLayer.constants.itemType.LISTENER_ON ||
-      item.type === DataLayer.constants.itemType.LISTENER_OFF ||
-      item.type === DataLayer.constants.itemType.FCTN ||
+    if (item.type === CONSTANTS.itemType.LISTENER_ON ||
+      item.type === CONSTANTS.itemType.LISTENER_OFF ||
+      item.type === CONSTANTS.itemType.FCTN ||
       !item.valid) {
       that._dataLayer.splice(i, 1);
       i--;
@@ -303,7 +303,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
    */
   function _getBefore(item) {
     if (!(that._dataLayer.length === 0 || item.index > that._dataLayer.length - 1)) {
-      return that._dataLayer.slice(0, item.index).map(itemConfig => DataLayer.Item(itemConfig));
+      return that._dataLayer.slice(0, item.index).map(itemConfig => Item(itemConfig));
     }
     return [];
   }
@@ -323,19 +323,19 @@ DataLayer.Manager.prototype._processItem = function(item) {
       that._listenerManager.triggerListeners(item);
     },
     listenerOn: function(item) {
-      const listener = DataLayer.Listener(item);
+      const listener = Listener(item);
       switch (listener.scope) {
-        case DataLayer.constants.listenerScope.PAST: {
+        case CONSTANTS.listenerScope.PAST: {
           for (const registeredItem of _getBefore(item)) {
             that._listenerManager.triggerListener(listener, registeredItem);
           }
           break;
         }
-        case DataLayer.constants.listenerScope.FUTURE: {
+        case CONSTANTS.listenerScope.FUTURE: {
           that._listenerManager.register(listener);
           break;
         }
-        case DataLayer.constants.listenerScope.ALL: {
+        case CONSTANTS.listenerScope.ALL: {
           const registered = that._listenerManager.register(listener);
           if (registered) {
             for (const registeredItem of _getBefore(item)) {
@@ -346,7 +346,7 @@ DataLayer.Manager.prototype._processItem = function(item) {
       }
     },
     listenerOff: function(item) {
-      that._listenerManager.unregister(DataLayer.Listener(item));
+      that._listenerManager.unregister(Listener(item));
     }
   };
 
