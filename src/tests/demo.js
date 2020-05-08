@@ -186,7 +186,7 @@ const keepOptions = {
 // option 1
 adobeDataLayer.reset(keepOptions);
 
-// option 1
+// option 2
 AdobeClientDataLayer.reset(adobeDataLayer, keepOptions);
 
 // -----------------------------------------------------------------------------------------------------------------
