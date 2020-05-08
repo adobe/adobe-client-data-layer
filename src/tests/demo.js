@@ -173,4 +173,35 @@ window.adobeDataLayer.push({
   }
 });
 
+// -----------------------------------------------------------------------------------------------------------------
+// Resetting a data layer
+// -----------------------------------------------------------------------------------------------------------------
 
+const keepOptions = {
+  paths: ["page", "component.carousel.carousel4"],
+  events: ["click"],
+  history: true
+};
+
+// option 1
+adobeDataLayer.reset(keepOptions);
+
+// option 1
+AdobeClientDataLayer.reset(adobeDataLayer, keepOptions);
+
+// -----------------------------------------------------------------------------------------------------------------
+// Creating a data layer
+// -----------------------------------------------------------------------------------------------------------------
+
+AdobeClientDataLayer.create('dataLayer1');
+
+// -----------------------------------------------------------------------------------------------------------------
+// Copying a data layer
+// -----------------------------------------------------------------------------------------------------------------
+
+const keepOptionsForCopy = {
+  paths: ["page", "component.carousel.carousel4"],
+  events: ["click"]
+};
+
+AdobeClientDataLayer.copy('myDataLayerCopy', adobeDataLayer, keepOptionsForCopy);

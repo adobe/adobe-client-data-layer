@@ -19,6 +19,7 @@ const mergeWith = require('lodash/mergeWith');
 const assign = require('lodash/assign');
 const isNull = require('lodash/isNull');
 const get = require('lodash/get');
+const set = require('lodash/set');
 
 /**
  * Data Layer.
@@ -250,6 +251,39 @@ DataLayer.Manager.prototype._augment = function() {
 
     that._processItem(eventListenerItem);
   };
+
+  /**
+   * Resets the data layer.
+   *
+   * @param keepOptions Options include:
+   * - paths: array of paths to keep
+   * - events: array of events to keep
+   * - history: true to keep the push history, false otherwise
+   */
+  that._dataLayer.reset = function(keepOptions) {
+    // Reset the push history
+    const keepHistory = keepOptions && keepOptions.history;
+    if (!keepHistory) {
+      that._dataLayer.length = 0;
+    }
+
+    // Reset the data layer state
+    const filteredState = {};
+    if (keepOptions) {
+      const paths = keepOptions.paths;
+      paths.forEach(function(path) {
+        const value = get(that._state, path);
+        if (value) {
+          set(filteredState, path, value);
+        }
+      });
+    }
+    that._state = filteredState;
+    that._previousStateCopy = {};
+
+    // Reset the data layer listeners
+    that._listenerManager.resetListeners(keepOptions);
+  };
 };
 
 /**
@@ -352,9 +386,51 @@ DataLayer.Manager.prototype._processItem = function(item) {
   typeProcessors[item.type](item);
 };
 
+// Create the Adobe data layer
 new DataLayer.Manager({
   dataLayer: window.adobeDataLayer
 });
+
+// Create multiple instances of data layers defined through the DOM
+const DATA_LAYER_NAMES_SELECTOR = '[data-adobe-client-data-layers]';
+const DATA_ATTR_DATA_LAYER_NAMES = 'adobeClientDataLayers';
+const dataLayerNamesElement = document.querySelectorAll(DATA_LAYER_NAMES_SELECTOR)[0];
+if (dataLayerNamesElement) {
+  const dataLayerNamesString = dataLayerNamesElement.dataset[DATA_ATTR_DATA_LAYER_NAMES];
+  if (dataLayerNamesString) {
+    const dataLayerNames = dataLayerNamesString.split(',');
+    dataLayerNames.forEach(function(name) {
+      window[name] = window[name] || [];
+      new DataLayer.Manager({
+        dataLayer: window[name]
+      });
+    });
+  }
+}
+
+// Static utility class to manipulate data layers
+class AdobeClientDataLayer {
+  static reset(dataLayer, options) {
+    dataLayer.reset(options);
+  }
+
+  static create(name) {
+    window[name] = window[name] || [];
+    new DataLayer.Manager({
+      dataLayer: window[name]
+    });
+  }
+
+  static copy(name, dataLayer, options) {
+    window[name] = window[name] || [];
+    window[name] = cloneDeep(dataLayer);
+    new DataLayer.Manager({
+      dataLayer: window[name]
+    });
+    window[name].reset(options);
+  }
+}
+window.AdobeClientDataLayer = AdobeClientDataLayer;
 
 /**
  * Triggered when there is change in the data layer state.
