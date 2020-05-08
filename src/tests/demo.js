@@ -193,7 +193,7 @@ AdobeClientDataLayer.reset(adobeDataLayer, keepOptions);
 // Creating a data layer
 // -----------------------------------------------------------------------------------------------------------------
 
-AdobeClientDataLayer.create('dataLayer1');
+AdobeClientDataLayer.create('myDataLayer');
 
 // -----------------------------------------------------------------------------------------------------------------
 // Copying a data layer
@@ -201,7 +201,8 @@ AdobeClientDataLayer.create('dataLayer1');
 
 const keepOptionsForCopy = {
   paths: ["page", "component.carousel.carousel4"],
-  events: ["click"]
+  events: ["click"],
+  history: true
 };
 
 AdobeClientDataLayer.copy('myDataLayerCopy', adobeDataLayer, keepOptionsForCopy);
