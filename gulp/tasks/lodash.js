@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -10,28 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-  'use strict';
+  const shell = require('gulp-shell');
 
-  require('./tasks/clean.js')(gulp);
-  require('./tasks/lint.js')(gulp);
-  require('./tasks/lodash.js')(gulp);
-  require('./tasks/release.js')(gulp);
-  require('./tasks/scripts.js')(gulp);
-  require('./tasks/watch.js')(gulp);
-  require('./tasks/test.js')(gulp);
+  const configs = {
+    include: ['isEqual', 'has', 'cloneDeep', 'cloneDeepWith', 'isObject', 'reject', 'merge', 'mergeWith', 'assign', 'isNull', 'get', 'isEmpty', 'omit', 'isPlainObject', 'cloneDeep'],
+    output: 'custom-lodash.js'
+  };
 
-  gulp.task('build',
-    gulp.series(
-      'lodash',
-      gulp.parallel('clean', 'lint', 'test'),
-      'scripts'
-    )
-  );
-
-  gulp.task('default',
-    gulp.series(
-      'build',
-      'watch'
-    )
-  );
+  gulp.task('lodash', shell.task(`lodash include=${configs.include.join(',')} -p -o ${configs.output}`));
 };
