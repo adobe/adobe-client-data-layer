@@ -177,32 +177,63 @@ window.adobeDataLayer.push({
 // Resetting a data layer
 // -----------------------------------------------------------------------------------------------------------------
 
-const keepOptions = {
-  paths: ["page", "component.carousel.carousel4"],
-  events: ["click"],
-  history: true
+adobeDataLayer.getState('component.carousel');
+
+options = {
+  keep: {
+    paths: ["component.carousel.carousel4"],
+    events: ["click"],
+    history: true // will keep the data layer items history
+  }
 };
 
-// option 1
-adobeDataLayer.reset(keepOptions);
+adobeDataLayer.reset(options);
 
-// option 2
-AdobeClientDataLayer.reset(adobeDataLayer, keepOptions);
-
-// -----------------------------------------------------------------------------------------------------------------
-// Creating a data layer
-// -----------------------------------------------------------------------------------------------------------------
-
-AdobeClientDataLayer.create('myDataLayer');
-
-// -----------------------------------------------------------------------------------------------------------------
-// Copying a data layer
-// -----------------------------------------------------------------------------------------------------------------
-
-const keepOptionsForCopy = {
-  paths: ["page", "component.carousel.carousel4"],
-  events: ["click"],
-  history: true
+options = {
+  remove: {
+    paths: ["component.carousel.carousel4"],
+    events: ["click"],
+    history: true // will remove the data layer items history
+  }
 };
 
-AdobeClientDataLayer.copy('myDataLayerCopy', adobeDataLayer, keepOptionsForCopy);
+adobeDataLayer.reset(options);
+
+// -----------------------------------------------------------------------------------------------------------------
+// Creating data layers
+// -----------------------------------------------------------------------------------------------------------------
+
+// Creating the adobeDataLayer
+
+/*
+    <script>
+      window.adobeDataLayer = window.adobeDataLayer || [];
+    </script>
+*/
+
+// Renaming the adobeDataLayer:
+
+/*
+    <script data-adobe-client-data-layers="myDataLayer">
+      window.myDataLayer = window.myDataLayer || [];
+      window.myDataLayer.push({ "test": "hello myDataLayer" });
+    </script>
+*/
+
+// Creating multiple data layers
+
+/*
+    <script data-adobe-client-data-layers="myDataLayer,myOtherDataLayer">
+      window.myDataLayer = window.myDataLayer || [];
+      window.myOtherDataLayer = window.myOtherDataLayer || [];
+      window.myDataLayer.push({ "test": "hello myDataLayer" });
+      window.myOtherDataLayer.push({ "test": "hello myOtherDataLayer" });
+    </script>
+*/
+
+// Creating a new data layer
+myDataLayerFoo = AdobeClientDataLayer.create();
+
+// Creating a new data layer based on an existing one:
+myDataLayerBar = AdobeClientDataLayer.create(myDataLayer);
+

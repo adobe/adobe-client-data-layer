@@ -20,6 +20,7 @@ const assign = require('lodash/assign');
 const isNull = require('lodash/isNull');
 const get = require('lodash/get');
 const set = require('lodash/set');
+const omit = require('lodash/omit');
 
 /**
  * Data Layer.
@@ -255,34 +256,38 @@ DataLayer.Manager.prototype._augment = function() {
   /**
    * Resets the data layer.
    *
-   * @param keepOptions Options include:
+   * @param {Object} options Options include:
    * - paths: array of paths to keep
    * - events: array of events to keep
    * - history: true to keep the push history, false otherwise
    */
-  that._dataLayer.reset = function(keepOptions) {
+  that._dataLayer.reset = function(options) {
     // Reset the push history
-    const keepHistory = keepOptions && keepOptions.history;
+    const keepHistory = (options && options.keep && options.keep.history) ||
+                        (options && options.remove && !options.remove.history);
     if (!keepHistory) {
       that._dataLayer.length = 0;
     }
 
     // Reset the data layer state
-    const filteredState = {};
-    if (keepOptions) {
-      const paths = keepOptions.paths;
+    let filteredState = {};
+    if (options && options.keep && options.keep.paths) {
+      const paths = options.keep.paths;
       paths.forEach(function(path) {
         const value = get(that._state, path);
         if (value) {
           set(filteredState, path, value);
         }
       });
+    } else if (options && options.remove && options.remove.paths) {
+      const paths = options.remove.paths;
+      filteredState = omit(that._state, paths);
     }
     that._state = filteredState;
     that._previousStateCopy = {};
 
     // Reset the data layer listeners
-    that._listenerManager.resetListeners(keepOptions);
+    that._listenerManager.resetListeners(options);
   };
 };
 
@@ -386,11 +391,6 @@ DataLayer.Manager.prototype._processItem = function(item) {
   typeProcessors[item.type](item);
 };
 
-// Create the Adobe data layer
-new DataLayer.Manager({
-  dataLayer: window.adobeDataLayer
-});
-
 // Create multiple instances of data layers defined through the DOM
 const DATA_LAYER_NAMES_SELECTOR = '[data-adobe-client-data-layers]';
 const DATA_ATTR_DATA_LAYER_NAMES = 'adobeClientDataLayers';
@@ -406,28 +406,21 @@ if (dataLayerNamesElement) {
       });
     });
   }
+} else {
+  // Create the Adobe data layer
+  new DataLayer.Manager({
+    dataLayer: window['adobeDataLayer'] /* eslint dot-notation: 0 */
+  });
 }
 
 // Static utility class to manipulate data layers
 class AdobeClientDataLayer {
-  static reset(dataLayer, options) {
-    dataLayer.reset(options);
-  }
-
-  static create(name) {
-    window[name] = window[name] || [];
+  static create(dataLayer) {
+    const newDataLayer = dataLayer ? cloneDeep(dataLayer) : [];
     new DataLayer.Manager({
-      dataLayer: window[name]
+      dataLayer: newDataLayer
     });
-  }
-
-  static copy(name, dataLayer, options) {
-    window[name] = window[name] || [];
-    window[name] = cloneDeep(dataLayer);
-    new DataLayer.Manager({
-      dataLayer: window[name]
-    });
-    window[name].reset(options);
+    return newDataLayer;
   }
 }
 window.AdobeClientDataLayer = AdobeClientDataLayer;

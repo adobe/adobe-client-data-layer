@@ -14,6 +14,7 @@ const cloneDeep = require('lodash/cloneDeep');
 const get = require('lodash/get');
 const has = require('lodash/has');
 const isEqual = require('lodash/isEqual');
+const omit = require('lodash/omit');
 
 const constants = require('./DataLayerConstants');
 
@@ -109,17 +110,20 @@ ListenerManagerFactory.create = function(dataLayerManager) {
     },
 
     // Resets the listeners based on the options of what to keep
-    resetListeners: function(keepOptions) {
+    resetListeners: function(options) {
       const filteredListeners = {};
-      if (keepOptions) {
-        const events = keepOptions.events;
+      if (options && options.keep && options.keep.events) {
+        const events = options.keep.events;
         events.forEach(function(event) {
           if (_listeners[event]) {
             filteredListeners[event] = _listeners[event];
           }
         });
+        _listeners = filteredListeners;
+      } else if (options && options.remove && options.remove.events) {
+        const events = options.remove.events;
+        _listeners = omit(_listeners, events);
       }
-      _listeners = filteredListeners;
     }
   };
 

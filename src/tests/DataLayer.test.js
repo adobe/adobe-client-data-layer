@@ -520,11 +520,13 @@ test('reset', () => {
   };
   adobeDataLayer.push(data);
 
-  const keepOptions = {
-    paths: ["page", "component.carousel.carousel1"],
-    events: ["click"]
+  const options = {
+    keep: {
+      paths: ["page", "component.carousel.carousel1"],
+      events: ["click"]
+    }
   };
-  adobeDataLayer.reset(keepOptions);
+  adobeDataLayer.reset(options);
 
   const filteredData = {
     page: {
