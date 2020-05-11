@@ -14,8 +14,13 @@ const isEmpty = require('lodash/isEmpty');
 const merge = require('lodash/merge');
 
 const testData = require('./testData');
+const ITEM_CONSTRAINTS = require('../itemConstraints');
 const DataLayer = require('../');
 let adobeDataLayer;
+
+const dataMatchesContraints = require('../utils/dataMatchesContraints');
+const indexOfListener = require('../utils/indexOfListener');
+const listenerMatch = require('../utils/listenerMatch');
 
 beforeEach(() => {
   adobeDataLayer = [];
@@ -478,5 +483,43 @@ describe('Performance', () => {
       expect(adobeDataLayer.getState()).toStrictEqual(data);
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
+  });
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------------------------------------------------------
+
+describe('Utils', () => {
+  describe('dataMatchesContraints', () => {
+    test('event', () => {
+      expect(dataMatchesContraints(testData.carousel1click, ITEM_CONSTRAINTS.event)).toBeTruthy();
+    });
+    test('listenerOn', () => {
+      const listenerOn = {
+        on: 'event',
+        handler: () => {},
+        scope: 'future',
+        path: 'component.carousel1'
+      };
+      expect(dataMatchesContraints(listenerOn, ITEM_CONSTRAINTS.listenerOn)).toBeTruthy();
+    });
+    test('listenerOff', () => {
+      const listenerOff = {
+        off: 'event',
+        handler: () => {},
+        scope: 'future',
+        path: 'component.carousel1'
+      };
+      expect(dataMatchesContraints(listenerOff, ITEM_CONSTRAINTS.listenerOff)).toBeTruthy();
+    });
+  });
+
+  test.skip('indexOfListener', () => {
+    indexOfListener();
+  });
+
+  test.skip('listenerMatch', () => {
+    listenerMatch();
   });
 });
