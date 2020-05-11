@@ -27,6 +27,7 @@ module.exports = function(gulp) {
 
     return b.bundle()
       .pipe(source('adobe-client-data-layer.js'))
+      .pipe(gulp.dest('./dist/'))
       .pipe(buffer())
       .pipe(sourcemaps.init({loadMaps: true}))
       .pipe((babel({
