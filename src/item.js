@@ -16,7 +16,7 @@ const isEmpty = _.isEmpty;
 const omit = _.omit;
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
-const ITEM_CONSTRAINTS = require('./ItemConstraints');
+const ITEM_CONSTRAINTS = require('./itemConstraints');
 const CONSTANTS = require('./constants');
 
 /**

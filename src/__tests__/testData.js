@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const merge = require('lodash/merge');
+const _ = require('../../custom-lodash.js');
+const merge = _.merge;
 
 const carousel1 = {
   component: {
