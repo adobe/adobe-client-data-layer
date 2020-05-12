@@ -18,6 +18,7 @@ const ITEM_CONSTRAINTS = require('../itemConstraints');
 const DataLayer = require('../');
 let adobeDataLayer;
 
+const ancestorRemoved = require('../utils/dataMatchesContraints');
 const dataMatchesContraints = require('../utils/dataMatchesContraints');
 const indexOfListener = require('../utils/indexOfListener');
 const listenerMatch = require('../utils/listenerMatch');
@@ -535,6 +536,10 @@ describe('Performance', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Utils', () => {
+  test.skip('ancestorRemoved', () => {
+    ancestorRemoved();
+  });
+
   describe('dataMatchesContraints', () => {
     test('event', () => {
       expect(dataMatchesContraints(testData.carousel1click, ITEM_CONSTRAINTS.event)).toBeTruthy();
