@@ -14,6 +14,7 @@ const _ = require('../../custom-lodash');
 const has = _.has;
 
 const CONSTANTS = require('../constants');
+const ancestorRemoved = require('./ancestorRemoved');
 
 /**
  * Checks if the listener matches the item.
@@ -53,8 +54,8 @@ function listenerMatch(listener, item) {
  * @private
  */
 function selectorMatches(listener, item) {
-  if (listener.path && item.data) {
-    return has(item.data, listener.path);
+  if (item.data && listener.path) {
+    return has(item.data, listener.path) || ancestorRemoved(item.data, listener.path);
   }
 
   return true;

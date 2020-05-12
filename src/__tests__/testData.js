@@ -59,6 +59,14 @@ const testData = {
     }
   },
 
+  componentNull: {
+    component: null
+  },
+
+  componentUndefined: {
+    component: undefined
+  },
+
   // Carousel 1
 
   carousel1: carousel1,
