@@ -18,7 +18,7 @@ const ITEM_CONSTRAINTS = require('../itemConstraints');
 const DataLayer = require('../');
 let adobeDataLayer;
 
-const ancestorRemoved = require('../utils/dataMatchesContraints');
+const ancestorRemoved = require('../utils/ancestorRemoved');
 const customMerge = require('../utils/customMerge');
 const dataMatchesContraints = require('../utils/dataMatchesContraints');
 const indexOfListener = require('../utils/indexOfListener');
@@ -537,12 +537,32 @@ describe('Performance', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Utils', () => {
-  test.skip('ancestorRemoved', () => {
-    ancestorRemoved();
+  describe('ancestorRemoved', () => {
+    test('removed', () => {
+      expect(ancestorRemoved(testData.componentNull, 'component.carousel')).toBeTruthy();
+      expect(ancestorRemoved(testData.componentNull, 'component.carousel.carousel1')).toBeTruthy();
+    });
+    test('not removed', () => {
+      expect(ancestorRemoved(testData.carousel1, 'component.carousel')).toBeFalsy();
+      expect(ancestorRemoved(testData.carousel1, 'component.carousel.carousel1')).toBeFalsy();
+    });
   });
 
-  test.skip('customMerge', () => {
-    ancestorRemoved();
+  describe('customMerge', () => {
+    test('merges object', () => {
+      const objectInitial = { prop1: 'foo' };
+      const objectSource = { prop2: 'bar' };
+      const objectFinal = { prop1: 'foo', prop2: 'bar' };
+      customMerge(objectInitial, objectSource);
+      expect(objectInitial).toEqual(objectFinal);
+    });
+    test('overrides with null and undefined', () => {
+      const objectInitial = { prop1: 'foo', prop2: 'bar' };
+      const objectSource = { prop1: null, prop2: undefined };
+      const objectFinal = { prop1: null, prop2: null };
+      customMerge(objectInitial, objectSource);
+      expect(objectInitial).toEqual(objectFinal);
+    });
   });
 
   describe('dataMatchesContraints', () => {
@@ -569,11 +589,51 @@ describe('Utils', () => {
     });
   });
 
-  test.skip('indexOfListener', () => {
-    indexOfListener();
+  describe('indexOfListener', () => {
+    test.skip('indexOfListener', () => {
+      indexOfListener();
+    });
   });
 
-  test.skip('listenerMatch', () => {
-    listenerMatch();
+  describe('listenerMatch', () => {
+    test('event type', () => {
+      const listener = {
+        event: 'user loaded',
+        handler: () => {},
+        scope: 'all',
+        path: null
+      };
+      const item = {
+        config: { event: 'user loaded' },
+        type: 'event'
+      };
+      expect(listenerMatch(listener, item)).toBeTruthy();
+    });
+    test('with correct path', () => {
+      const listener = { event: 'viewed',
+        handler: () => {},
+        scope: 'all',
+        path: 'component.image.image1'
+      };
+      const item = {
+        config: testData.image1viewed,
+        type: 'event',
+        data: testData.image1
+      };
+      expect(listenerMatch(listener, item)).toBeTruthy();
+    });
+    test('with incorrect path', () => {
+      const listener = { event: 'viewed',
+        handler: () => {},
+        scope: 'all',
+        path: 'component.carousel'
+      };
+      const item = {
+        config: testData.image1viewed,
+        type: 'event',
+        data: testData.image1
+      };
+      expect(listenerMatch(listener, item)).toBeFalsy();
+    });
   });
 });

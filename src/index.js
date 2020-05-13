@@ -85,11 +85,4 @@ DataLayer.Manager({
  * @property {Object} data Data that was pushed alongside the event.
  */
 
-/**
- * Triggered when the data layer has initialized.
- *
- * @event DataLayerEvent.READY
- * @type {Object}
- */
-
 module.exports = DataLayer;

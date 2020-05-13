@@ -14,11 +14,6 @@ const _ = require('../custom-lodash');
 const cloneDeep = _.cloneDeep;
 const get = _.get;
 
-/**
- * Data Layer.
- *
- * @type {Object}
- */
 const Item = require('./item');
 const Listener = require('./listener');
 const ListenerManager = require('./listenerManager');
@@ -83,7 +78,7 @@ module.exports = function(config) {
   };
 
   /**
-   * Augments the data layer Array Object, overriding push() and adding getState().
+   * Augments the data layer Array Object, overriding: push() and adding getState(), addEventListener and removeEventListener.
    *
    * @private
    */

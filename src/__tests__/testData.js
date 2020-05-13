@@ -30,7 +30,9 @@ const carousel1 = {
 const image1 = {
   component: {
     image: {
-      src: '/content/image/test.jpg'
+      image1: {
+        src: '/content/image/test.jpg'
+      }
     }
   }
 };
