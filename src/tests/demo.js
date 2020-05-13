@@ -12,7 +12,7 @@ window.adobeDataLayer.push({
       carousel1: {
         id: '/content/mysite/en/home/jcr:content/root/carousel1',
         shownItems: [
-          'item1', 'item2'
+          'item1', 'item2', 'item3'
         ]
       },
       carousel2: {
@@ -32,6 +32,11 @@ window.adobeDataLayer.push({
 window.adobeDataLayer.push({
   component: {
     carousel: {
+      carousel1: {
+        shownItems: [
+          'item1', null, 'item3'
+        ]
+      },
       carousel3: null
     }
   }
@@ -153,6 +158,12 @@ window.adobeDataLayer.push({
         items: {}
       }
     }
+  }
+});
+
+window.adobeDataLayer.push({
+  component: {
+    carousel: null
   }
 });
 
