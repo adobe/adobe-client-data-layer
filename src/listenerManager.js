@@ -26,6 +26,7 @@ const indexOfListener = require('./utils/indexOfListener');
  */
 module.exports = function(dataLayerManager) {
   const _listeners = {};
+  const _dataLayerManager = dataLayerManager;
 
   /**
    * Find index of listener in listeners object.
@@ -116,17 +117,17 @@ module.exports = function(dataLayerManager) {
 
       if (item.data) {
         if (listener.path) {
-          const oldValue = get(dataLayerManager._previousStateCopy, listener.path);
+          const oldValue = get(_dataLayerManager.getPreviousState(), listener.path);
           const newValue = get(cloneDeep(item.data), listener.path);
           callbackArgs.push(oldValue, newValue);
         } else if (!isPastItem) {
-          const oldState = dataLayerManager._previousStateCopy;
-          const newState = cloneDeep(dataLayerManager._state);
+          const oldState = _dataLayerManager.getPreviousState();
+          const newState = cloneDeep(_dataLayerManager.getState());
           callbackArgs.push(oldState, newState);
         }
       }
 
-      listener.handler.apply(dataLayerManager._dataLayer, callbackArgs);
+      listener.handler.apply(_dataLayerManager.getDataLayer(), callbackArgs);
     }
   }
 

@@ -19,13 +19,14 @@ const DataLayer = require('../');
 let adobeDataLayer;
 
 const ancestorRemoved = require('../utils/dataMatchesContraints');
+const customMerge = require('../utils/customMerge');
 const dataMatchesContraints = require('../utils/dataMatchesContraints');
 const indexOfListener = require('../utils/indexOfListener');
 const listenerMatch = require('../utils/listenerMatch');
 
 beforeEach(() => {
   adobeDataLayer = [];
-  new DataLayer.Manager({ dataLayer: adobeDataLayer });
+  DataLayer.Manager({ dataLayer: adobeDataLayer });
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -105,7 +106,7 @@ describe('Data', () => {
 
   test('push initial data provided before data layer initialization', () => {
     adobeDataLayer = [testData.carousel1, testData.carousel2];
-    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
 
     expect(adobeDataLayer.getState(), 'all items are pushed to data layer state').toStrictEqual(merge({}, testData.carousel1, testData.carousel2));
   });
@@ -114,7 +115,7 @@ describe('Data', () => {
     // Catches console.error function which should be triggered by data layer during this test
     var consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     adobeDataLayer = ['test'];
-    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
 
     expect(adobeDataLayer.getState(), 'initialization').toStrictEqual({});
     expect(consoleSpy).toHaveBeenCalled();
@@ -537,6 +538,10 @@ describe('Performance', () => {
 
 describe('Utils', () => {
   test.skip('ancestorRemoved', () => {
+    ancestorRemoved();
+  });
+
+  test.skip('customMerge', () => {
     ancestorRemoved();
   });
 
