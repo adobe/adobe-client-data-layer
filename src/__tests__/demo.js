@@ -43,7 +43,7 @@ console.log('Pushing component: ', window.adobeDataLayer.getState().component.ca
 
 window.adobeDataLayer.getState().component.carousel.carousel2.id = 'new id';
 
-console.log('getState copy can not be overridden: ', window.adobeDataLayer.getState().component.carousel.carousel2);
+window.adobeDataLayer.getState('component.carousel.carousel2');
 
 // update an object
 
@@ -59,7 +59,7 @@ window.adobeDataLayer.push({
   }
 });
 
-// window.adobeDataLayer.getState().component.carousel.carousel1;
+window.adobeDataLayer.getState('component.carousel.carousel1');
 
 // -----------------------------------------------------------------------------------------------------------------
 // Pushing a function

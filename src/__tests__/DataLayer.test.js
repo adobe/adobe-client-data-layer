@@ -610,7 +610,8 @@ describe('Utils', () => {
       expect(listenerMatch(listener, item)).toBeTruthy();
     });
     test('with correct path', () => {
-      const listener = { event: 'viewed',
+      const listener = {
+        event: 'viewed',
         handler: () => {},
         scope: 'all',
         path: 'component.image.image1'
@@ -623,7 +624,8 @@ describe('Utils', () => {
       expect(listenerMatch(listener, item)).toBeTruthy();
     });
     test('with incorrect path', () => {
-      const listener = { event: 'viewed',
+      const listener = {
+        event: 'viewed',
         handler: () => {},
         scope: 'all',
         path: 'component.carousel'
