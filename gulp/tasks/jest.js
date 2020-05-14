@@ -16,7 +16,7 @@ module.exports = function(gulp) {
     jest: require(`${__dirname}/../../jest.config.js`)
   };
 
-  gulp.task('test', (done) => {
+  gulp.task('jest', (done) => {
     jestcli.runCLI(configs.jest,['.'])
         .then((ret) => {
           if (ret.results.success) {
