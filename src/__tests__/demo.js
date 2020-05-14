@@ -37,13 +37,13 @@ window.adobeDataLayer.push({
   }
 });
 
-// window.adobeDataLayer.getState().component.carousel;
+console.log('Pushing component: ', window.adobeDataLayer.getState().component.carousel);
 
 // getState() returns a copy of the state
 
 window.adobeDataLayer.getState().component.carousel.carousel2.id = 'new id';
 
-// window.adobeDataLayer.getState().component.carousel.carousel2;
+console.log('getState copy can not be overridden: ', window.adobeDataLayer.getState().component.carousel.carousel2);
 
 // update an object
 
