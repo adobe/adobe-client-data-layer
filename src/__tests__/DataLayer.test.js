@@ -14,12 +14,19 @@ const isEmpty = require('lodash/isEmpty');
 const merge = require('lodash/merge');
 
 const testData = require('./testData');
-const DataLayer = require('../scripts/DataLayer');
+const ITEM_CONSTRAINTS = require('../itemConstraints');
+const DataLayer = require('../');
 let adobeDataLayer;
+
+const ancestorRemoved = require('../utils/ancestorRemoved');
+const customMerge = require('../utils/customMerge');
+const dataMatchesContraints = require('../utils/dataMatchesContraints');
+const indexOfListener = require('../utils/indexOfListener');
+const listenerMatch = require('../utils/listenerMatch');
 
 beforeEach(() => {
   adobeDataLayer = [];
-  new DataLayer.Manager({ dataLayer: adobeDataLayer });
+  DataLayer.Manager({ dataLayer: adobeDataLayer });
 });
 
 // -----------------------------------------------------------------------------------------------------------------
@@ -41,8 +48,8 @@ describe('State', () => {
     };
     adobeDataLayer.push(data);
     expect(adobeDataLayer.getState()).toEqual(data);
-    expect(adobeDataLayer.getState("component.carousel.carousel1")).toEqual(carousel1);
-    expect(isEmpty(adobeDataLayer.getState("undefined-path")));
+    expect(adobeDataLayer.getState('component.carousel.carousel1')).toEqual(carousel1);
+    expect(isEmpty(adobeDataLayer.getState('undefined-path')));
   });
 });
 
@@ -98,17 +105,17 @@ describe('Data', () => {
   });
 
   test('push initial data provided before data layer initialization', () => {
-    adobeDataLayer = [ testData.carousel1, testData.carousel2 ];
-    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+    adobeDataLayer = [testData.carousel1, testData.carousel2];
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
 
     expect(adobeDataLayer.getState(), 'all items are pushed to data layer state').toStrictEqual(merge({}, testData.carousel1, testData.carousel2));
   });
 
   test('invalid initial data triggers error', () => {
     // Catches console.error function which should be triggered by data layer during this test
-    var consoleSpy = jest.spyOn(console, "error").mockImplementation();
+    var consoleSpy = jest.spyOn(console, 'error').mockImplementation();
     adobeDataLayer = ['test'];
-    new DataLayer.Manager({ dataLayer: adobeDataLayer });
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
 
     expect(adobeDataLayer.getState(), 'initialization').toStrictEqual({});
     expect(consoleSpy).toHaveBeenCalled();
@@ -118,7 +125,7 @@ describe('Data', () => {
 
   test('push on / off listeners is not allowed', () => {
     adobeDataLayer.push({
-      on: 'click' ,
+      on: 'click',
       handler: jest.fn()
     });
     adobeDataLayer.push({
@@ -154,7 +161,7 @@ describe('Functions', () => {
   test('function adds event listener for adobeDataLayer:change', () => {
     const mockCallback = jest.fn();
     const addEventListener = function(adl) {
-        adl.addEventListener('adobeDataLayer:change', mockCallback);
+      adl.addEventListener('adobeDataLayer:change', mockCallback);
     };
 
     adobeDataLayer.push(testData.carousel1);
@@ -217,14 +224,14 @@ describe('Event listeners', () => {
       adobeDataLayer.removeEventListener('adobeDataLayer:event');
       adobeDataLayer.push(testData.carousel1click);
       expect(mockCallback.mock.calls.length, 'callback not triggered second time').toBe(1);
-    })
+    });
 
     test('adobeDataLayer:change not triggered by event push', () => {
       const mockCallback = jest.fn();
 
       adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback);
       adobeDataLayer.push({
-        "event": "page loaded"
+        event: 'page loaded'
       });
       expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
       adobeDataLayer.push(testData.carousel1click);
@@ -404,7 +411,7 @@ describe('Event listeners', () => {
 
       adobeDataLayer.push(testData.carousel1oldId);
       adobeDataLayer.addEventListener('adobeDataLayer:change', compareOldNewValueFunction, {
-          path: 'component.carousel.carousel1.id',
+        path: 'component.carousel.carousel1.id'
       });
       adobeDataLayer.push(testData.carousel1newId);
       expect(mockCallback.mock.calls.length).toBe(2);
@@ -427,9 +434,9 @@ describe('Event listeners', () => {
         if (isEqual(this.getState(), newState)) mockCallback();
       };
 
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId ));
+      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
       adobeDataLayer.addEventListener('adobeDataLayer:change', compareGetStateWithNewStateFunction);
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId ));
+      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
       expect(mockCallback.mock.calls.length).toBe(1);
     });
 
@@ -504,8 +511,8 @@ describe('Performance', () => {
     adobeDataLayer.addEventListener('carousel clicked', mockCallback);
 
     for (let i = 0; i < 1000; i++) {
-      let pageId = '/content/mysite/en/products/crossfit' + i;
-      let pageKey = 'page' + i;
+      const pageId = '/content/mysite/en/products/crossfit' + i;
+      const pageKey = 'page' + i;
       data[pageKey] = {
         id: pageId,
         siteLanguage: 'en-us',
@@ -522,5 +529,113 @@ describe('Performance', () => {
       expect(adobeDataLayer.getState()).toStrictEqual(data);
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
+  });
+});
+
+// -----------------------------------------------------------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------------------------------------------------------
+
+describe('Utils', () => {
+  describe('ancestorRemoved', () => {
+    test('removed', () => {
+      expect(ancestorRemoved(testData.componentNull, 'component.carousel')).toBeTruthy();
+      expect(ancestorRemoved(testData.componentNull, 'component.carousel.carousel1')).toBeTruthy();
+    });
+    test('not removed', () => {
+      expect(ancestorRemoved(testData.carousel1, 'component.carousel')).toBeFalsy();
+      expect(ancestorRemoved(testData.carousel1, 'component.carousel.carousel1')).toBeFalsy();
+    });
+  });
+
+  describe('customMerge', () => {
+    test('merges object', () => {
+      const objectInitial = { prop1: 'foo' };
+      const objectSource = { prop2: 'bar' };
+      const objectFinal = { prop1: 'foo', prop2: 'bar' };
+      customMerge(objectInitial, objectSource);
+      expect(objectInitial).toEqual(objectFinal);
+    });
+    test('overrides with null and undefined', () => {
+      const objectInitial = { prop1: 'foo', prop2: 'bar' };
+      const objectSource = { prop1: null, prop2: undefined };
+      const objectFinal = { prop1: null, prop2: null };
+      customMerge(objectInitial, objectSource);
+      expect(objectInitial).toEqual(objectFinal);
+    });
+  });
+
+  describe('dataMatchesContraints', () => {
+    test('event', () => {
+      expect(dataMatchesContraints(testData.carousel1click, ITEM_CONSTRAINTS.event)).toBeTruthy();
+    });
+    test('listenerOn', () => {
+      const listenerOn = {
+        on: 'event',
+        handler: () => {},
+        scope: 'future',
+        path: 'component.carousel1'
+      };
+      expect(dataMatchesContraints(listenerOn, ITEM_CONSTRAINTS.listenerOn)).toBeTruthy();
+    });
+    test('listenerOff', () => {
+      const listenerOff = {
+        off: 'event',
+        handler: () => {},
+        scope: 'future',
+        path: 'component.carousel1'
+      };
+      expect(dataMatchesContraints(listenerOff, ITEM_CONSTRAINTS.listenerOff)).toBeTruthy();
+    });
+  });
+
+  describe('indexOfListener', () => {
+    test.skip('indexOfListener', () => {
+      indexOfListener();
+    });
+  });
+
+  describe('listenerMatch', () => {
+    test('event type', () => {
+      const listener = {
+        event: 'user loaded',
+        handler: () => {},
+        scope: 'all',
+        path: null
+      };
+      const item = {
+        config: { event: 'user loaded' },
+        type: 'event'
+      };
+      expect(listenerMatch(listener, item)).toBeTruthy();
+    });
+    test('with correct path', () => {
+      const listener = {
+        event: 'viewed',
+        handler: () => {},
+        scope: 'all',
+        path: 'component.image.image1'
+      };
+      const item = {
+        config: testData.image1viewed,
+        type: 'event',
+        data: testData.image1
+      };
+      expect(listenerMatch(listener, item)).toBeTruthy();
+    });
+    test('with incorrect path', () => {
+      const listener = {
+        event: 'viewed',
+        handler: () => {},
+        scope: 'all',
+        path: 'component.carousel'
+      };
+      const item = {
+        config: testData.image1viewed,
+        type: 'event',
+        data: testData.image1
+      };
+      expect(listenerMatch(listener, item)).toBeFalsy();
+    });
   });
 });

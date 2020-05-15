@@ -1,5 +1,5 @@
 /*
-Copyright 2019 Adobe. All rights reserved.
+Copyright 2020 Adobe. All rights reserved.
 This file is licensed to you under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License. You may obtain a copy
 of the License at http://www.apache.org/licenses/LICENSE-2.0
@@ -9,21 +9,19 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-module.exports = function(gulp) {
-  const jestcli = require('jest-cli');
 
-  const configs = {
-    jest: require(`${__dirname}/../../jest.config.js`)
-  };
+const _ = require('../../custom-lodash');
+const isEqual = _.isEqual;
 
-  gulp.task('test', (done) => {
-    jestcli.runCLI(configs.jest,['.'])
-        .then((ret) => {
-          if (ret.results.success) {
-            done();
-          } else {
-            done(new Error("Tests failed!"));
-          }
-        });
-  });
+module.exports = function(listeners, listener) {
+  const event = listener.event;
+
+  if (Object.prototype.hasOwnProperty.call(listeners, event)) {
+    for (const [index, registeredListener] of listeners[event].entries()) {
+      if (isEqual(registeredListener.handler, listener.handler)) {
+        return index;
+      }
+    }
+  }
+  return -1;
 };

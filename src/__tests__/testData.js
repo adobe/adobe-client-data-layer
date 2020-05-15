@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const merge = require('lodash/merge');
+const _ = require('../../custom-lodash.js');
+const merge = _.merge;
 
 const carousel1 = {
   component: {
@@ -29,7 +30,9 @@ const carousel1 = {
 const image1 = {
   component: {
     image: {
-      src: '/content/image/test.jpg'
+      image1: {
+        src: '/content/image/test.jpg'
+      }
     }
   }
 };
@@ -59,11 +62,11 @@ const testData = {
     }
   },
 
-  componentNull : {
+  componentNull: {
     component: null
   },
 
-  componentUndefined : {
+  componentUndefined: {
     component: undefined
   },
 
@@ -188,6 +191,6 @@ const testData = {
   image1viewed: merge({}, image1, {
     event: 'viewed'
   })
-}
+};
 
 module.exports = testData;

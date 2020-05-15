@@ -9,19 +9,21 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-module.exports = {
-  dist: 'dist/',
-  examples: {
-    base: 'examples/',
-    html: 'examples/*.html',
-    js: 'examples/js/*.js'
-  },
-  src: {
-    base: 'src/',
-    scripts: 'src/**/*.js'
-  },
-  serve: {
-    base: './',
-    examples: './examples'
-  }
+module.exports = function(gulp) {
+  const jestcli = require('jest-cli');
+
+  const configs = {
+    jest: require(`${__dirname}/../../jest.config.js`)
+  };
+
+  gulp.task('jest', (done) => {
+    jestcli.runCLI(configs.jest,['.'])
+        .then((ret) => {
+          if (ret.results.success) {
+            done();
+          } else {
+            done(new Error("Tests failed!"));
+          }
+        });
+  });
 };

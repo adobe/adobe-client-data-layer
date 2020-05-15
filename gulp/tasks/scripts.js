@@ -21,7 +21,7 @@ module.exports = function(gulp) {
 
   gulp.task('scripts', () => {
     const b = browserify({
-      entries: './src/scripts/DataLayer.js',
+      entries: './src/index.js',
       debug: true
     });
 
