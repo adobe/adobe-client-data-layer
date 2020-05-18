@@ -20,11 +20,7 @@ module.exports = function(data, constraints) {
     if (mandatory) {
       return !value || valueType !== type || (supportedValues && !supportedValues.includes(value));
     } else {
-      if (value) {
-        return valueType !== type || (supportedValues && !supportedValues.includes(value));
-      } else {
-        return false;
-      }
+      return value && (valueType !== type || (supportedValues && !supportedValues.includes(value)));
     }
   }) === 'undefined';
 };
