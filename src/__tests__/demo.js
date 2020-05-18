@@ -12,7 +12,7 @@ window.adobeDataLayer.push({
       carousel1: {
         id: '/content/mysite/en/home/jcr:content/root/carousel1',
         shownItems: [
-          'item1', 'item2'
+          'item1', 'item2', 'item3'
         ]
       },
       carousel2: {
@@ -32,18 +32,24 @@ window.adobeDataLayer.push({
 window.adobeDataLayer.push({
   component: {
     carousel: {
+      carousel1: {
+        id: '/content/mysite/en/home/jcr:content/root/carousel1',
+        shownItems: [
+          'item1', null, 'item3'
+        ]
+      },
       carousel3: null
     }
   }
 });
 
-console.log('Pushing component: ', window.adobeDataLayer.getState().component.carousel);
+console.log('Pushing component: ', window.adobeDataLayer.getState('component.carousel'));
 
 // getState() returns a copy of the state
 
 window.adobeDataLayer.getState().component.carousel.carousel2.id = 'new id';
 
-window.adobeDataLayer.getState('component.carousel.carousel2');
+window.adobeDataLayer.getState('component.carousel.carousel2.id');
 
 // update an object
 
@@ -52,14 +58,14 @@ window.adobeDataLayer.push({
     carousel: {
       carousel1: {
         shownItems: [
-          'item1', 'item2-new'
+          'item1', 'item3-new'
         ]
       }
     }
   }
 });
 
-window.adobeDataLayer.getState('component.carousel.carousel1');
+window.adobeDataLayer.getState('component.carousel.carousel1.shownItems');
 
 // -----------------------------------------------------------------------------------------------------------------
 // Pushing a function
