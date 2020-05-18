@@ -193,6 +193,9 @@ describe('Event listeners', () => {
     test('adobeDataLayer:change triggered by component push', () => {
       const mockCallback = jest.fn();
 
+      // edge case: unregister when no listener had been registered
+      adobeDataLayer.removeEventListener('adobeDataLayer:change');
+
       adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback);
       adobeDataLayer.push(testData.carousel1);
       expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
@@ -578,6 +581,29 @@ describe('Utils', () => {
       };
       expect(dataMatchesContraints(listenerOn, ITEM_CONSTRAINTS.listenerOn)).toBeTruthy();
     });
+    test('listenerOn with wrong scope (optional)', () => {
+      const listenerOn = {
+        on: 'event',
+        handler: () => {},
+        scope: 'wrong',
+        path: 'component.carousel1'
+      };
+      expect(dataMatchesContraints(listenerOn, ITEM_CONSTRAINTS.listenerOn)).toBeFalsy();
+    });
+    test('listenerOn with wrong scope (not optional)', () => {
+      const constraints = {
+        scope: {
+          type: 'string',
+          values: ['past', 'future', 'all']
+        }
+      };
+      const listenerOn = {
+        on: 'event',
+        handler: () => {},
+        scope: 'past'
+      };
+      expect(dataMatchesContraints(listenerOn, constraints)).toBeTruthy();
+    });
     test('listenerOff', () => {
       const listenerOff = {
         off: 'event',
@@ -590,8 +616,26 @@ describe('Utils', () => {
   });
 
   describe('indexOfListener', () => {
-    test.skip('indexOfListener', () => {
-      indexOfListener();
+    test('indexOfListener', () => {
+      const fct1 = jest.fn();
+      const fct2 = jest.fn();
+      const listener1 = {
+        event: 'click',
+        handler: fct1
+      };
+      const listener2 = {
+        event: 'click',
+        handler: fct2
+      };
+      const listener3 = {
+        event: 'load',
+        handler: fct1
+      };
+      const listeners = {
+        click: [listener1, listener2]
+      };
+      expect(indexOfListener(listeners, listener2)).toBe(1);
+      expect(indexOfListener(listeners, listener3)).toBe(-1);
     });
   });
 
@@ -634,6 +678,29 @@ describe('Utils', () => {
         config: testData.image1viewed,
         type: 'event',
         data: testData.image1
+      };
+      expect(listenerMatch(listener, item)).toBeFalsy();
+    });
+    test('wrong item type', () => {
+      const listener = {
+        event: 'user loaded',
+        handler: () => {},
+        scope: 'all',
+        path: null
+      };
+      const item = {
+        config: { event: 'user loaded' },
+        type: 'wrong'
+      };
+      expect(listenerMatch(listener, item)).toBeFalsy();
+    });
+    test('item type == data', () => {
+      const listener = {
+        event: 'user loaded',
+        handler: () => {}
+      };
+      const item = {
+        type: 'data'
       };
       expect(listenerMatch(listener, item)).toBeFalsy();
     });
