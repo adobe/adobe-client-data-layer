@@ -27,10 +27,6 @@ const isNull = _.isNull;
  * @private
  */
 module.exports = function(object, source) {
-  const omitDeep = function(value, predicate = (val) => !val) {
-    return cloneDeepWith(value, makeOmittingCloneDeepCustomizer(predicate));
-  };
-
   const makeOmittingCloneDeepCustomizer = function(predicate) {
     return function omittingCloneDeepCustomizer(value, key, object, stack) {
       if (isObject(value)) {
@@ -54,6 +50,10 @@ module.exports = function(object, source) {
     if (typeof srcValue === 'undefined' || srcValue === null) {
       return null;
     }
+  };
+
+  const omitDeep = function(value, predicate = (val) => !val) {
+    return cloneDeepWith(value, makeOmittingCloneDeepCustomizer(predicate));
   };
 
   mergeWith(object, source, customizer);

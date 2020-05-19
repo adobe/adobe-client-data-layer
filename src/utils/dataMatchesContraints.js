@@ -19,6 +19,8 @@ module.exports = function(data, constraints) {
     const valueType = typeof value;
     if (mandatory) {
       return !value || valueType !== type || (supportedValues && !supportedValues.includes(value));
+    } else {
+      return value && (valueType !== type || (supportedValues && !supportedValues.includes(value)));
     }
   }) === 'undefined';
 };
