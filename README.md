@@ -40,7 +40,7 @@ Then choose from the following npm scripts:
 * `npm run build` - run the tests and generates the build in the `./dist` folder.
 * `npm run test` - run the unit tests
 
-Note: you can [get some stats](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer@1.0.0-beta.3) (bundle size, download time) about the released version.
+Note: you can [get some stats](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer@1.0.0) (bundle size, download time) about the released version.
 
 ## Releasing
 
