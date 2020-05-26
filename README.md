@@ -7,8 +7,6 @@
 
 The Adobe Client Data Layer aims to reduce the effort to instrument websites by providing a standardized method to expose and access any kind of data for any script.
 
-> **Tech Preview** - this is currently a tech preview, there may be API changes and it therefore shouldn't be used in production. If you have any feedback please comment on the [AEM Core Components Developer Google Group](https://groups.google.com/forum/#!forum/aem-core-components-dev).
-
 ## Documentation
 
 * [Adobe Client Data Layer](https://github.com/adobe/adobe-client-data-layer/wiki)
