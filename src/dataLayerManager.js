@@ -141,6 +141,15 @@ module.exports = function(config) {
      *
      * @param {String} type A case-sensitive string representing the event type to listen for.
      * @param {Function} listener A function that is called when the event of the specified type occurs.
+     *   Note: when the listener is called, following arguments are available to the listener function:
+     *         - if a path parameter is not defined:
+     *            - the data layer object
+     *            - the state before the event
+     *            - the state after the event
+     *         - if a path parameter is defined:
+     *            - the data layer object
+     *            - the object defined at the path before the event
+     *            - the object defined at the path after the event
      * @param {Object} [options] Optional characteristics of the event listener. Available options:
      *   - {String} path The path of the object to listen to.
      *   - {String} scope The listener scope. Possible values:
