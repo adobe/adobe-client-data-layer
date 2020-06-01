@@ -74,7 +74,7 @@ module.exports = function(config) {
    */
   function _updateState(item) {
     _previousStateCopy = cloneDeep(_state);
-    customMerge(_state, item.data);
+    _state = customMerge(_state, item.data);
   };
 
   /**
