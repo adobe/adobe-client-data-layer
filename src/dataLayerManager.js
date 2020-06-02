@@ -137,30 +137,34 @@ module.exports = function(config) {
     };
 
     /**
+     * Event listener callback.
+     *
+     * @callback eventListenerCallback A function that is called when the event of the specified type occurs.
+     * @this {DataLayer}
+     * @param {Object} event The event object pushed to the data layer that triggered the callback.
+     * @param {Object} [beforeState] The state before the change caused by the event. Available only when the event
+     * object has data that modify the state. If a path filter option has been provided when registering the event,
+     * the object will only contain the data at the defined path.
+     * @param {Object} [afterState] The state after the change caused by the event. Available only when the event
+     * object has data that modify the state. If a path filter option has been provided when registering the event,
+     * the object will only contain the data at the defined path.
+     */
+
+    /**
      * Sets up a function that will be called whenever the specified event is triggered.
      *
      * @param {String} type A case-sensitive string representing the event type to listen for.
-     * @param {Function} listener A function that is called when the event of the specified type occurs.
-     *   Note: when the listener is called, following arguments are available to the listener function:
-     *         - if a path parameter is not defined:
-     *            - the data layer object
-     *            - the state before the event
-     *            - the state after the event
-     *         - if a path parameter is defined:
-     *            - the data layer object
-     *            - the object defined at the path before the event
-     *            - the object defined at the path after the event
-     * @param {Object} [options] Optional characteristics of the event listener. Available options:
-     *   - {String} path The path of the object to listen to.
-     *   - {String} scope The listener scope. Possible values:
-     *      - {String} past The listener is triggered for past events.
-     *      - {String} future The listener is triggered for future events.
-     *      - {String} all The listener is triggered for past and future events (default value).
-     */
-    _dataLayer.addEventListener = function(type, listener, options) {
+     * @param {eventListenerCallback} callback A function that is called when the event of the specified type occurs.
+     * @param {Object} [options] Optional characteristics of the event listener.
+     * @param {String} [options.path] The path in the state object to filter the listening to.
+     * @param {('past'|'future'|'all')} [options.scope] The timing to filter the listening to:
+     *      - {String} past The listener is triggered for past events only.
+     *      - {String} future The listener is triggered for future events only.
+     *      - {String} all The listener is triggered for both past and future events (default value).
+     */    _dataLayer.addEventListener = function(type, callback, options) {
       const eventListenerItem = Item({
         on: type,
-        handler: listener,
+        handler: callback,
         scope: options && options.scope,
         path: options && options.path
       });
