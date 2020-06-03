@@ -11,16 +11,21 @@ governing permissions and limitations under the License.
 */
 
 module.exports = function(data, constraints) {
-  return typeof Object.keys(constraints).find(key => {
+  // Go through all constraints and find one which does not match the data
+  const foundObjection = Object.keys(constraints).find(key => {
     const type = constraints[key].type;
     const supportedValues = constraints[key].values;
     const mandatory = !constraints[key].optional;
     const value = data[key];
     const valueType = typeof value;
+    const incorrectType = type && valueType !== type;
+    const noMatchForSupportedValues = supportedValues && !supportedValues.includes(value);
     if (mandatory) {
-      return !value || valueType !== type || (supportedValues && !supportedValues.includes(value));
+      return !value || incorrectType || noMatchForSupportedValues;
     } else {
-      return value && (valueType !== type || (supportedValues && !supportedValues.includes(value)));
+      return value && (incorrectType || noMatchForSupportedValues);
     }
-  }) === 'undefined';
+  });
+  // If no objections found then data matches contraints
+  return typeof foundObjection === 'undefined';
 };
