@@ -40,15 +40,9 @@ module.exports = function(itemConfig, index) {
   }
 
   function getData() {
-    switch (_type) {
-      case CONSTANTS.itemType.DATA:
-        return omit(_config, 'eventInfo');
-      case CONSTANTS.itemType.EVENT: {
-        const eventData = omit(_config, Object.keys(ITEM_CONSTRAINTS.event));
-        if (!isEmpty(eventData)) {
-          return eventData;
-        }
-      }
+    const data = omit(_config, Object.keys(ITEM_CONSTRAINTS.event));
+    if (!isEmpty(data)) {
+      return data;
     }
   }
 
