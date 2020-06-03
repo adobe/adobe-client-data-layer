@@ -16,7 +16,6 @@ const isObject = _.isObject;
 const isArray = _.isArray;
 const reject = _.reject;
 const mergeWith = _.mergeWith;
-const assign = _.assign;
 const isNull = _.isNull;
 
 /**

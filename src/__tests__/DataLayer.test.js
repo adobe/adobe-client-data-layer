@@ -64,11 +64,11 @@ describe('Data', () => {
   });
 
   test('push data, override and remove', () => {
-    adobeDataLayer.push({ test: "foo" });
-    expect(adobeDataLayer.getState(), 'data pushed').toStrictEqual({ test: "foo" });
+    adobeDataLayer.push({ test: 'foo' });
+    expect(adobeDataLayer.getState(), 'data pushed').toStrictEqual({ test: 'foo' });
 
-    adobeDataLayer.push({ test: "bar" });
-    expect(adobeDataLayer.getState(), 'data overriden').toStrictEqual({ test: "bar" });
+    adobeDataLayer.push({ test: 'bar' });
+    expect(adobeDataLayer.getState(), 'data overriden').toStrictEqual({ test: 'bar' });
 
     adobeDataLayer.push({ test: null });
     expect(adobeDataLayer.getState(), 'data removed').toStrictEqual({});
