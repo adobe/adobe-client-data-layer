@@ -16,7 +16,6 @@ const isObject = _.isObject;
 const isArray = _.isArray;
 const reject = _.reject;
 const mergeWith = _.mergeWith;
-const assign = _.assign;
 const isNull = _.isNull;
 
 /**
@@ -24,7 +23,7 @@ const isNull = _.isNull;
  *
  * @param {Object} object The object into which to merge.
  * @param {Object} source The source to merge with.
- * @private
+ * @returns {Object} The object into which source was merged in.
  */
 module.exports = function(object, source) {
   const makeOmittingCloneDeepCustomizer = function(predicate) {
@@ -59,5 +58,7 @@ module.exports = function(object, source) {
   mergeWith(object, source, customizer);
 
   // Remove null or undefined objects
-  assign(object, omitDeep(object, isNull));
+  object = omitDeep(object, isNull);
+
+  return object;
 };

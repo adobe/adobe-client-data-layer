@@ -63,6 +63,17 @@ describe('Data', () => {
     expect(adobeDataLayer.getState(), 'page is in data layer after push').toStrictEqual(testData.page1);
   });
 
+  test('push data, override and remove', () => {
+    adobeDataLayer.push({ test: 'foo' });
+    expect(adobeDataLayer.getState(), 'data pushed').toStrictEqual({ test: 'foo' });
+
+    adobeDataLayer.push({ test: 'bar' });
+    expect(adobeDataLayer.getState(), 'data overriden').toStrictEqual({ test: 'bar' });
+
+    adobeDataLayer.push({ test: null });
+    expect(adobeDataLayer.getState(), 'data removed').toStrictEqual({});
+  });
+
   test('push components and override', () => {
     const twoCarousels = merge({}, testData.carousel1, testData.carousel2);
     const carousel1empty = merge({}, testData.carousel1empty, testData.carousel2);

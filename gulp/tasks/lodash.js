@@ -13,7 +13,7 @@ module.exports = function(gulp) {
   const shell = require('gulp-shell');
 
   const configs = {
-    include: ['assign', 'cloneDeep', 'cloneDeepWith', 'get', 'has', 'isEmpty', 'isEqual', 'isNull', 'isPlainObject', 'isObject', 'merge', 'mergeWith', 'omit', 'reject'],
+    include: ['cloneDeep', 'cloneDeepWith', 'get', 'has', 'isEmpty', 'isEqual', 'isNull', 'isPlainObject', 'isObject', 'merge', 'mergeWith', 'omit', 'reject'],
     output: 'custom-lodash.js'
   };
 
