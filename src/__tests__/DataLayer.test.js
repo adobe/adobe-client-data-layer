@@ -63,6 +63,17 @@ describe('Data', () => {
     expect(adobeDataLayer.getState(), 'page is in data layer after push').toStrictEqual(testData.page1);
   });
 
+  test('push data, override and remove', () => {
+    adobeDataLayer.push({ test: 'foo' });
+    expect(adobeDataLayer.getState(), 'data pushed').toStrictEqual({ test: 'foo' });
+
+    adobeDataLayer.push({ test: 'bar' });
+    expect(adobeDataLayer.getState(), 'data overriden').toStrictEqual({ test: 'bar' });
+
+    adobeDataLayer.push({ test: null });
+    expect(adobeDataLayer.getState(), 'data removed').toStrictEqual({});
+  });
+
   test('push components and override', () => {
     const twoCarousels = merge({}, testData.carousel1, testData.carousel2);
     const carousel1empty = merge({}, testData.carousel1empty, testData.carousel2);
@@ -90,6 +101,12 @@ describe('Data', () => {
 
     adobeDataLayer.push(testData.carousel1);
     expect(adobeDataLayer.getState(), 'carousel 1 with data, carousel 2 empty').toStrictEqual(carousel2empty);
+  });
+
+  test('push eventInfo without event', () => {
+    adobeDataLayer.push({ eventInfo: 'test' });
+
+    expect(adobeDataLayer.getState(), 'no event info added').toStrictEqual({});
   });
 
   test('push invalid data type - string', () => {
@@ -144,6 +161,29 @@ describe('Events', () => {
   test('push simple event', () => {
     adobeDataLayer.push(testData.carousel1click);
     expect(adobeDataLayer.getState()).toStrictEqual(testData.carousel1);
+  });
+
+  test('check number of arguments in callback', () => {
+    let calls = 0;
+
+    adobeDataLayer.addEventListener('test', function() { calls = arguments.length; });
+
+    adobeDataLayer.push({ event: 'test' });
+    expect(calls, 'just one argument if no data is added').toStrictEqual(1);
+
+    adobeDataLayer.push({ event: 'test', eventInfo: 'test' });
+    expect(calls, 'just one argument if no data is added').toStrictEqual(1);
+
+    adobeDataLayer.push({ event: 'test', somekey: 'somedata' });
+    expect(calls, 'three arguments if data is added').toStrictEqual(3);
+  });
+
+  test('check if eventInfo is passed to callback', () => {
+    adobeDataLayer.addEventListener('test', function() {
+      expect(arguments[0].eventInfo).toStrictEqual('test');
+    });
+
+    adobeDataLayer.push({ event: 'test', eventInfo: 'test' });
   });
 });
 

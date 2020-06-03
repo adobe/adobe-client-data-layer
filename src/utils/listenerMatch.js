@@ -22,7 +22,6 @@ const ancestorRemoved = require('./ancestorRemoved');
  * @param {Listener} listener The listener.
  * @param {Item} item The item.
  * @returns {Boolean} true if listener matches the item, false otherwise.
- * @private
  */
 function listenerMatch(listener, item) {
   const event = listener.event;

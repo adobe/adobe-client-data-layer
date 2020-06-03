@@ -20,7 +20,6 @@ const itemConstraints = {
       type: 'string'
     },
     eventInfo: {
-      type: 'object',
       optional: true
     }
   },
