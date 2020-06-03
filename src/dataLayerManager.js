@@ -161,7 +161,8 @@ module.exports = function(config) {
      *      - {String} past The listener is triggered for past events only.
      *      - {String} future The listener is triggered for future events only.
      *      - {String} all The listener is triggered for both past and future events (default value).
-     */    _dataLayer.addEventListener = function(type, callback, options) {
+     */
+    _dataLayer.addEventListener = function(type, callback, options) {
       const eventListenerItem = Item({
         on: type,
         handler: callback,
