@@ -17,7 +17,8 @@ module.exports = function(data, constraints) {
     const supportedValues = constraints[key].values;
     const mandatory = !constraints[key].optional;
     const value = data[key];
-    const incorrectType = type && typeof value !== type;
+    const valueType = typeof value;
+    const incorrectType = type && valueType !== type;
     const noMatchForSupportedValues = supportedValues && !supportedValues.includes(value);
     if (mandatory) {
       return !value || incorrectType || noMatchForSupportedValues;

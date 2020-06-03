@@ -155,25 +155,24 @@ describe('Events', () => {
   test('check number of arguments in callback', () => {
     let calls = 0;
 
-    adobeDataLayer.addEventListener("test", function() { calls = arguments.length });
+    adobeDataLayer.addEventListener('test', function() { calls = arguments.length; });
 
     adobeDataLayer.push({ event: 'test' });
     expect(calls, 'just one argument if no data is added').toStrictEqual(1);
 
-    adobeDataLayer.push({ event: "test", eventInfo: "test" });
+    adobeDataLayer.push({ event: 'test', eventInfo: 'test' });
     expect(calls, 'just one argument if no data is added').toStrictEqual(1);
 
-    adobeDataLayer.push({ event: "test", somekey: "somedata" });
+    adobeDataLayer.push({ event: 'test', somekey: 'somedata' });
     expect(calls, 'three arguments if data is added').toStrictEqual(3);
   });
 
   test('check if eventInfo is passed to callback', () => {
-    adobeDataLayer.addEventListener("test", function() {
-      
-      expect(arguments[0].eventInfo).toStrictEqual("test");
+    adobeDataLayer.addEventListener('test', function() {
+      expect(arguments[0].eventInfo).toStrictEqual('test');
     });
 
-    adobeDataLayer.push({ event: "test", eventInfo: 'test' });
+    adobeDataLayer.push({ event: 'test', eventInfo: 'test' });
   });
 });
 
