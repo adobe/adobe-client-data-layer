@@ -24,16 +24,20 @@ const dataMatchesContraints = require('../utils/dataMatchesContraints');
 const indexOfListener = require('../utils/indexOfListener');
 const listenerMatch = require('../utils/listenerMatch');
 
-beforeEach(() => {
-  adobeDataLayer = [];
-  DataLayer.Manager({ dataLayer: adobeDataLayer });
-});
+const clearDL = function() {
+  beforeEach(() => {
+    adobeDataLayer = [];
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+  });
+};
 
 // -----------------------------------------------------------------------------------------------------------------
 // State
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('State', () => {
+  clearDL();
+
   test('getState()', () => {
     const carousel1 = {
       id: '/content/mysite/en/home/jcr:content/root/carousel1',
@@ -54,10 +58,58 @@ describe('State', () => {
 });
 
 // -----------------------------------------------------------------------------------------------------------------
+// Initialization order
+// -----------------------------------------------------------------------------------------------------------------
+
+describe('Initialization order', () => {
+  beforeEach(() => {
+    adobeDataLayer = [];
+  });
+
+  test('listener > event > initialization', () => {
+    const mockCallback = jest.fn();
+    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    adobeDataLayer.push(testData.carousel1click);
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+    expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+  });
+
+  test('event > listener > initialization', () => {
+    const mockCallback = jest.fn();
+    adobeDataLayer.push(testData.carousel1click);
+    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+    expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+  });
+
+  test('listener > initialization > event', () => {
+    const mockCallback = jest.fn();
+    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+    adobeDataLayer.push(testData.carousel1click);
+
+    expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+  });
+
+  test('event > initialization > listener', () => {
+    const mockCallback = jest.fn();
+    adobeDataLayer.push(testData.carousel1click);
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+
+    expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+  });
+});
+
+// -----------------------------------------------------------------------------------------------------------------
 // Data
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Data', () => {
+  clearDL();
+
   test('push page', () => {
     adobeDataLayer.push(testData.page1);
     expect(adobeDataLayer.getState(), 'page is in data layer after push').toStrictEqual(testData.page1);
@@ -158,6 +210,8 @@ describe('Data', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Events', () => {
+  clearDL();
+
   test('push simple event', () => {
     adobeDataLayer.push(testData.carousel1click);
     expect(adobeDataLayer.getState()).toStrictEqual(testData.carousel1);
@@ -192,6 +246,8 @@ describe('Events', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Functions', () => {
+  clearDL();
+
   test('push simple function', () => {
     const mockCallback = jest.fn();
     adobeDataLayer.push(mockCallback);
@@ -229,6 +285,8 @@ describe('Functions', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Event listeners', () => {
+  clearDL();
+
   describe('types', () => {
     test('adobeDataLayer:change triggered by component push', () => {
       const mockCallback = jest.fn();
@@ -546,6 +604,8 @@ describe('Event listeners', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Performance', () => {
+  clearDL();
+
   // high load benchmark: runs alone in 10.139s with commit: df0fef59c86635d3c29e6f698352491dcf39003c (15/oct/2019)
   test.skip('high load', () => {
     const mockCallback = jest.fn();
@@ -580,6 +640,8 @@ describe('Performance', () => {
 // -----------------------------------------------------------------------------------------------------------------
 
 describe('Utils', () => {
+  clearDL();
+
   describe('ancestorRemoved', () => {
     test('removed', () => {
       expect(ancestorRemoved(testData.componentNull, 'component.carousel')).toBeTruthy();
