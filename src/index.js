@@ -11,6 +11,7 @@ governing permissions and limitations under the License.
 */
 
 const DataLayerManager = require('./dataLayerManager');
+const version = require('../version.json').version;
 
 /**
  * Data Layer.
@@ -18,8 +19,11 @@ const DataLayerManager = require('./dataLayerManager');
  * @type {Object}
  */
 const DataLayer = {
-  Manager: DataLayerManager
+  Manager: DataLayerManager,
+  version: version
 };
+
+window.adobeDataLayer.version = version;
 
 DataLayer.Manager({
   dataLayer: window.adobeDataLayer
