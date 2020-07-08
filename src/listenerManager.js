@@ -112,7 +112,7 @@ module.exports = function(dataLayerManager) {
    * @private
    */
   function _callHandler(listener, item, isPastItem) {
-    // Fixes #91. Do not trigger event during initialization when event was pushed after adding listener and before DL initialization
+    // Do not trigger event during initialization when event was pushed after adding listener and before DL initialization
     if (typeof item.index !== 'undefined') return;
 
     if (listenerMatch(listener, item)) {
