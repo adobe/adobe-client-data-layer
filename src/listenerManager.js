@@ -112,6 +112,9 @@ module.exports = function(dataLayerManager) {
    * @private
    */
   function _callHandler(listener, item, isPastItem) {
+    // Do not trigger event during initialization when event was pushed after adding listener and before DL initialization
+    if (typeof item.index !== 'undefined') return;
+
     if (listenerMatch(listener, item)) {
       const callbackArgs = [cloneDeep(item.config)];
 
