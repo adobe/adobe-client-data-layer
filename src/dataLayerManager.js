@@ -14,6 +14,7 @@ const _ = require('../custom-lodash');
 const cloneDeep = _.cloneDeep;
 const get = _.get;
 
+const version = require('../version.json').version;
 const Item = require('./item');
 const Listener = require('./listener');
 const ListenerManager = require('./listenerManager');
@@ -61,6 +62,7 @@ module.exports = function(config) {
     }
 
     _dataLayer = _config.dataLayer;
+    _dataLayer.version = version;
     _state = {};
     _previousStateCopy = {};
     _listenerManager = ListenerManager(DataLayerManager);

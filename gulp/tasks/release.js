@@ -28,7 +28,7 @@ module.exports = function(gulp) {
 
   gulp.task('perform-version-bump', (done) => {
     const doBump = () => {
-      gulp.src([`${CWD}/package.json`, `${CWD}/package-lock.json`])
+      gulp.src([`${CWD}/package.json`, `${CWD}/package-lock.json`, `${CWD}/version.json`])
         .pipe(bump({version: releaseVersion}))
         .pipe(gulp.dest('./'))
         .on('end', () => {
