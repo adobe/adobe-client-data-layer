@@ -1,5 +1,6 @@
 ## Adobe Client Data Layer
 
+[![NPM version](https://badgen.net/npm/v/@adobe/adobe-client-data-layer)](https://www.npmjs.com/package/@adobe/adobe-client-data-layer)
 [![BundlePhobia](https://badgen.net/bundlephobia/minzip/@adobe/adobe-client-data-layer)](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer)
 [![LGTM](https://badgen.net/lgtm/grade/g/adobe/adobe-client-data-layer)](https://lgtm.com/projects/g/adobe/adobe-client-data-layer)
 [![CircleCI](https://badgen.net/circleci/github/adobe/adobe-client-data-layer)](https://app.circleci.com/pipelines/github/adobe/adobe-client-data-layer)
@@ -34,7 +35,7 @@ First run the following commands:
 ```
 npm install
 ```   
- 
+
 Then choose from the following npm scripts:
 * `npm run dev` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
 * `npm run build` - run the tests and generates the build in the `./dist` folder.
