@@ -11,10 +11,10 @@ governing permissions and limitations under the License.
 */
 
 const _ = require('../custom-lodash');
+// const version = require('../version.json').version;
 const cloneDeep = _.cloneDeep;
 const get = _.get;
 
-const version = require('../version.json').version;
 const Item = require('./item');
 const Listener = require('./listener');
 const ListenerManager = require('./listenerManager');
@@ -62,7 +62,6 @@ module.exports = function(config) {
     }
 
     _dataLayer = _config.dataLayer;
-    _dataLayer.version = version;
     _state = {};
     _previousStateCopy = {};
     _listenerManager = ListenerManager(DataLayerManager);
@@ -165,14 +164,20 @@ module.exports = function(config) {
      *      - {String} all The listener is triggered for both past and future events (default value).
      */
     _dataLayer.addEventListener = function(type, callback, options) {
-      const eventListenerItem = Item({
+      const eventListenerConfig = {
         on: type,
         handler: callback,
         scope: options && options.scope,
         path: options && options.path
-      });
+      };
 
-      _processItem(eventListenerItem);
+      if(_dataLayer.processed) {
+        // If Data Layer has been already processed then process event listener
+        _processItem(Item(eventListenerConfig));
+      } else {
+        // otherwise add event listener to the data layer without processing
+        _dataLayer[_dataLayer.length] = eventListenerConfig;
+      }
     };
 
     /**
@@ -197,7 +202,9 @@ module.exports = function(config) {
    * @private
    */
   function _processItems() {
-    for (let i = 0; i < _dataLayer.length; i++) {
+    let i = 0;
+
+    while(i < _dataLayer.length) {
       const item = Item(_dataLayer[i], i);
 
       _processItem(item);
@@ -210,7 +217,11 @@ module.exports = function(config) {
         _dataLayer.splice(i, 1);
         i--;
       }
+
+      i++;
     }
+
+    _dataLayer.processed = true;
   };
 
   /**
