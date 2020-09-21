@@ -68,7 +68,12 @@ describe('Initialization order', () => {
 
   test('listener > event > initialization', () => {
     const mockCallback = jest.fn();
-    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    adobeDataLayer.push(function(dl) {
+      dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
+        expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+        mockCallback();
+      }); 
+    });
     adobeDataLayer.push(testData.carousel1click);
     DataLayer.Manager({ dataLayer: adobeDataLayer });
 
@@ -78,7 +83,12 @@ describe('Initialization order', () => {
   test('event > listener > initialization', () => {
     const mockCallback = jest.fn();
     adobeDataLayer.push(testData.carousel1click);
-    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    adobeDataLayer.push(function(dl) {
+      dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
+        expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+        mockCallback();
+      }); 
+    });
     DataLayer.Manager({ dataLayer: adobeDataLayer });
 
     expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
@@ -86,7 +96,12 @@ describe('Initialization order', () => {
 
   test('listener > initialization > event', () => {
     const mockCallback = jest.fn();
-    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    adobeDataLayer.push(function(dl) {
+      dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
+        expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+        mockCallback();
+      }); 
+    });
     DataLayer.Manager({ dataLayer: adobeDataLayer });
     adobeDataLayer.push(testData.carousel1click);
 
@@ -97,7 +112,12 @@ describe('Initialization order', () => {
     const mockCallback = jest.fn();
     adobeDataLayer.push(testData.carousel1click);
     DataLayer.Manager({ dataLayer: adobeDataLayer });
-    adobeDataLayer.push(function(dl) { dl.addEventListener('adobeDataLayer:event', mockCallback); });
+    adobeDataLayer.push(function(dl) {
+      dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
+        expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+        mockCallback();
+      }); 
+    });
 
     expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
   });
