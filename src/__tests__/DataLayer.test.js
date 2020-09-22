@@ -72,7 +72,7 @@ describe('Initialization order', () => {
       dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
         expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
         mockCallback();
-      }); 
+      });
     });
     adobeDataLayer.push(testData.carousel1click);
     DataLayer.Manager({ dataLayer: adobeDataLayer });
@@ -87,7 +87,7 @@ describe('Initialization order', () => {
       dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
         expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
         mockCallback();
-      }); 
+      });
     });
     DataLayer.Manager({ dataLayer: adobeDataLayer });
 
@@ -100,7 +100,7 @@ describe('Initialization order', () => {
       dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
         expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
         mockCallback();
-      }); 
+      });
     });
     DataLayer.Manager({ dataLayer: adobeDataLayer });
     adobeDataLayer.push(testData.carousel1click);
@@ -116,7 +116,7 @@ describe('Initialization order', () => {
       dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
         expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
         mockCallback();
-      }); 
+      });
     });
 
     expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);

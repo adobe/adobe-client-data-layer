@@ -11,7 +11,7 @@ governing permissions and limitations under the License.
 */
 
 const _ = require('../custom-lodash');
-// const version = require('../version.json').version;
+const version = require('../version.json').version;
 const cloneDeep = _.cloneDeep;
 const get = _.get;
 
@@ -62,6 +62,7 @@ module.exports = function(config) {
     }
 
     _dataLayer = _config.dataLayer;
+    _dataLayer.version = version;
     _state = {};
     _previousStateCopy = {};
     _listenerManager = ListenerManager(DataLayerManager);
@@ -171,7 +172,7 @@ module.exports = function(config) {
         path: options && options.path
       };
 
-      if(_dataLayer.processed) {
+      if (_dataLayer.processed) {
         // If Data Layer has been already processed then process event listener
         _processItem(Item(eventListenerConfig));
       } else {
@@ -204,7 +205,7 @@ module.exports = function(config) {
   function _processItems() {
     let i = 0;
 
-    while(i < _dataLayer.length) {
+    while (i < _dataLayer.length) {
       const item = Item(_dataLayer[i], i);
 
       _processItem(item);
