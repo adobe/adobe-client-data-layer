@@ -172,7 +172,7 @@ module.exports = function(config) {
         path: options && options.path
       };
 
-      if (_dataLayer.processed) {
+      if (_dataLayer.initialized) {
         // If Data Layer has been already processed then process event listener
         _processItem(Item(eventListenerConfig));
       } else {
@@ -222,7 +222,7 @@ module.exports = function(config) {
       i++;
     }
 
-    _dataLayer.processed = true;
+    _dataLayer.initialized = true;
   };
 
   /**
