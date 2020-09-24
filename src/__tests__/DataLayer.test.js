@@ -15,7 +15,8 @@ const merge = require('lodash/merge');
 
 const testData = require('./testData');
 const ITEM_CONSTRAINTS = require('../itemConstraints');
-const DataLayer = require('../');
+const DataLayerManager = require('../dataLayerManager');
+const DataLayer = { Manager: DataLayerManager };
 let adobeDataLayer;
 
 const ancestorRemoved = require('../utils/ancestorRemoved');
@@ -67,8 +68,8 @@ describe('Initialization order', () => {
   });
 
   const createEventListener = function(dl, callback) {
-    dl.addEventListener('adobeDataLayer:event', function(dataLayer) {
-      expect(dataLayer, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+    dl.addEventListener('adobeDataLayer:event', function(eventData) {
+      expect(eventData, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
       callback();
     });
   };
