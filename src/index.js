@@ -21,6 +21,8 @@ const DataLayer = {
   Manager: DataLayerManager
 };
 
+window.adobeDataLayer = window.adobeDataLayer || [];
+
 DataLayer.Manager({
   dataLayer: window.adobeDataLayer
 });

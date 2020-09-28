@@ -29,7 +29,7 @@ const customMerge = require('./utils/customMerge');
  * @param {Object} config The Data Layer manager configuration.
  */
 module.exports = function(config) {
-  const _config = config;
+  const _config = config || {};
   let _dataLayer = [];
   let _state = {};
   let _previousStateCopy = {};
