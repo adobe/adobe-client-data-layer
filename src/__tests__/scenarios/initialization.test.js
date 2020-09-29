@@ -15,6 +15,13 @@ const DataLayerManager = require('../../dataLayerManager');
 const DataLayer = { Manager: DataLayerManager };
 let adobeDataLayer;
 
+const createEventListener = function(dl, callback, options) {
+  dl.addEventListener('adobeDataLayer:event', function(eventData) {
+    expect(eventData, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
+    callback();
+  }, options);
+};
+
 describe('Initialization', () => {
   describe('arguments', () => {
     test('empty array', () => {
@@ -44,17 +51,52 @@ describe('Initialization', () => {
     });
   });
 
-  describe('order', () => {
+  describe('events', () => {
     beforeEach(() => {
       adobeDataLayer = [];
     });
 
-    const createEventListener = function(dl, callback) {
-      dl.addEventListener('adobeDataLayer:event', function(eventData) {
-        expect(eventData, 'data layer object as an argument of callback').toEqual(testData.carousel1click);
-        callback();
-      });
-    };
+    test('scope past with early initialization', () => {
+      const mockCallback = jest.fn();
+      DataLayer.Manager({ dataLayer: adobeDataLayer });
+      adobeDataLayer.push(function(dl) { createEventListener(dl, mockCallback, { scope: 'past' }); });
+      adobeDataLayer.push(testData.carousel1click);
+
+      expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
+    });
+
+    test('scope past with late initialization', () => {
+      const mockCallback = jest.fn();
+      adobeDataLayer.push(function(dl) { createEventListener(dl, mockCallback, { scope: 'past' }); });
+      adobeDataLayer.push(testData.carousel1click);
+      DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+      expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+    });
+
+    test('scope future with early initialization', () => {
+      const mockCallback = jest.fn();
+      DataLayer.Manager({ dataLayer: adobeDataLayer });
+      adobeDataLayer.push(function(dl) { createEventListener(dl, mockCallback, { scope: 'future' }); });
+      adobeDataLayer.push(testData.carousel1click);
+
+      expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+    });
+
+    test('scope future with late initialization', () => {
+      const mockCallback = jest.fn();
+      adobeDataLayer.push(function(dl) { createEventListener(dl, mockCallback, { scope: 'future' }); });
+      adobeDataLayer.push(testData.carousel1click);
+      DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+      expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
+    });
+  });
+
+  describe('order', () => {
+    beforeEach(() => {
+      adobeDataLayer = [];
+    });
 
     test('listener > event > initialization', () => {
       const mockCallback = jest.fn();
