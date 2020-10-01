@@ -53,6 +53,6 @@ describe('Performance', () => {
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
 
-    expect(new Date() - start, 'to be samller ms time than').toBeLessThan(20000);
+    expect(new Date() - start, 'to be samller ms time than').toBeLessThan(60000);
   });
 });
