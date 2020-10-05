@@ -21,7 +21,7 @@ const clearDL = function() {
   });
 };
 
-describe('Performance', () => {
+describe.skip('Performance', () => {
   clearDL();
 
   // high load benchmark: runs alone in 16.078s (28/mon/2020)

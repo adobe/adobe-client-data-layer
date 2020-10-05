@@ -34,6 +34,7 @@ module.exports = function(config) {
   let _state = {};
   let _previousStateCopy = {};
   let _listenerManager;
+  let _initializationIndex = 0;
 
   const DataLayerManager = {
     getState: function() {
@@ -95,33 +96,37 @@ module.exports = function(config) {
       const pushArguments = arguments;
       const filteredArguments = arguments;
 
-      Object.keys(pushArguments).forEach(function(key) {
-        const itemConfig = pushArguments[key];
-        const item = Item(itemConfig);
+      if (_dataLayer.initialized) {
+        Object.keys(pushArguments).forEach(function(key) {
+          const itemConfig = pushArguments[key];
+          const item = Item(itemConfig);
 
-        if (!item.valid) {
-          delete filteredArguments[key];
-        }
-        switch (item.type) {
-          case CONSTANTS.itemType.DATA:
-          case CONSTANTS.itemType.EVENT: {
-            _processItem(item);
-            break;
-          }
-          case CONSTANTS.itemType.FCTN: {
-            delete filteredArguments[key];
-            _processItem(item);
-            break;
-          }
-          case CONSTANTS.itemType.LISTENER_ON:
-          case CONSTANTS.itemType.LISTENER_OFF: {
+          if (!item.valid) {
             delete filteredArguments[key];
           }
-        }
-      });
+          switch (item.type) {
+            case CONSTANTS.itemType.DATA:
+            case CONSTANTS.itemType.EVENT: {
+              _processItem(item);
+              break;
+            }
+            case CONSTANTS.itemType.FCTN: {
+              delete filteredArguments[key];
+              _processItem(item);
+              break;
+            }
+            case CONSTANTS.itemType.LISTENER_ON:
+            case CONSTANTS.itemType.LISTENER_OFF: {
+              delete filteredArguments[key];
+            }
+          }
+        });
 
-      if (filteredArguments[0]) {
-        return Array.prototype.push.apply(this, filteredArguments);
+        if (filteredArguments[0]) {
+          return Array.prototype.push.apply(this, filteredArguments);
+        }
+      } else {
+        _insertItemsForInitialization(pushArguments);
       }
     };
 
@@ -177,7 +182,7 @@ module.exports = function(config) {
         _processItem(Item(eventListenerConfig));
       } else {
         // otherwise add event listener to the data layer without processing
-        _dataLayer[_dataLayer.length] = eventListenerConfig;
+        _insertItemsForInitialization(eventListenerConfig);
       }
     };
 
@@ -198,28 +203,47 @@ module.exports = function(config) {
   };
 
   /**
+   * Insert items for initialization
+   *
+   * @param {Item} item The item config.
+   * @private
+   */
+  function _insertItemsForInitialization(item) {
+    if (Array.isArray(_dataLayer[_initializationIndex])) {
+      _dataLayer[_initializationIndex].push(item);
+    } else {
+      _dataLayer.splice(_initializationIndex, 0, [item]);
+    }
+  };
+
+  /**
    * Processes all items that already exist on the stack.
    *
    * @private
    */
   function _processItems() {
-    let i = 0;
+    _initializationIndex = 0;
 
-    while (i < _dataLayer.length) {
-      const item = Item(_dataLayer[i], i);
+    while (_initializationIndex < _dataLayer.length) {
+      // If it is nested array then flat it out
+      if (Array.isArray(_dataLayer[_initializationIndex])) {
+        _dataLayer.splice(_initializationIndex, 1, ..._dataLayer[_initializationIndex]);
+      } else {
+        const item = Item(_dataLayer[_initializationIndex], _initializationIndex);
 
-      _processItem(item);
+        _processItem(item);
 
-      // remove event listener or invalid item from the data layer array
-      if (item.type === CONSTANTS.itemType.LISTENER_ON ||
-        item.type === CONSTANTS.itemType.LISTENER_OFF ||
-        item.type === CONSTANTS.itemType.FCTN ||
-        !item.valid) {
-        _dataLayer.splice(i, 1);
-        i--;
+        // remove event listener or invalid item from the data layer array
+        if (item.type === CONSTANTS.itemType.LISTENER_ON ||
+          item.type === CONSTANTS.itemType.LISTENER_OFF ||
+          item.type === CONSTANTS.itemType.FCTN ||
+          !item.valid) {
+          _dataLayer.splice(_initializationIndex, 1);
+          _initializationIndex--;
+        }
+
+        _initializationIndex++;
       }
-
-      i++;
     }
 
     _dataLayer.initialized = true;

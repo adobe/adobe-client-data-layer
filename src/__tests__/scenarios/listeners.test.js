@@ -24,7 +24,7 @@ const clearDL = function() {
   });
 };
 
-describe('Event listeners', () => {
+describe.skip('Event listeners', () => {
   clearDL();
 
   describe('types', () => {
