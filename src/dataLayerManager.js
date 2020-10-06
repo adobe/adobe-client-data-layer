@@ -30,11 +30,11 @@ const customMerge = require('./utils/customMerge');
  */
 module.exports = function(config) {
   const _config = config || {};
+  let _preLoadedItems = [];
   let _dataLayer = [];
   let _state = {};
   let _previousStateCopy = {};
   let _listenerManager;
-  let _initializationIndex = 0;
 
   const DataLayerManager = {
     getState: function() {
@@ -62,7 +62,7 @@ module.exports = function(config) {
       _config.dataLayer = [];
     }
 
-    _dataLayer = _config.dataLayer;
+    _preLoadedItems = _config.dataLayer;
     _dataLayer.version = version;
     _state = {};
     _previousStateCopy = {};
@@ -96,37 +96,33 @@ module.exports = function(config) {
       const pushArguments = arguments;
       const filteredArguments = arguments;
 
-      if (_dataLayer.initialized) {
-        Object.keys(pushArguments).forEach(function(key) {
-          const itemConfig = pushArguments[key];
-          const item = Item(itemConfig);
+      Object.keys(pushArguments).forEach(function(key) {
+        const itemConfig = pushArguments[key];
+        const item = Item(itemConfig);
 
-          if (!item.valid) {
+        if (!item.valid) {
+          delete filteredArguments[key];
+        }
+        switch (item.type) {
+          case CONSTANTS.itemType.DATA:
+          case CONSTANTS.itemType.EVENT: {
+            _processItem(item);
+            break;
+          }
+          case CONSTANTS.itemType.FCTN: {
+            delete filteredArguments[key];
+            _processItem(item);
+            break;
+          }
+          case CONSTANTS.itemType.LISTENER_ON:
+          case CONSTANTS.itemType.LISTENER_OFF: {
             delete filteredArguments[key];
           }
-          switch (item.type) {
-            case CONSTANTS.itemType.DATA:
-            case CONSTANTS.itemType.EVENT: {
-              _processItem(item);
-              break;
-            }
-            case CONSTANTS.itemType.FCTN: {
-              delete filteredArguments[key];
-              _processItem(item);
-              break;
-            }
-            case CONSTANTS.itemType.LISTENER_ON:
-            case CONSTANTS.itemType.LISTENER_OFF: {
-              delete filteredArguments[key];
-            }
-          }
-        });
-
-        if (filteredArguments[0]) {
-          return Array.prototype.push.apply(this, filteredArguments);
         }
-      } else {
-        _insertItemsForInitialization(pushArguments);
+      });
+
+      if (filteredArguments[0]) {
+        return Array.prototype.push.apply(this, filteredArguments);
       }
     };
 
@@ -170,20 +166,14 @@ module.exports = function(config) {
      *      - {String} all The listener is triggered for both past and future events (default value).
      */
     _dataLayer.addEventListener = function(type, callback, options) {
-      const eventListenerConfig = {
+      const eventListenerItem = Item({
         on: type,
         handler: callback,
         scope: options && options.scope,
         path: options && options.path
-      };
+      });
 
-      if (_dataLayer.initialized) {
-        // If Data Layer has been already processed then process event listener
-        _processItem(Item(eventListenerConfig));
-      } else {
-        // otherwise add event listener to the data layer without processing
-        _insertItemsForInitialization(eventListenerConfig);
-      }
+      _processItem(eventListenerItem);
     };
 
     /**
@@ -203,50 +193,14 @@ module.exports = function(config) {
   };
 
   /**
-   * Insert items for initialization
-   *
-   * @param {Item} item The item config.
-   * @private
-   */
-  function _insertItemsForInitialization(item) {
-    if (Array.isArray(_dataLayer[_initializationIndex])) {
-      _dataLayer[_initializationIndex].push(item);
-    } else {
-      _dataLayer.splice(_initializationIndex, 0, [item]);
-    }
-  };
-
-  /**
    * Processes all items that already exist on the stack.
    *
    * @private
    */
   function _processItems() {
-    _initializationIndex = 0;
-
-    while (_initializationIndex < _dataLayer.length) {
-      // If it is nested array then flat it out
-      if (Array.isArray(_dataLayer[_initializationIndex])) {
-        _dataLayer.splice(_initializationIndex, 1, ..._dataLayer[_initializationIndex]);
-      } else {
-        const item = Item(_dataLayer[_initializationIndex], _initializationIndex);
-
-        _processItem(item);
-
-        // remove event listener or invalid item from the data layer array
-        if (item.type === CONSTANTS.itemType.LISTENER_ON ||
-          item.type === CONSTANTS.itemType.LISTENER_OFF ||
-          item.type === CONSTANTS.itemType.FCTN ||
-          !item.valid) {
-          _dataLayer.splice(_initializationIndex, 1);
-          _initializationIndex--;
-        }
-
-        _initializationIndex++;
-      }
+    for (let i = 0; i < _preLoadedItems.length; i++) {
+      _dataLayer.push(_preLoadedItems[i]);
     }
-
-    _dataLayer.initialized = true;
   };
 
   /**
