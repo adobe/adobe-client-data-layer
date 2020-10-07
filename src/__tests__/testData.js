@@ -48,7 +48,7 @@ const testData = {
       siteCountry: 'US',
       pageType: 'product detail',
       pageName: 'pdp - crossfit zoom',
-      pageCategory: 'womens > shoes > athletic'
+      pageCategory: 'women > shoes > athletic'
     }
   },
   page2: {
@@ -58,7 +58,7 @@ const testData = {
       siteCountry: 'US',
       pageType: 'product detail',
       pageName: 'pdp - running zoom',
-      pageCategory: 'womens > shoes > running'
+      pageCategory: 'women > shoes > running'
     }
   },
 

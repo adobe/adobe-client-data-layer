@@ -14,7 +14,7 @@ module.exports = function(data, constraints) {
   // Go through all constraints and find one which does not match the data
   const foundObjection = Object.keys(constraints).find(key => {
     const type = constraints[key].type;
-    const supportedValues = constraints[key].values;
+    const supportedValues = key && constraints[key].values;
     const mandatory = !constraints[key].optional;
     const value = data[key];
     const valueType = typeof value;
