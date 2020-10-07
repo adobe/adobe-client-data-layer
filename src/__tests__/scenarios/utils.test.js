@@ -29,7 +29,7 @@ const clearDL = function() {
   });
 };
 
-describe.skip('Utils', () => {
+describe('Utils', () => {
   clearDL();
 
   describe('ancestorRemoved', () => {

@@ -23,7 +23,7 @@ const clearDL = function() {
   });
 };
 
-describe.skip('Data', () => {
+describe('Data', () => {
   clearDL();
 
   test('push page', () => {

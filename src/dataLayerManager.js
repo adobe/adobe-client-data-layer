@@ -30,8 +30,8 @@ const customMerge = require('./utils/customMerge');
  */
 module.exports = function(config) {
   const _config = config || {};
-  let _preLoadedItems = [];
   let _dataLayer = [];
+  let _preLoadedItems = [];
   let _state = {};
   let _previousStateCopy = {};
   let _listenerManager;
@@ -62,7 +62,10 @@ module.exports = function(config) {
       _config.dataLayer = [];
     }
 
-    _preLoadedItems = _config.dataLayer;
+    // Substract all items that were preloaded in data layer array
+    _preLoadedItems = _config.dataLayer.splice(0, _config.dataLayer.length);
+    // Copy reference to data layer to augment data layer methods
+    _dataLayer = _config.dataLayer;
     _dataLayer.version = version;
     _state = {};
     _previousStateCopy = {};
@@ -101,6 +104,7 @@ module.exports = function(config) {
         const item = Item(itemConfig);
 
         if (!item.valid) {
+          _throwInvalidItemError(item);
           delete filteredArguments[key];
         }
         switch (item.type) {
@@ -211,10 +215,7 @@ module.exports = function(config) {
    */
   function _processItem(item) {
     if (!item.valid) {
-      const message = 'The following item cannot be handled by the data layer ' +
-        'because it does not have a valid format: ' +
-        JSON.stringify(item.config);
-      console.error(message);
+      _throwInvalidItemError(item);
       return;
     }
 
@@ -275,6 +276,19 @@ module.exports = function(config) {
     };
 
     typeProcessors[item.type](item);
+  };
+
+  /**
+   * Throw error for invlalid item pushed to the data layer.
+   *
+   * @param {Item} item The invalid item.
+   * @private
+   */
+  function _throwInvalidItemError(item) {
+    const message = 'The following item cannot be handled by the data layer ' +
+      'because it does not have a valid format: ' +
+      JSON.stringify(item.config);
+    console.error(message);
   };
 
   return DataLayerManager;

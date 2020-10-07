@@ -22,7 +22,7 @@ const createEventListener = function(dl, callback, options) {
   }, options);
 };
 
-describe.skip('Initialization', () => {
+describe('Initialization', () => {
   describe('arguments', () => {
     test('empty array', () => {
       adobeDataLayer = [];
@@ -71,7 +71,7 @@ describe.skip('Initialization', () => {
       adobeDataLayer.push(testData.carousel1click);
       DataLayer.Manager({ dataLayer: adobeDataLayer });
 
-      expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(1);
+      expect(mockCallback.mock.calls.length, 'callback triggered once').toBe(0);
     });
 
     test('scope future with early initialization', () => {
@@ -89,7 +89,7 @@ describe.skip('Initialization', () => {
       adobeDataLayer.push(testData.carousel1click);
       DataLayer.Manager({ dataLayer: adobeDataLayer });
 
-      expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(0);
+      expect(mockCallback.mock.calls.length, 'callback not triggered').toBe(1);
     });
   });
 

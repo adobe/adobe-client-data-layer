@@ -22,7 +22,7 @@ const clearDL = function() {
   });
 };
 
-describe.skip('State', () => {
+describe('State', () => {
   clearDL();
 
   test('getState()', () => {

@@ -22,7 +22,7 @@ const clearDL = function() {
   });
 };
 
-describe.skip('Functions', () => {
+describe('Functions', () => {
   clearDL();
 
   test('push simple function', () => {
