@@ -62,9 +62,8 @@ module.exports = function(config) {
       _config.dataLayer = [];
     }
 
-    // Substract all items that were preloaded in data layer array
+    // Remove preloaded items from the data layer array and add those to the array of preloaded items
     _preLoadedItems = _config.dataLayer.splice(0, _config.dataLayer.length);
-    // Copy reference to data layer to augment data layer methods
     _dataLayer = _config.dataLayer;
     _dataLayer.version = version;
     _state = {};
@@ -104,7 +103,7 @@ module.exports = function(config) {
         const item = Item(itemConfig);
 
         if (!item.valid) {
-          _throwInvalidItemError(item);
+          _logInvalidItemError(item);
           delete filteredArguments[key];
         }
         switch (item.type) {
@@ -215,7 +214,7 @@ module.exports = function(config) {
    */
   function _processItem(item) {
     if (!item.valid) {
-      _throwInvalidItemError(item);
+      _logInvalidItemError(item);
       return;
     }
 
@@ -279,12 +278,12 @@ module.exports = function(config) {
   };
 
   /**
-   * Throw error for invlalid item pushed to the data layer.
+   * Logs error for invalid item pushed to the data layer.
    *
    * @param {Item} item The invalid item.
    * @private
    */
-  function _throwInvalidItemError(item) {
+  function _logInvalidItemError(item) {
     const message = 'The following item cannot be handled by the data layer ' +
       'because it does not have a valid format: ' +
       JSON.stringify(item.config);

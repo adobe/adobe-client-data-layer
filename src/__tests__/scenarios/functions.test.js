@@ -22,37 +22,78 @@ const clearDL = function() {
   });
 };
 
+const createEventListener = function(dl, eventName, callback, eventData) {
+  dl.addEventListener(eventName, function(eventData) {
+    expect(eventData, 'data layer object as an argument of callback').toEqual(eventData);
+    callback();
+  });
+};
+
 describe('Functions', () => {
-  clearDL();
+  describe('simple', () => {
+    clearDL();
 
-  test('push simple function', () => {
-    const mockCallback = jest.fn();
-    adobeDataLayer.push(mockCallback);
-    expect(mockCallback.mock.calls.length).toBe(1);
+    test('push simple function', () => {
+      const mockCallback = jest.fn();
+      adobeDataLayer.push(mockCallback);
+      expect(mockCallback.mock.calls.length).toBe(1);
+    });
+
+    test('function adds event listener for adobeDataLayer:change', () => {
+      const mockCallback = jest.fn();
+      const addEventListener = function(adl) {
+        adl.addEventListener('adobeDataLayer:change', mockCallback);
+      };
+
+      adobeDataLayer.push(testData.carousel1);
+      adobeDataLayer.push(addEventListener);
+      adobeDataLayer.push(testData.carousel2);
+
+      expect(mockCallback.mock.calls.length, 'event triggered twice').toBe(2);
+    });
+
+    test('function updates component in data layer state', () => {
+      const updateCarousel = function(adl) {
+        adl.push(testData.carousel1new);
+      };
+
+      adobeDataLayer.push(testData.carousel1);
+      expect(adobeDataLayer.getState(), 'carousel set to carousel1').toEqual(testData.carousel1);
+
+      adobeDataLayer.push(updateCarousel);
+      expect(adobeDataLayer.getState(), 'carousel set to carousel1new').toEqual(testData.carousel1new);
+    });
   });
 
-  test('function adds event listener for adobeDataLayer:change', () => {
-    const mockCallback = jest.fn();
-    const addEventListener = function(adl) {
-      adl.addEventListener('adobeDataLayer:change', mockCallback);
-    };
+  test('nested anonymous functions', () => {
+    const mockCallback1 = jest.fn();
+    const mockCallback2 = jest.fn();
+    const mockCallback3 = jest.fn();
 
-    adobeDataLayer.push(testData.carousel1);
-    adobeDataLayer.push(addEventListener);
-    adobeDataLayer.push(testData.carousel2);
+    adobeDataLayer.addEventListener('adobeDataLayer:event', function(eventData) {
+      mockCallback1();
+    });
 
-    expect(mockCallback.mock.calls.length, 'event triggered twice').toBe(2);
-  });
+    adobeDataLayer.push(testData.carousel1click);
 
-  test('function updates component in data layer state', () => {
-    const updateCarousel = function(adl) {
-      adl.push(testData.carousel1new);
-    };
+    adobeDataLayer.push(function(dl) {
+      createEventListener(dl, 'carousel clicked', mockCallback2, testData.carousel1click);
 
-    adobeDataLayer.push(testData.carousel1);
-    expect(adobeDataLayer.getState(), 'carousel set to carousel1').toEqual(testData.carousel1);
+      dl.push(function(dl2) {
+        createEventListener(dl2, 'viewed', mockCallback3, testData.carousel1viewed);
 
-    adobeDataLayer.push(updateCarousel);
-    expect(adobeDataLayer.getState(), 'carousel set to carousel1new').toEqual(testData.carousel1new);
+        dl2.push(function(dl3) {
+          dl3.push(testData.carousel1click);
+        });
+      });
+
+      adobeDataLayer.push(testData.carousel1viewed);
+    });
+
+    DataLayer.Manager({ dataLayer: adobeDataLayer });
+
+    expect(mockCallback1.mock.calls.length, 'callback triggered 3 times').toBe(3);
+    expect(mockCallback2.mock.calls.length, 'callback triggered 2 times').toBe(2);
+    expect(mockCallback3.mock.calls.length, 'callback triggered 1 times').toBe(1);
   });
 });
