@@ -41,7 +41,7 @@ describe('Performance', () => {
         siteCountry: 'US',
         pageType: 'product detail',
         pageName: 'pdp - crossfit zoom',
-        pageCategory: 'womens > shoes > athletic'
+        pageCategory: 'women > shoes > athletic'
       };
       const pushArg = {
         event: 'carousel clicked'
@@ -53,6 +53,6 @@ describe('Performance', () => {
       expect(mockCallback.mock.calls.length).toBe(i + 1);
     }
 
-    expect(new Date() - start, 'to be samller ms time than').toBeLessThan(60000);
+    expect(new Date() - start, 'to be smaller ms time than').toBeLessThan(60000);
   });
 });
