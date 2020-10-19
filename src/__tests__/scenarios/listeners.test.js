@@ -270,7 +270,7 @@ describe('Event listeners', () => {
       expect(mockCallback.mock.calls.length).toBe(2);
     });
 
-    test('calling getState() within a handler should return the state after the event', () => {
+    test.skip('calling getState() within a handler should return the state after the event', () => {
       const compareGetStateWithNewStateFunction = function(event, oldState, newState) {
         if (isEqual(this.getState(), newState)) mockCallback();
       };
@@ -281,7 +281,7 @@ describe('Event listeners', () => {
       expect(mockCallback.mock.calls.length).toBe(1);
     });
 
-    test('undefined old / new state for past events', () => {
+    test.skip('undefined old / new state for past events', () => {
       // this behaviour is explained at: https://github.com/adobe/adobe-client-data-layer/issues/33
       const isOldNewStateUndefinedFunction = function(event, oldState, newState) {
         if (isEqual(oldState, undefined) && isEqual(newState, undefined)) mockCallback();

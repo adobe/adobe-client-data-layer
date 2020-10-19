@@ -17,6 +17,8 @@ const get = _.get;
 const constants = require('./constants');
 const listenerMatch = require('./utils/listenerMatch');
 const indexOfListener = require('./utils/indexOfListener');
+const customMerge = require('./utils/customMerge');
+const Item = require('./item');
 
 /**
  * Creates a listener manager.
@@ -115,12 +117,23 @@ module.exports = function(dataLayerManager) {
     if (listenerMatch(listener, item)) {
       const callbackArgs = [cloneDeep(item.config)];
 
-      if (item.data) {
+      if (isPastItem) {
+        const states = _getStates(item);
+        if (listener.path) {
+          const oldValue = cloneDeep(get(states.before, listener.path));
+          const newValue = cloneDeep(get(states.after, listener.path));
+          callbackArgs.push(oldValue, newValue);
+        } else {
+          const oldState = cloneDeep(states.before);
+          const newState = cloneDeep(states.after);
+          callbackArgs.push(oldState, newState);
+        }
+      } else {
         if (listener.path) {
           const oldValue = get(_dataLayerManager.getPreviousState(), listener.path);
-          const newValue = get(cloneDeep(item.data), listener.path);
+          const newValue = cloneDeep(get(_dataLayerManager.getState(), listener.path));
           callbackArgs.push(oldValue, newValue);
-        } else if (!isPastItem) {
+        } else {
           const oldState = _dataLayerManager.getPreviousState();
           const newState = cloneDeep(_dataLayerManager.getState());
           callbackArgs.push(oldState, newState);
@@ -129,6 +142,23 @@ module.exports = function(dataLayerManager) {
 
       listener.handler.apply(_dataLayerManager.getDataLayer(), callbackArgs);
     }
+  }
+
+  function _getStates(item) {
+    const _state = {};
+    const _dataLayer = _dataLayerManager.getDataLayer();
+    for (let i = 0; i < item.index; i++) {
+      const _item = Item(_dataLayer[i]);
+      if (_item.data) {
+        customMerge(_state, _item.data);
+      }
+    }
+    const _beforeState = cloneDeep(_state);
+    const _afterState = customMerge(_state, item.data);
+    return {
+      before: _beforeState,
+      after: _afterState
+    };
   }
 
   /**

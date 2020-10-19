@@ -30,7 +30,7 @@ describe('Events', () => {
     expect(adobeDataLayer.getState()).toStrictEqual(testData.carousel1);
   });
 
-  test('check number of arguments in callback', () => {
+  test.skip('check number of arguments in callback', () => {
     let calls = 0;
 
     adobeDataLayer.addEventListener('test', function() { calls = arguments.length; });

@@ -227,7 +227,7 @@ module.exports = function(config) {
      */
     function _getBefore(item) {
       if (!(_dataLayer.length === 0 || item.index > _dataLayer.length - 1)) {
-        return _dataLayer.slice(0, item.index).map(itemConfig => Item(itemConfig));
+        return _dataLayer.slice(0, item.index).map((itemConfig, idx) => Item(itemConfig, idx));
       }
       return [];
     }
