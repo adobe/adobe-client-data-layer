@@ -18,7 +18,7 @@ const constants = require('./constants');
 const listenerMatch = require('./utils/listenerMatch');
 const indexOfListener = require('./utils/indexOfListener');
 const customMerge = require('./utils/customMerge');
-const Item = require('./item');
+// const Item = require('./item');
 
 /**
  * Creates a listener manager.
@@ -146,6 +146,7 @@ module.exports = function(dataLayerManager) {
 
   function _getStates(item) {
     const _state = {};
+    /*
     const _dataLayer = _dataLayerManager.getDataLayer();
     for (let i = 0; i < item.index; i++) {
       const _item = Item(_dataLayer[i]);
@@ -153,8 +154,9 @@ module.exports = function(dataLayerManager) {
         customMerge(_state, _item.data);
       }
     }
-    const _beforeState = cloneDeep(_state);
-    const _afterState = customMerge(_state, item.data);
+     */
+    const _beforeState = cloneDeep(item.config._state);
+    const _afterState = customMerge(item.config._state, item.data);
     return {
       before: _beforeState,
       after: _afterState

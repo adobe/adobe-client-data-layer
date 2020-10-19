@@ -99,6 +99,10 @@ module.exports = function(config) {
       const filteredArguments = arguments;
 
       Object.keys(pushArguments).forEach(function(key) {
+        const _internalState = cloneDeep(_state);
+        delete _internalState._state;
+        pushArguments[key]._state = _internalState;
+
         const itemConfig = pushArguments[key];
         const item = Item(itemConfig);
 
