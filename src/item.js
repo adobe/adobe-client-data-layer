@@ -14,6 +14,7 @@ const _ = require('../custom-lodash');
 const isPlainObject = _.isPlainObject;
 const isEmpty = _.isEmpty;
 const omit = _.omit;
+const find = _.find;
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./itemConstraints');
@@ -34,7 +35,7 @@ module.exports = function(itemConfig, index) {
   const _valid = !!_type;
 
   function getType() {
-    return Object.keys(ITEM_CONSTRAINTS).find(key => dataMatchesContraints(_config, ITEM_CONSTRAINTS[key])) ||
+    return find(Object.keys(ITEM_CONSTRAINTS), key => dataMatchesContraints(_config, ITEM_CONSTRAINTS[key])) ||
       (typeof _config === 'function' && CONSTANTS.itemType.FCTN) ||
       (isPlainObject(_config) && CONSTANTS.itemType.DATA);
   }
