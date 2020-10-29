@@ -12,6 +12,7 @@ governing permissions and limitations under the License.
 
 const _ = require('../../custom-lodash');
 const find = _.find;
+const includes = _.includes;
 
 module.exports = function(data, constraints) {
   // Go through all constraints and find one which does not match the data
@@ -22,7 +23,7 @@ module.exports = function(data, constraints) {
     const value = data[key];
     const valueType = typeof value;
     const incorrectType = type && valueType !== type;
-    const noMatchForSupportedValues = supportedValues && !supportedValues.includes(value);
+    const noMatchForSupportedValues = supportedValues && !includes(supportedValues, value);
     if (mandatory) {
       return !value || incorrectType || noMatchForSupportedValues;
     } else {
