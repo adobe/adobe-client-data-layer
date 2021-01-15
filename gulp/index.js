@@ -16,7 +16,6 @@ module.exports = function(gulp) {
   require('./tasks/jest.js')(gulp);
   require('./tasks/lint.js')(gulp);
   require('./tasks/lodash.js')(gulp);
-  require('./tasks/release.js')(gulp);
   require('./tasks/scripts.js')(gulp);
   require('./tasks/watch.js')(gulp);
 

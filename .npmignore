@@ -1,6 +1,7 @@
 /.github
 /.idea
 
+/custom-lodash.js
 /.editorconfig
 /.gitignore
 /gulpfile.js
@@ -8,5 +9,5 @@
 
 /examples
 /gulp
-/src/tests
+/src/__tests__
 /test
