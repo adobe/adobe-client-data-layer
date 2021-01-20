@@ -41,6 +41,8 @@ jobs:
         tags: true
 
     - name: Publish
+      env:
+        NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
+        NPM_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
       run: |
-        echo "//registry.npmjs.org/:_authToken=${{ secrets.ADOBE_BOT_NPM_TOKEN }}" > ~/.npmrc
         npm publish --access public

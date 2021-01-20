@@ -45,7 +45,7 @@ Then choose from the following npm scripts:
 
 ## Releasing
 
-Release can be triggered only as a Github action. There is no way to release package manual using npm scripts anymore.
+Release can be triggered only as a Github action. There is no way to release package manually using npm scripts anymore.
 
 To release using Github action:
 1. Go to [Github action](https://github.com/adobe/adobe-client-data-layer/actions/new).
