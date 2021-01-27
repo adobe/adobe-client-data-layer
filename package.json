@@ -8,6 +8,7 @@
   "homepage": "https://github.com/adobe/adobe-client-data-layer#readme",
   "scripts": {
     "build": "gulp build",
+    "bumpVersion": "gulp bumpVersion",
     "dev": "gulp",
     "test": "gulp test"
   },

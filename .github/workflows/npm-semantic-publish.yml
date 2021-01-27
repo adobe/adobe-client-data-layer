@@ -32,6 +32,7 @@ jobs:
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
         git config --local user.name "Release action on behalf of ${{ github.actor }}"
         npm version ${{ github.event.inputs.semantic_version }} -m 'Release %s'
+        npm run bumpVersion
 
     - name: Push changes
       uses: ad-m/github-push-action@master

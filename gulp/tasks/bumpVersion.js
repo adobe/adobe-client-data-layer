@@ -10,34 +10,21 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
-  'use strict';
+  const bump = require('gulp-bump');
+  const fs = require('fs');
+  const CWD = process.cwd();
 
-  require('./tasks/bumpVersion.js')(gulp);
-  require('./tasks/clean.js')(gulp);
-  require('./tasks/jest.js')(gulp);
-  require('./tasks/lint.js')(gulp);
-  require('./tasks/lodash.js')(gulp);
-  require('./tasks/scripts.js')(gulp);
-  require('./tasks/watch.js')(gulp);
+  function getPackageJson() {
+    return JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+  }
 
-  gulp.task('test',
-    gulp.series(
-      'lodash',
-      'jest'
-    )
-  );
-
-  gulp.task('build',
-    gulp.series(
-      gulp.parallel('clean', 'lint', 'test'),
-      'scripts'
-    )
-  );
-
-  gulp.task('default',
-    gulp.series(
-      'build',
-      'watch'
-    )
-  );
+  gulp.task('bumpVersion', (done) => {
+    const version = getPackageJson().version;
+    gulp.src([`${CWD}/version.json`])
+      .pipe(bump({version: version}))
+      .pipe(gulp.dest('./'))
+      .on('end', () => {
+      done();
+    });
+  });
 };
