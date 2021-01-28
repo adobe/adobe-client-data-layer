@@ -45,18 +45,18 @@ Then choose from the following npm scripts:
 
 ## Releasing
 
-> **Note** - only release this package if you have access to the Adobe npm organization and are a project committer.
+Release can be triggered only as a Github action. There is no way to release package manually using npm scripts anymore.
 
-First run the following commands:
-```
-git checkout master
-git pull
-rm -rf node_modules && npm install
-```
+To release using Github action:
+1. Go to [Github action](https://github.com/adobe/adobe-client-data-layer/actions/new).
+2. Select "Release and publish to npm" and click "Run workflow".
+3. Provide a new version. Patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
 
-Then run:
-* `npm run release` - prompts for a new version, with patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
-  Following selection, the task will increase, commit and push the version, create and push the Git release tag, and publish the npm package.
+Release and publish Github action will:
+* increase the ACDL version accordingly,
+* commit release and push to Github repository,
+* create and push the Git release tag,
+* publish the npm package.
 
 ## Contributing
 
