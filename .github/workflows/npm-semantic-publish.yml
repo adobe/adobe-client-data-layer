@@ -31,8 +31,9 @@ jobs:
       run: |
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
         git config --local user.name "Release action on behalf of ${{ github.actor }}"
-        npm version ${{ github.event.inputs.semantic_version }} -m 'Release %s'
+        npm version ${{ github.event.inputs.semantic_version }}
         npm run bumpVersion
+        git commit -m "@releng - release ${{ github.event.inputs.semantic_version }}" -a
 
     - name: Push changes
       uses: ad-m/github-push-action@master
@@ -42,8 +43,6 @@ jobs:
         tags: true
 
     - name: Publish
-      env:
-        NPM_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
-        NPM_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
       run: |
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.ADOBE_BOT_NPM_TOKEN }}" > ~/.npmrc
         npm publish --access public
