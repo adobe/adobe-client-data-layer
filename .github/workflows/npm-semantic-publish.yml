@@ -1,0 +1,48 @@
+name: Release and publish to npm
+
+on: 
+  workflow_dispatch:
+    inputs:
+      semantic_version:
+        description: 'Release version (major.minor.patch)'
+        required: true
+        default: ''
+
+jobs:
+  release_and_deploy:
+    name: Release and publish
+    runs-on: ubuntu-latest
+
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v1
+      with:
+        node-version: '12'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build scripts and run tests
+      run: npm run build
+
+    - name: Bump version and commit
+      run: |
+        git config --local user.email "${{ github.actor }}@users.noreply.github.com"
+        git config --local user.name "Release action on behalf of ${{ github.actor }}"
+        npm run bumpVersion -- --version=${{ github.event.inputs.semantic_version }}
+        git commit -m "@releng - prepare release ${{ github.event.inputs.semantic_version }}" -a
+        npm version ${{ github.event.inputs.semantic_version }} -m '@releng - release %s'
+
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
+        tags: true
+
+    - name: Publish
+      run: |
+        echo "//registry.npmjs.org/:_authToken=${{ secrets.ADOBE_BOT_NPM_TOKEN }}" > ~/.npmrc
+        npm publish --access public

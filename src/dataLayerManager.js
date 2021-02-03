@@ -11,10 +11,10 @@ governing permissions and limitations under the License.
 */
 
 const _ = require('../custom-lodash');
+const version = require('../version.json').version;
 const cloneDeep = _.cloneDeep;
 const get = _.get;
 
-const version = require('../version.json').version;
 const Item = require('./item');
 const Listener = require('./listener');
 const ListenerManager = require('./listenerManager');
@@ -29,8 +29,9 @@ const customMerge = require('./utils/customMerge');
  * @param {Object} config The Data Layer manager configuration.
  */
 module.exports = function(config) {
-  const _config = config;
+  const _config = config || {};
   let _dataLayer = [];
+  let _preLoadedItems = [];
   let _state = {};
   let _previousStateCopy = {};
   let _listenerManager;
@@ -61,6 +62,8 @@ module.exports = function(config) {
       _config.dataLayer = [];
     }
 
+    // Remove preloaded items from the data layer array and add those to the array of preloaded items
+    _preLoadedItems = _config.dataLayer.splice(0, _config.dataLayer.length);
     _dataLayer = _config.dataLayer;
     _dataLayer.version = version;
     _state = {};
@@ -100,6 +103,7 @@ module.exports = function(config) {
         const item = Item(itemConfig);
 
         if (!item.valid) {
+          _logInvalidItemError(item);
           delete filteredArguments[key];
         }
         switch (item.type) {
@@ -197,19 +201,8 @@ module.exports = function(config) {
    * @private
    */
   function _processItems() {
-    for (let i = 0; i < _dataLayer.length; i++) {
-      const item = Item(_dataLayer[i], i);
-
-      _processItem(item);
-
-      // remove event listener or invalid item from the data layer array
-      if (item.type === CONSTANTS.itemType.LISTENER_ON ||
-        item.type === CONSTANTS.itemType.LISTENER_OFF ||
-        item.type === CONSTANTS.itemType.FCTN ||
-        !item.valid) {
-        _dataLayer.splice(i, 1);
-        i--;
-      }
+    for (let i = 0; i < _preLoadedItems.length; i++) {
+      _dataLayer.push(_preLoadedItems[i]);
     }
   };
 
@@ -221,10 +214,7 @@ module.exports = function(config) {
    */
   function _processItem(item) {
     if (!item.valid) {
-      const message = 'The following item cannot be handled by the data layer ' +
-        'because it does not have a valid format: ' +
-        JSON.stringify(item.config);
-      console.error(message);
+      _logInvalidItemError(item);
       return;
     }
 
@@ -285,6 +275,19 @@ module.exports = function(config) {
     };
 
     typeProcessors[item.type](item);
+  };
+
+  /**
+   * Logs error for invalid item pushed to the data layer.
+   *
+   * @param {Item} item The invalid item.
+   * @private
+   */
+  function _logInvalidItemError(item) {
+    const message = 'The following item cannot be handled by the data layer ' +
+      'because it does not have a valid format: ' +
+      JSON.stringify(item.config);
+    console.error(message);
   };
 
   return DataLayerManager;

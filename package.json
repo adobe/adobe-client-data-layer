@@ -1,15 +1,15 @@
 {
   "name": "@adobe/adobe-client-data-layer",
   "description": "Adobe Client Data Layer",
-  "version": "1.1.0",
+  "version": "1.1.4",
   "main": "dist/adobe-client-data-layer.min.js",
   "license": "Apache-2.0",
   "private": false,
   "homepage": "https://github.com/adobe/adobe-client-data-layer#readme",
   "scripts": {
     "build": "gulp build",
+    "bumpVersion": "gulp bumpVersion",
     "dev": "gulp",
-    "release": "gulp release",
     "test": "gulp test"
   },
   "repository": {
@@ -49,7 +49,7 @@
     "jest-cli": "^24.9.0",
     "jest-expect-message": "^1.0.2",
     "lodash-cli": "^4.17.5",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.5",
     "plugin-error": "^1.0.1",
     "semver": "^6.3.0",
     "vinyl-buffer": "^1.0.1",

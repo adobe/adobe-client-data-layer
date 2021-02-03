@@ -12,11 +12,11 @@ governing permissions and limitations under the License.
 module.exports = function(gulp) {
   'use strict';
 
+  require('./tasks/bumpVersion.js')(gulp);
   require('./tasks/clean.js')(gulp);
   require('./tasks/jest.js')(gulp);
   require('./tasks/lint.js')(gulp);
   require('./tasks/lodash.js')(gulp);
-  require('./tasks/release.js')(gulp);
   require('./tasks/scripts.js')(gulp);
   require('./tasks/watch.js')(gulp);
 
