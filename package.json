@@ -49,7 +49,7 @@
     "jest-cli": "^24.9.0",
     "jest-expect-message": "^1.0.2",
     "lodash-cli": "^4.17.5",
-    "minimist": "^1.2.0",
+    "minimist": "^1.2.5",
     "plugin-error": "^1.0.1",
     "semver": "^6.3.0",
     "vinyl-buffer": "^1.0.1",

@@ -10,18 +10,14 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = function(gulp) {
+  const argv = require('minimist')(process.argv.slice(2));
   const bump = require('gulp-bump');
   const fs = require('fs');
   const CWD = process.cwd();
 
-  function getPackageJson() {
-    return JSON.parse(fs.readFileSync('./package.json', 'utf8'));
-  }
-
   gulp.task('bumpVersion', (done) => {
-    const version = getPackageJson().version;
     gulp.src([`${CWD}/version.json`])
-      .pipe(bump({version: version}))
+      .pipe(bump({version: argv.version}))
       .pipe(gulp.dest('./'))
       .on('end', () => {
       done();
