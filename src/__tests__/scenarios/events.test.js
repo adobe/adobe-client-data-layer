@@ -42,7 +42,7 @@ describe('Events', () => {
     expect(calls, 'just one argument if no data is added').toStrictEqual(1);
 
     adobeDataLayer.push({ event: 'test', somekey: 'somedata' });
-    expect(calls, 'three arguments if data is added').toStrictEqual(3);
+    expect(calls, 'just one argument if data is added').toStrictEqual(1);
   });
 
   test('check if eventInfo is passed to callback', () => {

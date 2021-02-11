@@ -9,9 +9,6 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const isEqual = require('lodash/isEqual');
-const merge = require('lodash/merge');
-
 const testData = require('../testData');
 const DataLayerManager = require('../../dataLayerManager');
 const DataLayer = { Manager: DataLayerManager };
@@ -242,54 +239,6 @@ describe('Event listeners', () => {
       adobeDataLayer.addEventListener('adobeDataLayer:change', mockCallback, { path: 'component' });
       adobeDataLayer.push(testData.image1change);
       expect(mockCallback.mock.calls.length).toBe(3);
-    });
-
-    test('old / new value', () => {
-      const compareOldNewValueFunction = function(event, oldValue, newValue) {
-        if (oldValue === 'old') mockCallback();
-        if (newValue === 'new') mockCallback();
-      };
-
-      adobeDataLayer.push(testData.carousel1oldId);
-      adobeDataLayer.addEventListener('adobeDataLayer:change', compareOldNewValueFunction, {
-        path: 'component.carousel.carousel1.id'
-      });
-      adobeDataLayer.push(testData.carousel1newId);
-      expect(mockCallback.mock.calls.length).toBe(2);
-    });
-
-    test('old / new state', () => {
-      const compareOldNewStateFunction = function(event, oldState, newState) {
-        if (isEqual(oldState, testData.carousel1oldId)) mockCallback();
-        if (isEqual(newState, testData.carousel1newId)) mockCallback();
-      };
-
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
-      adobeDataLayer.addEventListener('adobeDataLayer:change', compareOldNewStateFunction);
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1newId));
-      expect(mockCallback.mock.calls.length).toBe(2);
-    });
-
-    test('calling getState() within a handler should return the state after the event', () => {
-      const compareGetStateWithNewStateFunction = function(event, oldState, newState) {
-        if (isEqual(this.getState(), newState)) mockCallback();
-      };
-
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
-      adobeDataLayer.addEventListener('adobeDataLayer:change', compareGetStateWithNewStateFunction);
-      adobeDataLayer.push(merge({ event: 'adobeDataLayer:change' }, testData.carousel1oldId));
-      expect(mockCallback.mock.calls.length).toBe(1);
-    });
-
-    test('undefined old / new state for past events', () => {
-      // this behaviour is explained at: https://github.com/adobe/adobe-client-data-layer/issues/33
-      const isOldNewStateUndefinedFunction = function(event, oldState, newState) {
-        if (isEqual(oldState, undefined) && isEqual(newState, undefined)) mockCallback();
-      };
-
-      adobeDataLayer.push(testData.carousel1change);
-      adobeDataLayer.addEventListener('adobeDataLayer:change', isOldNewStateUndefinedFunction, { scope: 'past' });
-      expect(mockCallback.mock.calls.length).toBe(1);
     });
   });
 

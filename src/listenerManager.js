@@ -12,7 +12,6 @@ governing permissions and limitations under the License.
 
 const _ = require('../custom-lodash');
 const cloneDeep = _.cloneDeep;
-const get = _.get;
 
 const constants = require('./constants');
 const listenerMatch = require('./utils/listenerMatch');
@@ -86,7 +85,7 @@ module.exports = function(dataLayerManager) {
       triggeredEvents.forEach(function(event) {
         if (Object.prototype.hasOwnProperty.call(_listeners, event)) {
           for (const listener of _listeners[event]) {
-            _callHandler(listener, item, false);
+            _callHandler(listener, item);
           }
         }
       });
@@ -99,7 +98,7 @@ module.exports = function(dataLayerManager) {
      * @param {Item} item Item to call the listener with.
      */
     triggerListener: function(listener, item) {
-      _callHandler(listener, item, true);
+      _callHandler(listener, item);
     }
   };
 
@@ -108,25 +107,11 @@ module.exports = function(dataLayerManager) {
    *
    * @param {Listener} listener The listener.
    * @param {Item} item The item.
-   * @param {Boolean} isPastItem Flag indicating whether the item was registered before the listener.
    * @private
    */
-  function _callHandler(listener, item, isPastItem) {
+  function _callHandler(listener, item) {
     if (listenerMatch(listener, item)) {
       const callbackArgs = [cloneDeep(item.config)];
-
-      if (item.data) {
-        if (listener.path) {
-          const oldValue = get(_dataLayerManager.getPreviousState(), listener.path);
-          const newValue = get(cloneDeep(item.data), listener.path);
-          callbackArgs.push(oldValue, newValue);
-        } else if (!isPastItem) {
-          const oldState = _dataLayerManager.getPreviousState();
-          const newState = cloneDeep(_dataLayerManager.getState());
-          callbackArgs.push(oldState, newState);
-        }
-      }
-
       listener.handler.apply(_dataLayerManager.getDataLayer(), callbackArgs);
     }
   }
