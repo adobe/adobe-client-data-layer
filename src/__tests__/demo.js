@@ -116,12 +116,10 @@ window.adobeDataLayer.push({
   }
 });
 
-const fct2 = function(event, oldState, newState) {
+const fct2 = function(event) {
   console.log('fct2');
   console.log('this', this);
   console.log('event', event);
-  console.log('oldState', oldState);
-  console.log('newState', newState);
 };
 
 window.adobeDataLayer.addEventListener('adobeDataLayer:change', fct2, { scope: 'future' });
@@ -141,12 +139,10 @@ window.adobeDataLayer.push({
 // Adding an event listener: path
 // -----------------------------------------------------------------------------------------------------------------
 
-const fct3 = function(event, oldValue, newValue) {
+const fct3 = function(event) {
   console.log('fct3');
   console.log('this', this);
   console.log('event', event);
-  console.log('oldValue', oldValue);
-  console.log('newValue', newValue);
 };
 
 window.adobeDataLayer.addEventListener('adobeDataLayer:change', fct3, { path: 'component.carousel.carousel5' });

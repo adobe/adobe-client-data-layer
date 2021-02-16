@@ -33,7 +33,6 @@ module.exports = function(config) {
   let _dataLayer = [];
   let _preLoadedItems = [];
   let _state = {};
-  let _previousStateCopy = {};
   let _listenerManager;
 
   const DataLayerManager = {
@@ -42,9 +41,6 @@ module.exports = function(config) {
     },
     getDataLayer: function() {
       return _dataLayer;
-    },
-    getPreviousState: function() {
-      return _previousStateCopy;
     }
   };
 
@@ -67,7 +63,6 @@ module.exports = function(config) {
     _dataLayer = _config.dataLayer;
     _dataLayer.version = version;
     _state = {};
-    _previousStateCopy = {};
     _listenerManager = ListenerManager(DataLayerManager);
   };
 
@@ -78,7 +73,6 @@ module.exports = function(config) {
    * @private
    */
   function _updateState(item) {
-    _previousStateCopy = cloneDeep(_state);
     _state = customMerge(_state, item.data);
   };
 
@@ -148,12 +142,6 @@ module.exports = function(config) {
      * @callback eventListenerCallback A function that is called when the event of the specified type occurs.
      * @this {DataLayer}
      * @param {Object} event The event object pushed to the data layer that triggered the callback.
-     * @param {Object} [beforeState] The state before the change caused by the event. Available only when the event
-     * object has data that modify the state. If a path filter option has been provided when registering the event,
-     * the object will only contain the data at the defined path.
-     * @param {Object} [afterState] The state after the change caused by the event. Available only when the event
-     * object has data that modify the state. If a path filter option has been provided when registering the event,
-     * the object will only contain the data at the defined path.
      */
 
     /**
