@@ -17,5 +17,5 @@ module.exports = function(gulp) {
     output: 'custom-lodash.js'
   };
 
-  gulp.task('lodash', shell.task(`lodash include=${configs.include.join(',')} -p -o ${configs.output}`));
+  gulp.task('lodash', shell.task(`lodash exports=node include=${configs.include.join(',')} -p -o ${configs.output}`));
 };

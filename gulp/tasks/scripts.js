@@ -18,6 +18,7 @@ module.exports = function(gulp) {
   const source = require('vinyl-source-stream');
   const sourcemaps = require('gulp-sourcemaps');
   const uglify = require('gulp-uglify');
+  const derequire = require('gulp-derequire');
 
   gulp.task('scripts', () => {
     const b = browserify({
@@ -27,14 +28,18 @@ module.exports = function(gulp) {
 
     return b.bundle()
       .pipe(source('adobe-client-data-layer.js'))
+      .pipe(derequire([{
+          from: 'require',
+          to: 'acdlreq'
+      }]))
       .pipe(gulp.dest('./dist/'))
       .pipe(buffer())
-      .pipe(sourcemaps.init({loadMaps: true}))
+      .pipe(sourcemaps.init({ loadMaps: true }))
       .pipe((babel({
         presets: ['@babel/env']
       })))
       .pipe(uglify())
-      .pipe(rename({suffix: '.min'}))
+      .pipe(rename({ suffix: '.min' }))
       .on('error', log.error)
       .pipe(sourcemaps.write('./'))
       .pipe(gulp.dest('./dist/'));
