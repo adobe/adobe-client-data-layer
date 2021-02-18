@@ -48,7 +48,7 @@ Then choose from the following npm scripts:
 Release can be triggered only as a Github action. There is no way to release package manually using npm scripts anymore.
 
 To release using Github action:
-1. Go to the [Github Actions tab](https://github.com/adobe/adobe-client-data-layer/actions).
+1. Go to the Github [Actions](https://github.com/adobe/adobe-client-data-layer/actions) tab.
 2. Select "Release and publish to npm" and click "Run workflow".
 3. Provide a new version. Patch, minor or major versions allowed, see [NPM Semantic Versioning](https://docs.npmjs.com/about-semantic-versioning).
 
