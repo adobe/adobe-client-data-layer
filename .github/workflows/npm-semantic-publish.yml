@@ -35,6 +35,9 @@ jobs:
         git commit -m "@releng - prepare release ${{ github.event.inputs.semantic_version }}" -a
         npm version ${{ github.event.inputs.semantic_version }} -m '@releng - release %s'
 
+    - name: Build scripts and run tests again to ensure version bump is picked up
+      run: npm run build
+
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
