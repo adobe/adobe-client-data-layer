@@ -23,9 +23,16 @@ const DataLayer = {
 
 window.adobeDataLayer = window.adobeDataLayer || [];
 
-DataLayer.Manager({
-  dataLayer: window.adobeDataLayer
-});
+// If data layer has already been initialized, do not re-initialize.
+if (window.adobeDataLayer.version) {
+  console.warn(
+    `Adobe Client Data Layer v${window.adobeDataLayer.version} has already been imported/initialized on this page. You may be erroneously loading it a second time.`
+  );
+} else {
+  DataLayer.Manager({
+    dataLayer: window.adobeDataLayer,
+  });
+}
 
 /**
  * @typedef  {Object} ListenerOnConfig
