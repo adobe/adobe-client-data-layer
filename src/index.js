@@ -30,7 +30,7 @@ if (window.adobeDataLayer.version) {
   );
 } else {
   DataLayer.Manager({
-    dataLayer: window.adobeDataLayer,
+    dataLayer: window.adobeDataLayer
   });
 }
 
