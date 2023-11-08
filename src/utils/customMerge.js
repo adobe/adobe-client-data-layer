@@ -10,13 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../../custom-lodash');
-const cloneDeepWith = _.cloneDeepWith;
-const isObject = _.isObject;
-const isArray = _.isArray;
-const reject = _.reject;
-const mergeWith = _.mergeWith;
-const isNull = _.isNull;
+import { cloneDeepWith, isObject, isArray, reject, mergeWith, isNull } from 'lodash-es';
 
 /**
  * Merges the source into the object and sets objects as 'undefined' if they are 'undefined' in the source object.

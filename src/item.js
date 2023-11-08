@@ -10,11 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../custom-lodash');
-const isPlainObject = _.isPlainObject;
-const isEmpty = _.isEmpty;
-const omit = _.omit;
-const find = _.find;
+import { isPlainObject, isEmpty, omit, find } from 'lodash-es';
 
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./itemConstraints');

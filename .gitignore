@@ -4,3 +4,4 @@
 .idea/
 /dist
 custom-lodash.js
+.parcel-cache

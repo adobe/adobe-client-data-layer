@@ -14,5 +14,11 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/unit-test-coverage',
   testMatch: ['<rootDir>/src/__tests__/**/*.test.js'],
   setupFilesAfterEnv: ['jest-expect-message'],
-  coveragePathIgnorePatterns: ['<rootDir>/src/__tests__', 'custom-lodash.js']
+  coveragePathIgnorePatterns: ['<rootDir>/src/__tests__'],
+  transformIgnorePatterns: [
+    "node_modules/(?!(lodash-es)/)"
+  ],
+  moduleNameMapper: {
+    '^lodash-es$': 'lodash'
+  }
 };

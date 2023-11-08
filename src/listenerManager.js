@@ -10,8 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../custom-lodash');
-const cloneDeep = _.cloneDeep;
+import { cloneDeep } from 'lodash-es';
 
 const constants = require('./constants');
 const listenerMatch = require('./utils/listenerMatch');
