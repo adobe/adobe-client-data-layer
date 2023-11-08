@@ -37,8 +37,8 @@ npm install
 ```   
  
 Then choose from the following npm scripts:
-* `npm run dev` - run the tests, generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
-* `npm run build` - run the tests and generates the build in the `./dist` folder.
+* `npm run dev` - generates the build in the `./dist` folder and runs a development server on `localhost:3000`.
+* `npm run build` - generates the build in the `./dist` folder.
 * `npm run test` - run the unit tests
 
 > **Note** - you can [get some stats](https://bundlephobia.com/result?p=@adobe/adobe-client-data-layer@2.0.1) (bundle size, download time) about the released version.

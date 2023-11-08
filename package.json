@@ -10,7 +10,9 @@
   "homepage": "https://github.com/adobe/adobe-client-data-layer#readme",
   "scripts": {
     "build": "parcel build",
-    "dev": "parcel",
+    "dev": "concurrently \"npm:watch\" \"npm:live-server\"",
+    "watch": "parcel watch",
+    "live-server": "live-server --port=3000 --open=examples/index.html --watch=examples --verbose",
     "lint": "eslint src",
     "test": "jest"
   },
@@ -28,6 +30,7 @@
     "@parcel/reporter-bundle-analyzer": "^2.10.2",
     "babel-jest": "^29.7.0",
     "codecov": "^3.6.5",
+    "concurrently": "^8.2.2",
     "eslint": "^6.5.1",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-compat": "^3.6.0",
@@ -38,6 +41,7 @@
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "jest-expect-message": "^1.0.2",
+    "live-server": "^1.2.2",
     "parcel": "^2.10.2"
   },
   "dependencies": {
