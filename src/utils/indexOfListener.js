@@ -10,14 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { isEqual } from 'lodash-es';
-
 module.exports = function(listeners, listener) {
   const event = listener.event;
 
   if (Object.prototype.hasOwnProperty.call(listeners, event)) {
     for (const [index, registeredListener] of listeners[event].entries()) {
-      if (isEqual(registeredListener.handler, listener.handler)) {
+      if (registeredListener.handler === listener.handler) {
         return index;
       }
     }

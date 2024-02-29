@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { has } from 'lodash-es';
+import { has } from './get.js';
 
 const CONSTANTS = require('../constants');
 const ancestorRemoved = require('./ancestorRemoved');

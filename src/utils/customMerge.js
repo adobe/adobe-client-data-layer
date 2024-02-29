@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { cloneDeepWith, isObject, isArray, reject, mergeWith, isNull } from 'lodash-es';
+const { cloneDeepWith, mergeWith } = require('./mergeWith.js');
 
 /**
  * Merges the source into the object and sets objects as 'undefined' if they are 'undefined' in the source object.
@@ -22,9 +22,9 @@ import { cloneDeepWith, isObject, isArray, reject, mergeWith, isNull } from 'lod
 module.exports = function(object, source) {
   const makeOmittingCloneDeepCustomizer = function(predicate) {
     return function omittingCloneDeepCustomizer(value, key, object, stack) {
-      if (isObject(value)) {
-        if (isArray(value)) {
-          return reject(value, predicate).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
+      if (value === Object(value)) {
+        if (Array.isArray(value)) {
+          return value.filter(item => !predicate(item)).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
         }
 
         const clone = {};
@@ -52,7 +52,7 @@ module.exports = function(object, source) {
   mergeWith(object, source, customizer);
 
   // Remove null or undefined objects
-  object = omitDeep(object, isNull);
+  object = omitDeep(object, v => v === null || v === undefined);
 
   return object;
 };

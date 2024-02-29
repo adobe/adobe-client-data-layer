@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { cloneDeep, get } from 'lodash-es';
+import { get } from './utils/get.js';
+
 const version = require('../version.json').version;
 const Item = require('./item');
 const Listener = require('./listener');
@@ -128,9 +129,9 @@ module.exports = function(config) {
      */
     _dataLayer.getState = function(path) {
       if (path) {
-        return get(cloneDeep(_state), path);
+        return get(structuredClone(_state), path);
       }
-      return cloneDeep(_state);
+      return structuredClone(_state);
     };
 
     /**

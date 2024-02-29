@@ -10,11 +10,19 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { isPlainObject, isEmpty, omit, find } from 'lodash-es';
-
 const dataMatchesContraints = require('./utils/dataMatchesContraints');
 const ITEM_CONSTRAINTS = require('./itemConstraints');
 const CONSTANTS = require('./constants');
+
+const isEmpty = obj => [Object, Array].includes((obj || {}).constructor) && !Object.entries((obj || {})).length;
+function isPlainObject(obj) {
+  if (typeof obj !== 'object' || obj === null) return false;
+  let proto = obj;
+  while (Object.getPrototypeOf(proto) !== null) {
+    proto = Object.getPrototypeOf(proto);
+  }
+  return Object.getPrototypeOf(obj) === proto;
+}
 
 /**
  * Constructs a data layer item.
@@ -31,13 +39,18 @@ module.exports = function(itemConfig, index) {
   const _valid = !!_type;
 
   function getType() {
-    return find(Object.keys(ITEM_CONSTRAINTS), key => dataMatchesContraints(_config, ITEM_CONSTRAINTS[key])) ||
+    return Object.keys(ITEM_CONSTRAINTS).find(key => dataMatchesContraints(_config, ITEM_CONSTRAINTS[key])) ||
       (typeof _config === 'function' && CONSTANTS.itemType.FCTN) ||
       (isPlainObject(_config) && CONSTANTS.itemType.DATA);
   }
 
   function getData() {
-    const data = omit(_config, Object.keys(ITEM_CONSTRAINTS.event));
+    const data = Object.keys(_config)
+      .filter(key => !Object.keys(ITEM_CONSTRAINTS.event).includes(key))
+      .reduce((obj, key) => {
+        obj[key] = _config[key];
+        return obj;
+      }, {});
     if (!isEmpty(data)) {
       return data;
     }

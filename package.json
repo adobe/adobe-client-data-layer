@@ -26,8 +26,9 @@
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-transform-modules-commonjs": "^7.23.0",
-    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-env": "^7.24.0",
     "@parcel/reporter-bundle-analyzer": "^2.10.2",
+    "@ungap/structured-clone": "^1.2.0",
     "babel-jest": "^29.7.0",
     "codecov": "^3.6.5",
     "concurrently": "^8.2.2",
@@ -45,8 +46,7 @@
     "parcel": "^2.10.2"
   },
   "dependencies": {
-    "@swc/helpers": "^0.5.3",
-    "lodash-es": "^4.17.21"
+    "@swc/helpers": "^0.5.3"
   },
   "targets": {
     "acdl": {
