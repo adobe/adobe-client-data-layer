@@ -21,7 +21,7 @@ const { cloneDeepWith, mergeWith } = require('./mergeWith.js');
  */
 module.exports = function(object, source) {
   const makeOmittingCloneDeepCustomizer = function(predicate) {
-    return function omittingCloneDeepCustomizer(value, key, object, stack) {
+    return function omittingCloneDeepCustomizer(value) {
       if (value === Object(value)) {
         if (Array.isArray(value)) {
           return value.filter(item => !predicate(item)).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
@@ -39,7 +39,7 @@ module.exports = function(object, source) {
     };
   };
 
-  const customizer = function(objValue, srcValue, key, object) {
+  const customizer = function(_, srcValue) {
     if (typeof srcValue === 'undefined' || srcValue === null) {
       return null;
     }

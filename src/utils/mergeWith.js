@@ -33,7 +33,7 @@ function cloneDeepWith(target, customizer) {
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
         newTarget[key] = cloneDeepWith(target[key], customizer);
-      };
+      }
     }
     newTarget = structuredClone(target);
   }

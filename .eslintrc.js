@@ -10,9 +10,9 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 module.exports = {
-  "extends": ["standard", "plugin:compat/recommended"],
+  "extends": ["eslint:recommended"],
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 2021,
     "sourceType": "module"
   },
   "env": {

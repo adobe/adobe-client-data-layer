@@ -18,6 +18,7 @@ function has(obj, path) {
   let result = obj;
 
   for (const key of keys) {
+    /* eslint-disable no-prototype-builtins */
     if (!result?.hasOwnProperty(key)) {
       return false;
     }
