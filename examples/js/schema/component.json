@@ -1,0 +1,28 @@
+{
+    "definitions": {
+        "carouselItem": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "items": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "items"
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "carousel": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/carouselItem"
+            }
+        }
+    }
+}

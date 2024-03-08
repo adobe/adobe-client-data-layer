@@ -3,7 +3,6 @@
   "description": "Adobe Client Data Layer",
   "version": "2.0.2",
   "acdl": "dist/adobe-client-data-layer.min.js",
-  "source": "src/index.js",
   "license": "Apache-2.0",
   "private": false,
   "browserslist": "> 1%",
@@ -50,7 +49,13 @@
   },
   "targets": {
     "acdl": {
-      "outputFormat": "global"
+      "outputFormat": "global",
+      "source": "src/index.js"
+    },
+    "validator": {
+      "outputFormat": "esmodule",
+      "source": "src/validator.js",
+      "isLibrary": true
     }
   }
 }

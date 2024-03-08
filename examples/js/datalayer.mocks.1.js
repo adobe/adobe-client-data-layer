@@ -63,7 +63,7 @@ governing permissions and limitations under the License.
     // -----------------------------------------------------------------------------------------------------------------
 
     adobeDataLayer.push({
-      event: 'carousel clicked',
+      event: 'carousel-clicked',
       component: {
         carousel: {
           carousel3: {
@@ -137,12 +137,12 @@ governing permissions and limitations under the License.
 
     let success6 = false;
 
-    adobeDataLayer.addEventListener('carousel clicked', function(event) {
+    adobeDataLayer.addEventListener('carousel-clicked', function(event) {
       success6 = true;
     });
 
     adobeDataLayer.push({
-      event: 'carousel clicked',
+      event: 'carousel-clicked',
       eventInfo: {
         reference: '/content/mysite/en/home/jcr:content/root/carousel6'
       }
