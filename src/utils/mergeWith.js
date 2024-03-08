@@ -1,10 +1,7 @@
 
 function mergeWith(target, source, customizer) {
-  if (!source) {
+  if (!source || !target) {
     return;
-  }
-  if (!target) {
-    target = {};
   }
 
   Object.keys(source).forEach(key => {
