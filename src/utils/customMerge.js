@@ -49,6 +49,9 @@ module.exports = function(object, source) {
     if (typeof srcValue === 'undefined' || srcValue === null) {
       return null;
     }
+    if (isArray(srcValue)) {
+      return srcValue.map(value => (typeof value === 'undefined' || value === null) ? null : value);
+    }
   };
 
   const omitDeep = function(value, predicate = (val) => !val) {
