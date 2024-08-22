@@ -27,7 +27,7 @@ This script can then be included in your page head, as follows:
 <script src="adobe-client-data-layer.min.js" async defer></script>
 ```
 
-> **Note** - you can directly access the [minified version](https://unpkg.com/browse/@adobe/adobe-client-data-layer@2.0.1/dist/adobe-client-data-layer.min.js) of the data layer without downloading the sources and compiling them.
+> **Note** - you can directly access the [minified version](https://unpkg.com/browse/@adobe/adobe-client-data-layer@2.0.2/dist/adobe-client-data-layer.min.js) of the data layer without downloading the sources and compiling them.
 
 ## Building / Testing
 
