@@ -4,10 +4,8 @@
 /custom-lodash.js
 /.editorconfig
 /.gitignore
-/gulpfile.js
 /jest.config.js
 
 /examples
-/gulp
 /src/__tests__
 /test

@@ -10,13 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../../custom-lodash');
-const cloneDeepWith = _.cloneDeepWith;
-const isObject = _.isObject;
-const isArray = _.isArray;
-const reject = _.reject;
-const mergeWith = _.mergeWith;
-const isNull = _.isNull;
+const { cloneDeepWith, mergeWith } = require('./mergeWith.js');
 
 /**
  * Merges the source into the object and sets objects as 'undefined' if they are 'undefined' in the source object.
@@ -27,10 +21,10 @@ const isNull = _.isNull;
  */
 module.exports = function(object, source) {
   const makeOmittingCloneDeepCustomizer = function(predicate) {
-    return function omittingCloneDeepCustomizer(value, key, object, stack) {
-      if (isObject(value)) {
-        if (isArray(value)) {
-          return reject(value, predicate).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
+    return function omittingCloneDeepCustomizer(value) {
+      if (value === Object(value)) {
+        if (Array.isArray(value)) {
+          return value.filter(item => !predicate(item)).map(item => cloneDeepWith(item, omittingCloneDeepCustomizer));
         }
 
         const clone = {};
@@ -45,7 +39,7 @@ module.exports = function(object, source) {
     };
   };
 
-  const customizer = function(objValue, srcValue, key, object) {
+  const customizer = function(_, srcValue) {
     if (typeof srcValue === 'undefined' || srcValue === null) {
       return null;
     }
@@ -58,7 +52,7 @@ module.exports = function(object, source) {
   mergeWith(object, source, customizer);
 
   // Remove null or undefined objects
-  object = omitDeep(object, isNull);
+  object = omitDeep(object, v => v === null || v === undefined);
 
   return object;
 };

@@ -10,8 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../custom-lodash');
-const cloneDeep = _.cloneDeep;
+import { cloneDeepWith } from './utils/mergeWith';
 
 const constants = require('./constants');
 const listenerMatch = require('./utils/listenerMatch');
@@ -111,7 +110,7 @@ module.exports = function(dataLayerManager) {
    */
   function _callHandler(listener, item) {
     if (listenerMatch(listener, item)) {
-      const callbackArgs = [cloneDeep(item.config)];
+      const callbackArgs = [cloneDeepWith(item.config)];
       listener.handler.apply(_dataLayerManager.getDataLayer(), callbackArgs);
     }
   }

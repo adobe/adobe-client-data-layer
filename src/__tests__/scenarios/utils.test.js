@@ -58,6 +58,13 @@ describe('Utils', () => {
       customMerge(objectInitial, objectSource);
       expect(objectInitial).toEqual(objectFinal);
     });
+    test('merge into null object', () => {
+      const objectInitial = null;
+      const objectSource = { prop1: 'foo' };
+      const objectFinal = null;
+      customMerge(objectInitial, objectSource);
+      expect(objectInitial).toEqual(objectFinal);
+    });
   });
 
   describe('dataMatchesContraints', () => {
