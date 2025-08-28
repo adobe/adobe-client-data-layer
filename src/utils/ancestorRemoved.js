@@ -10,9 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-const _ = require('../../custom-lodash');
-const has = _.has;
-const get = _.get;
+import { has, get } from './get.js';
 
 /**
   * Checks if the object contains an ancestor that is set to null or undefined.

@@ -9,11 +9,16 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-const merge = require('lodash/merge');
+import { mergeWith } from '../../utils/mergeWith';
 
 const testData = require('../testData');
 const DataLayerManager = require('../../dataLayerManager');
 const DataLayer = { Manager: DataLayerManager };
+const merge = (target, ...sources) => {
+  return sources.reduce((acc, source) => {
+    return mergeWith(acc, structuredClone(source));
+  }, target);
+};
 let adobeDataLayer;
 
 const clearDL = function() {

@@ -22,7 +22,7 @@ const clearDL = function() {
   });
 };
 
-const createEventListener = function(dl, eventName, callback, eventData) {
+const createEventListener = function(dl, eventName, callback) {
   dl.addEventListener(eventName, function(eventData) {
     expect(eventData, 'data layer object as an argument of callback').toEqual(eventData);
     callback();
@@ -70,7 +70,7 @@ describe('Functions', () => {
     const mockCallback2 = jest.fn();
     const mockCallback3 = jest.fn();
 
-    adobeDataLayer.addEventListener('adobeDataLayer:event', function(eventData) {
+    adobeDataLayer.addEventListener('adobeDataLayer:event', function() {
       mockCallback1();
     });
 

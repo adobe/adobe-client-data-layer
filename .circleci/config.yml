@@ -5,9 +5,11 @@ jobs:
   test:
     executor:
       name: node/default
+      tag: lts
     steps:
       - checkout
       - node/install-packages
+      - run: npm run lint
       - run: npm test
       - run: bash <(curl -s https://codecov.io/bash)
 workflows:
