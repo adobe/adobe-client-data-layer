@@ -1,0 +1,23 @@
+{
+    "type": "object",
+    "properties": {
+        "event": {
+            "type": "string"
+        },
+        "eventInfo": {
+            "type": "object",
+            "properties": {
+                "reference": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "reference"
+            ]
+        }
+    },
+    "required": [
+        "event",
+        "eventInfo"
+    ]
+}
