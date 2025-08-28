@@ -10,7 +10,8 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { cloneDeep, get } from 'lodash-es';
+import { get } from './utils/get.js';
+
 const version = require('../version.json').version;
 const Item = require('./item');
 const Listener = require('./listener');
@@ -61,7 +62,7 @@ module.exports = function(config) {
     _dataLayer.version = version;
     _state = {};
     _listenerManager = ListenerManager(DataLayerManager);
-  };
+  }
 
   /**
    * Updates the state with the item.
@@ -71,7 +72,7 @@ module.exports = function(config) {
    */
   function _updateState(item) {
     _state = customMerge(_state, item.data);
-  };
+  }
 
   /**
    * Augments the data layer Array Object, overriding: push() and adding getState(), addEventListener and removeEventListener.
@@ -82,12 +83,12 @@ module.exports = function(config) {
     /**
      * Pushes one or more items to the data layer.
      *
-     * @param {...ItemConfig} var_args The items to add to the data layer.
+     * @param {...ItemConfig} args The items to add to the data layer.
      * @returns {Number} The length of the data layer following push.
      */
-    _dataLayer.push = function(var_args) { /* eslint-disable-line camelcase */
-      const pushArguments = arguments;
-      const filteredArguments = arguments;
+    _dataLayer.push = function(...args) {
+      const pushArguments = args;
+      const filteredArguments = args;
 
       Object.keys(pushArguments).forEach(function(key) {
         const itemConfig = pushArguments[key];
@@ -128,9 +129,9 @@ module.exports = function(config) {
      */
     _dataLayer.getState = function(path) {
       if (path) {
-        return get(cloneDeep(_state), path);
+        return get(structuredClone(_state), path);
       }
-      return cloneDeep(_state);
+      return structuredClone(_state);
     };
 
     /**
@@ -178,7 +179,7 @@ module.exports = function(config) {
 
       _processItem(eventListenerItem);
     };
-  };
+  }
 
   /**
    * Processes all items that already exist on the stack.
@@ -189,7 +190,7 @@ module.exports = function(config) {
     for (let i = 0; i < _preLoadedItems.length; i++) {
       _dataLayer.push(_preLoadedItems[i]);
     }
-  };
+  }
 
   /**
    * Processes an item pushed to the stack.
@@ -260,7 +261,7 @@ module.exports = function(config) {
     };
 
     typeProcessors[item.type](item);
-  };
+  }
 
   /**
    * Logs error for invalid item pushed to the data layer.
@@ -273,7 +274,7 @@ module.exports = function(config) {
       'because it does not have a valid format: ' +
       JSON.stringify(item.config);
     console.error(message);
-  };
+  }
 
   return DataLayerManager;
 };

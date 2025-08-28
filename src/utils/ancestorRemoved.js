@@ -10,7 +10,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { has, get } from 'lodash-es';
+import { has, get } from './get.js';
 
 /**
   * Checks if the object contains an ancestor that is set to null or undefined.

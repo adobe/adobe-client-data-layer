@@ -9,10 +9,11 @@ the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTA
 OF ANY KIND, either express or implied. See the License for the specific language
 governing permissions and limitations under the License.
 */
-import { isEmpty } from 'lodash-es';
 
 const DataLayerManager = require('../../dataLayerManager');
 const DataLayer = { Manager: DataLayerManager };
+const isEmpty = obj => [Object, Array].includes((obj || {}).constructor) && !Object.entries((obj || {})).length;
+
 let adobeDataLayer;
 
 const clearDL = function() {

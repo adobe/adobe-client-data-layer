@@ -26,18 +26,13 @@
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-transform-modules-commonjs": "^7.23.0",
-    "@babel/preset-env": "^7.6.3",
+    "@babel/preset-env": "^7.24.0",
     "@parcel/reporter-bundle-analyzer": "^2.10.2",
+    "@ungap/structured-clone": "^1.2.0",
     "babel-jest": "^29.7.0",
     "codecov": "^3.6.5",
     "concurrently": "^8.2.2",
-    "eslint": "^6.5.1",
-    "eslint-config-standard": "^14.1.0",
-    "eslint-plugin-compat": "^3.6.0",
-    "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-node": "^10.0.0",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-standard": "^4.0.1",
+    "eslint": "^8.57.0",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
     "jest-expect-message": "^1.0.2",
@@ -45,8 +40,7 @@
     "parcel": "^2.10.2"
   },
   "dependencies": {
-    "@swc/helpers": "^0.5.3",
-    "lodash-es": "^4.17.21"
+    "@swc/helpers": "^0.5.3"
   },
   "targets": {
     "acdl": {

@@ -10,7 +10,12 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { merge } from 'lodash-es';
+import { mergeWith } from '../utils/mergeWith';
+const merge = (target, ...sources) => {
+  return sources.reduce((acc, source) => {
+    return mergeWith(acc, structuredClone(source));
+  }, target);
+};
 
 const carousel1 = {
   component: {

@@ -5,6 +5,7 @@ jobs:
   test:
     executor:
       name: node/default
+      tag: lts
     steps:
       - checkout
       - node/install-packages
