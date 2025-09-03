@@ -1,7 +1,7 @@
 {
   "name": "@adobe/adobe-client-data-layer",
   "description": "Adobe Client Data Layer",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "acdl": "dist/adobe-client-data-layer.min.js",
   "source": "src/index.js",
   "license": "Apache-2.0",
