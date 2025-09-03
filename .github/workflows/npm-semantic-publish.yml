@@ -29,30 +29,30 @@ jobs:
         node-version: 'lts/*'
 
     - name: Install dependencies
-      run: npm install
+      run: npm ci
 
     - name: Build scripts and run tests
       run: npm run build
 
-    - name: Bump version and commit
+    - name: Bump version, commit, and tag
       run: |
         git config --local user.email "${{ github.actor }}@users.noreply.github.com"
         git config --local user.name "Release action on behalf of ${{ github.actor }}"
-        npm --no-git-tag-version version ${{ github.event.inputs.semantic_version }}
-        git commit -m "@releng - prepare release ${{ github.event.inputs.semantic_version }}" -a
         npm version ${{ github.event.inputs.semantic_version }} -m '@releng - release %s'
 
-    - name: Build scripts and run tests again to ensure version bump is picked up
+    - name: Build again to ensure version bump is picked up
       run: npm run build
 
-    - name: Push changes
+    - name: Push commit and tags
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
         tags: true
 
-    - name: Publish
+    - name: Publish to npm
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.ADOBE_BOT_NPM_TOKEN }}
       run: |
-        echo "//registry.npmjs.org/:_authToken=${{ secrets.ADOBE_BOT_NPM_TOKEN }}" > ~/.npmrc
+        echo "//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}" > ~/.npmrc
         npm publish --access public
