@@ -31,7 +31,7 @@
     "@ungap/structured-clone": "^1.2.0",
     "babel-jest": "^29.7.0",
     "codecov": "^3.6.5",
-    "concurrently": "^8.2.2",
+    "concurrently": "^9.0.0",
     "eslint": "^8.57.0",
     "jest": "^24.9.0",
     "jest-cli": "^24.9.0",
