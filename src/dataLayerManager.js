@@ -85,41 +85,50 @@ module.exports = function(config) {
      *
      * @param {...ItemConfig} args The items to add to the data layer.
      * @returns {Number} The length of the data layer following push.
-     */
+     *
+	 * 
+	 * updated with fix: push() could silently drop valid items when multiple items were pushed in a single call. 
+	 * Previously, push() tracked which items should end up in the array by deleting invalid/function/listener-type entries out of the same array holding the original arguments.
+	 * It then checked only whether index 0 of that array survived before deciding whether to add anything the array at all
+	 * Because delete on an array leaves a hole rather than shifting later items, if the first argument in a multi-item push() call was deleted,
+	 * every other valid item in that same call was excluded from the array even though its data was still correctly merged into state and any listeners still correctly fired.
+	 * The fix now builds a new list of the items that should be visible (itemsToKeep), rather than mutating and re-checking a single shared array.
+	 * ALSO: ListenerOn/Off items are now processed (like they should have been in the first place) 
+	 */
+	
     _dataLayer.push = function(...args) {
-      const pushArguments = args;
-      const filteredArguments = args;
+      const itemsToKeep = [];
 
-      Object.keys(pushArguments).forEach(function(key) {
-        const itemConfig = pushArguments[key];
+      args.forEach(function(itemConfig) {
         const item = Item(itemConfig);
 
         if (!item.valid) {
           _logInvalidItemError(item);
-          delete filteredArguments[key];
+          return;
         }
         switch (item.type) {
           case CONSTANTS.itemType.DATA:
           case CONSTANTS.itemType.EVENT: {
             _processItem(item);
+            itemsToKeep.push(itemConfig);
             break;
           }
           case CONSTANTS.itemType.FCTN: {
-            delete filteredArguments[key];
             _processItem(item);
             break;
           }
           case CONSTANTS.itemType.LISTENER_ON:
           case CONSTANTS.itemType.LISTENER_OFF: {
-            delete filteredArguments[key];
+            _processItem(item);
+            break;
           }
         }
       });
 
-      if (filteredArguments[0]) {
-        return Array.prototype.push.apply(this, filteredArguments);
+      if (itemsToKeep.length > 0) {
+        return Array.prototype.push.apply(this, itemsToKeep);
       }
-    };
+    };	
 
     /**
      * Returns a deep copy of the data layer state or of the object defined by the path.

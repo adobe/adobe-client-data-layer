@@ -20,21 +20,14 @@ function mergeWith(target, source, customizer) {
   return target;
 }
 
+/**
+ * Fix: got rid of some no longer needed code.  structuredClone(target) by itself handles everything we need whenever the customizer doesn't provide a result
+ */
 function cloneDeepWith(target, customizer) {
   let newTarget = customizer ? customizer(target) : undefined;
-
   if (newTarget === undefined) {
-    if (target === Object(target) && !Array.isArray(target)) {
-      newTarget = {};
-      const keys = Object.keys(target);
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        newTarget[key] = cloneDeepWith(target[key], customizer);
-      }
-    }
     newTarget = structuredClone(target);
   }
-
   return newTarget;
 }
 
